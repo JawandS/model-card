@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Healthcare Model Card Generator',
   description: 'Create comprehensive model cards for healthcare ML models',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export const dynamic = 'force-dynamic'

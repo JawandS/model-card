@@ -132,17 +132,17 @@ export function ModelCardForm() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom duration-700">
       {/* Form Section */}
       <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Model Card Information</CardTitle>
-            <CardDescription>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-border/50">
+            <CardTitle className="text-2xl">Model Card Information</CardTitle>
+            <CardDescription className="text-base">
               Fill out the required fields to document your healthcare ML model
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-8">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <BasicInfoSection form={form} />
@@ -157,79 +157,88 @@ export function ModelCardForm() {
         </Card>
 
         {/* Export Buttons */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Export Model Card</CardTitle>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border-b border-border/50">
+            <CardTitle className="text-xl flex items-center gap-2">
+              <Download className="h-5 w-5" />
+              Export Model Card
+            </CardTitle>
             <CardDescription>
               Download your model card in various formats
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleExport('json')}
-              className="w-full"
-            >
-              <FileJson className="mr-2 h-4 w-4" />
-              JSON
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleExport('pdf')}
-              className="w-full"
-            >
-              <FileType className="mr-2 h-4 w-4" />
-              PDF
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleExport('markdown')}
-              className="w-full"
-            >
-              <FileText className="mr-2 h-4 w-4" />
-              Markdown
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleExport('html')}
-              className="w-full"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              HTML
-            </Button>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleExport('json')}
+                className="w-full group"
+              >
+                <FileJson className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                JSON
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleExport('pdf')}
+                className="w-full group"
+              >
+                <FileType className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                PDF
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleExport('markdown')}
+                className="w-full group"
+              >
+                <FileText className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                Markdown
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleExport('html')}
+                className="w-full group"
+              >
+                <Download className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                HTML
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Preview Section */}
       <div className="sticky top-8 h-fit">
-        <Card>
-          <CardHeader>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-border/50">
             <div className="flex items-center justify-between">
-              <CardTitle>Preview</CardTitle>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Eye className="h-5 w-5" />
+                Live Preview
+              </CardTitle>
               <Button
                 type="button"
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowPreview(!showPreview)}
+                className="rounded-lg"
               >
                 {showPreview ? (
-                  <EyeOff className="h-4 w-4" />
+                  <EyeOff className="h-5 w-5" />
                 ) : (
-                  <Eye className="h-4 w-4" />
+                  <Eye className="h-5 w-5" />
                 )}
               </Button>
             </div>
             <CardDescription>
-              Live preview of your model card
+              Real-time preview of your documentation
             </CardDescription>
           </CardHeader>
           {showPreview && (
-            <CardContent>
+            <CardContent className="p-6 max-h-[calc(100vh-16rem)] overflow-y-auto">
               <ModelCardPreview data={formData} />
             </CardContent>
           )}

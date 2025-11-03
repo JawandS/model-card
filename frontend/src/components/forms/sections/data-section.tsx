@@ -24,9 +24,14 @@ interface DataSectionProps {
 
 export function DataSection({ form }: DataSectionProps) {
   return (
-    <div className="space-y-4 border-t pt-6">
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Data Sources</h3>
+    <div className="space-y-6 border-t border-border/30 pt-8">
+      <div className="pb-3 border-b border-border/50">
+        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+          Data Sources
+        </h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          Training data characteristics and representativeness
+        </p>
       </div>
 
       <FormField
@@ -98,8 +103,8 @@ export function DataSection({ form }: DataSectionProps) {
         )}
       />
 
-      <div className="space-y-4 border-l-2 border-muted pl-4 mt-6">
-        <h4 className="text-sm font-semibold">Data Representativeness</h4>
+      <div className="space-y-4 rounded-xl bg-gradient-to-r from-blue-500/5 to-indigo-500/5 border border-border/30 p-6 mt-6">
+        <h4 className="text-base font-bold text-foreground mb-4">Data Representativeness</h4>
 
         <FormField
           control={form.control}

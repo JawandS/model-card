@@ -1,0 +1,26 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Medical cross with document -->
+  <rect x="4" y="8" width="24" height="20" rx="2" fill="url(#gradient1)" />
+  <rect x="4" y="8" width="24" height="20" rx="2" stroke="#3B82F6" stroke-width="1.5" fill="none" />
+
+  <!-- Document lines -->
+  <line x1="8" y1="14" x2="18" y2="14" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="8" y1="18" x2="18" y2="18" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="8" y1="22" x2="14" y2="22" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+
+  <!-- Medical cross badge -->
+  <circle cx="22" cy="20" r="6" fill="#3B82F6" />
+  <circle cx="22" cy="20" r="6" fill="url(#gradient2)" />
+  <path d="M22 17V23M19 20H25" stroke="white" stroke-width="2" stroke-linecap="round" />
+
+  <defs>
+    <linearGradient id="gradient1" x1="4" y1="8" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6" />
+      <stop offset="1" stop-color="#6366F1" />
+    </linearGradient>
+    <linearGradient id="gradient2" x1="16" y1="14" x2="28" y2="26" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#60A5FA" stop-opacity="0.8" />
+      <stop offset="1" stop-color="#3B82F6" />
+    </linearGradient>
+  </defs>
+</svg>
