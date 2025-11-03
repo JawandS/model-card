@@ -1,0 +1,22 @@
+{
+  "name": "healthcare-modelcard-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Monorepo for Healthcare Model Card Generator",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build:schema": "cd packages/schema && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:schema && npm run build:frontend",
+    "install:all": "cd packages/schema && npm install && cd ../../frontend && npm install"
+  },
+  "keywords": [
+    "healthcare",
+    "model-card",
+    "ml",
+    "ai",
+    "documentation"
+  ],
+  "author": "",
+  "license": "MIT"
+}
