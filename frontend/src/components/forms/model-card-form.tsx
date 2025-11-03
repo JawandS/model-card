@@ -155,6 +155,44 @@ export function ModelCardForm() {
             </Form>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Preview and Export Section */}
+      <div className="space-y-6">
+        {/* Preview Section */}
+        <div className="sticky top-8">
+          <Card className="overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-border/50">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <Eye className="h-5 w-5" />
+                  Live Preview
+                </CardTitle>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowPreview(!showPreview)}
+                  className="rounded-lg"
+                >
+                  {showPreview ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </Button>
+              </div>
+              <CardDescription>
+                Real-time preview of your documentation
+              </CardDescription>
+            </CardHeader>
+            {showPreview && (
+              <CardContent className="p-6 max-h-[calc(100vh-32rem)] overflow-y-auto">
+                <ModelCardPreview data={formData} />
+              </CardContent>
+            )}
+          </Card>
+        </div>
 
         {/* Export Buttons */}
         <Card className="overflow-hidden">
@@ -207,41 +245,6 @@ export function ModelCardForm() {
               </Button>
             </div>
           </CardContent>
-        </Card>
-      </div>
-
-      {/* Preview Section */}
-      <div className="sticky top-8 h-fit">
-        <Card className="overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-border/50">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Eye className="h-5 w-5" />
-                Live Preview
-              </CardTitle>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowPreview(!showPreview)}
-                className="rounded-lg"
-              >
-                {showPreview ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </Button>
-            </div>
-            <CardDescription>
-              Real-time preview of your documentation
-            </CardDescription>
-          </CardHeader>
-          {showPreview && (
-            <CardContent className="p-6 max-h-[calc(100vh-16rem)] overflow-y-auto">
-              <ModelCardPreview data={formData} />
-            </CardContent>
-          )}
         </Card>
       </div>
     </div>
