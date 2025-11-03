@@ -20,6 +20,16 @@ if [ ! -d "frontend/node_modules" ]; then
   cd ..
 fi
 
+# Kill any process running on port 3000
+echo "🔍 Checking for processes on port 3000..."
+if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1 ; then
+  echo "⚠️  Killing existing process on port 3000..."
+  lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+  sleep 1
+else
+  echo "✅ Port 3000 is available"
+fi
+
 # Start dev server
 echo "🎨 Starting development server..."
 cd frontend
