@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: 'Create comprehensive model cards for healthcare ML models',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default function RootLayout({
   children,
 }: {

@@ -1,3 +1,5 @@
+'use client'
+
 import { ModelCardForm } from '@/components/forms/model-card-form'
 import { ThemeToggle } from '@/components/theme-toggle'
 

@@ -97,7 +97,7 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
               />
             </FormControl>
             <FormDescription>
-              Known limitations, biases, or caveats about the model's performance
+              Known limitations, biases, or caveats about the model&apos;s performance
             </FormDescription>
             <FormMessage />
           </FormItem>

@@ -2,9 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@modelcard/schema'],
-  experimental: {
-    // Enable optimizations
-  },
+  output: 'standalone',
 }
 
 module.exports = nextConfig

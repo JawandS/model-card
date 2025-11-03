@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ModelCardSchema, type ModelCard, type PartialModelCard } from '@modelcard/schema'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Form } from '@/components/ui/form'
 import { BasicInfoSection } from './sections/basic-info-section'
 import { IntendedUseSection } from './sections/intended-use-section'
 import { DataSection } from './sections/data-section'
@@ -71,11 +72,12 @@ export function ModelCardForm() {
   })
 
   // Watch form values for preview
-  const watchedValues = form.watch()
-
   React.useEffect(() => {
-    setFormData(watchedValues as PartialModelCard)
-  }, [watchedValues])
+    const subscription = form.watch((value) => {
+      setFormData(value as PartialModelCard)
+    })
+    return () => subscription.unsubscribe()
+  }, [form])
 
   // Save to localStorage
   React.useEffect(() => {
@@ -141,14 +143,16 @@ export function ModelCardForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <BasicInfoSection form={form} />
-              <IntendedUseSection form={form} />
-              <DataSection form={form} />
-              <EvaluationSection form={form} />
-              <RiskManagementSection form={form} />
-              <ProvenanceSection form={form} />
-            </form>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <BasicInfoSection form={form} />
+                <IntendedUseSection form={form} />
+                <DataSection form={form} />
+                <EvaluationSection form={form} />
+                <RiskManagementSection form={form} />
+                <ProvenanceSection form={form} />
+              </form>
+            </Form>
           </CardContent>
         </Card>
 

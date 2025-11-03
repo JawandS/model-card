@@ -43,7 +43,7 @@ export function IntendedUseSection({ form }: IntendedUseSectionProps) {
               />
             </FormControl>
             <FormDescription>
-              A brief summary of the model's intended use case
+              A brief summary of the model&apos;s intended use case
             </FormDescription>
             <FormMessage />
           </FormItem>
