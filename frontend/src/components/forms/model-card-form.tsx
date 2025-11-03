@@ -14,8 +14,7 @@ import { EvaluationSection } from './sections/evaluation-section'
 import { RiskManagementSection } from './sections/risk-management-section'
 import { ProvenanceSection } from './sections/provenance-section'
 import { ModelCardPreview } from '../model-card-preview'
-import { exportToJSON, exportToPDF, exportToMarkdown, exportToHTML } from '@/lib/exporters'
-import { Download, FileJson, FileText, FileType, Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 
 export function ModelCardForm() {
   const [showPreview, setShowPreview] = React.useState(true)
@@ -105,44 +104,18 @@ export function ModelCardForm() {
     // Validation passed, ready to export or save
   }
 
-  const handleExport = (format: 'json' | 'pdf' | 'markdown' | 'html') => {
-    const result = ModelCardSchema.safeParse(formData)
-
-    if (!result.success) {
-      alert('Please complete all required fields before exporting.')
-      return
-    }
-
-    const validData = result.data
-
-    switch (format) {
-      case 'json':
-        exportToJSON(validData)
-        break
-      case 'pdf':
-        exportToPDF(validData)
-        break
-      case 'markdown':
-        exportToMarkdown(validData)
-        break
-      case 'html':
-        exportToHTML(validData)
-        break
-    }
-  }
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom duration-700">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full animate-in fade-in slide-in-from-bottom duration-700">
       {/* Form Section */}
-      <div className="space-y-6">
-        <Card className="overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-border/50">
+      <div className="flex flex-col min-h-0">
+        <Card className="overflow-hidden flex flex-col h-full">
+          <CardHeader className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-border/50 flex-shrink-0">
             <CardTitle className="text-2xl">Model Card Information</CardTitle>
             <CardDescription className="text-base">
               Fill out the required fields to document your healthcare ML model
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-8">
+          <CardContent className="p-8 overflow-y-auto flex-1 min-h-0">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <BasicInfoSection form={form} />
@@ -157,94 +130,38 @@ export function ModelCardForm() {
         </Card>
       </div>
 
-      {/* Preview and Export Section */}
-      <div className="space-y-6">
-        {/* Preview Section */}
-        <div className="sticky top-8">
-          <Card className="overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-border/50">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-xl flex items-center gap-2">
+      {/* Preview Section */}
+      <div className="flex flex-col min-h-0">
+        <Card className="overflow-hidden flex flex-col h-full">
+          <CardHeader className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-border/50 flex-shrink-0">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Eye className="h-5 w-5" />
+                Live Preview
+              </CardTitle>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowPreview(!showPreview)}
+                className="rounded-lg"
+              >
+                {showPreview ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
                   <Eye className="h-5 w-5" />
-                  Live Preview
-                </CardTitle>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowPreview(!showPreview)}
-                  className="rounded-lg"
-                >
-                  {showPreview ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </Button>
-              </div>
-              <CardDescription>
-                Real-time preview of your documentation
-              </CardDescription>
-            </CardHeader>
-            {showPreview && (
-              <CardContent className="p-6 max-h-[calc(100vh-32rem)] overflow-y-auto">
-                <ModelCardPreview data={formData} />
-              </CardContent>
-            )}
-          </Card>
-        </div>
-
-        {/* Export Buttons */}
-        <Card className="overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border-b border-border/50">
-            <CardTitle className="text-xl flex items-center gap-2">
-              <Download className="h-5 w-5" />
-              Export Model Card
-            </CardTitle>
-            <CardDescription>
-              Download your model card in various formats
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleExport('json')}
-                className="w-full group"
-              >
-                <FileJson className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                JSON
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleExport('pdf')}
-                className="w-full group"
-              >
-                <FileType className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                PDF
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleExport('markdown')}
-                className="w-full group"
-              >
-                <FileText className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                Markdown
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleExport('html')}
-                className="w-full group"
-              >
-                <Download className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                HTML
+                )}
               </Button>
             </div>
-          </CardContent>
+            <CardDescription>
+              Real-time preview of your documentation
+            </CardDescription>
+          </CardHeader>
+          {showPreview && (
+            <CardContent className="p-6 overflow-y-auto flex-1 min-h-0">
+              <ModelCardPreview data={formData} />
+            </CardContent>
+          )}
         </Card>
       </div>
     </div>

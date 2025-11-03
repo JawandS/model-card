@@ -3,10 +3,11 @@
 import { ModelCardForm } from '@/components/forms/model-card-form'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { InstructionsModal } from '@/components/instructions-modal'
+import { ExportModal } from '@/components/export-modal'
 
 export default function Home() {
   return (
-    <main className="min-h-screen gradient-bg relative overflow-hidden">
+    <main className="h-screen gradient-bg relative overflow-hidden flex flex-col">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl" />
@@ -14,15 +15,18 @@ export default function Home() {
         <div className="absolute -bottom-40 right-1/3 w-80 h-80 bg-indigo-400/20 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto py-8 px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-10 flex flex-col h-full overflow-hidden">
         {/* Header */}
-        <div className="flex justify-start items-center gap-3 mb-8 pl-8">
+        <div className="flex justify-start items-center gap-3 py-6 pl-8 flex-shrink-0">
           <InstructionsModal />
+          <ExportModal />
           <ThemeToggle />
         </div>
 
         {/* Main Content */}
-        <ModelCardForm />
+        <div className="flex-1 overflow-hidden pb-6">
+          <ModelCardForm />
+        </div>
       </div>
     </main>
   )
