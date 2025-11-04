@@ -8,10 +8,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { BasicInfoSection } from './sections/basic-info-section'
-import { IntendedUseSection } from './sections/intended-use-section'
-import { DataSection } from './sections/data-section'
+import { ModelDetailsSection } from './sections/model-details-section'
+import { TrainingDataSection } from './sections/training-data-section'
+import { ImplementationSection } from './sections/implementation-section'
 import { EvaluationSection } from './sections/evaluation-section'
-import { RiskManagementSection } from './sections/risk-management-section'
+import { EthicsAndSafetySection } from './sections/ethics-and-safety-section'
+import { UsageAndLimitationsSection } from './sections/usage-and-limitations-section'
+import { HealthcareExtensionSection } from './sections/healthcare-extension-section'
 import { ProvenanceSection } from './sections/provenance-section'
 import { ModelCardPreview } from '../model-card-preview'
 import { Eye, EyeOff } from 'lucide-react'
@@ -24,38 +27,63 @@ export function ModelCardForm() {
     resolver: zodResolver(ModelCardSchema),
     defaultValues: {
       name: '',
-      model_version: '',
-      owner: {
-        organization: '',
-        contact: '',
+      model_details: {
+        description: '',
+        version: '',
+        owners: [],
+        license: '',
+        citation: '',
+        references: [],
+        input_format: '',
+        output_format: '',
       },
-      intended_use: {
-        summary: '',
+      training_data: {
+        description: '',
+        source: '',
+        preprocessing: '',
+        size: '',
+      },
+      implementation: {
+        hardware: '',
+        software: '',
+        framework: '',
+      },
+      evaluation: {
+        benchmark_results: '',
+        metrics: '',
+        datasets: '',
+        factors: '',
+      },
+      ethics_and_safety: {
+        approach: '',
+        risks: '',
+        harms: '',
+        bias_analysis: '',
+        fairness_assessment: '',
+        use_cases: [],
+        out_of_scope_uses: [],
+      },
+      usage_and_limitations: {
+        intended_use: '',
+        limitations: '',
+        ethical_considerations: '',
+        benefits: '',
+      },
+      healthcare: {
         clinical_context: undefined,
         care_setting: undefined,
         contraindications: '',
-      },
-      data: {
-        source: undefined,
-        time_window: '',
-        geography: '',
-        codesets: [],
+        patient_population: '',
+        clinical_validation: '',
         representativeness: {
           population_frame: '',
           payer_mix: '',
           age_distribution: '',
           sex_distribution: '',
           race_ethnicity_notes: '',
+          geographic_distribution: '',
           missingness: '',
         },
-      },
-      evaluation: {
-        overall_metrics: '',
-        subgroup_analysis: '',
-        external_validation: '',
-        limitations: '',
-      },
-      risk_management: {
         failure_modes: '',
         human_oversight: '',
         monitoring_plan: '',
@@ -63,8 +91,8 @@ export function ModelCardForm() {
       provenance: {
         created_at: '',
         created_by: '',
-        dataset_id: '',
-        artifact_hash: '',
+        last_updated: '',
+        version_history: '',
       },
     },
     mode: 'onChange',
@@ -112,17 +140,20 @@ export function ModelCardForm() {
           <CardHeader className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-border/50 flex-shrink-0">
             <CardTitle className="text-2xl">Model Card Information</CardTitle>
             <CardDescription className="text-base">
-              Fill out the required fields to document your healthcare ML model
+              Document your ML model following the Google Model Card standard
             </CardDescription>
           </CardHeader>
           <CardContent className="p-8 overflow-y-auto flex-1 min-h-0">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <BasicInfoSection form={form} />
-                <IntendedUseSection form={form} />
-                <DataSection form={form} />
+                <ModelDetailsSection form={form} />
+                <TrainingDataSection form={form} />
+                <ImplementationSection form={form} />
                 <EvaluationSection form={form} />
-                <RiskManagementSection form={form} />
+                <EthicsAndSafetySection form={form} />
+                <UsageAndLimitationsSection form={form} />
+                <HealthcareExtensionSection form={form} />
                 <ProvenanceSection form={form} />
               </form>
             </Form>

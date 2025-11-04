@@ -2,15 +2,17 @@ import { z } from 'zod';
 import {
   ModelCardSchema,
   OwnerSchema,
-  IntendedUseSchema,
-  DataSchema,
+  ModelDetailsSchema,
+  TrainingDataSchema,
+  ImplementationSchema,
   EvaluationSchema,
-  RiskManagementSchema,
+  EthicsAndSafetySchema,
+  UsageAndLimitationsSchema,
+  HealthcareExtensionSchema,
   ProvenanceSchema,
   RepresentativenessSchema,
   ClinicalContextEnum,
   CareSettingEnum,
-  DataSourceEnum,
 } from './modelcard.schema';
 
 /**
@@ -19,16 +21,18 @@ import {
 
 export type ModelCard = z.infer<typeof ModelCardSchema>;
 export type Owner = z.infer<typeof OwnerSchema>;
-export type IntendedUse = z.infer<typeof IntendedUseSchema>;
-export type Data = z.infer<typeof DataSchema>;
+export type ModelDetails = z.infer<typeof ModelDetailsSchema>;
+export type TrainingData = z.infer<typeof TrainingDataSchema>;
+export type Implementation = z.infer<typeof ImplementationSchema>;
 export type Evaluation = z.infer<typeof EvaluationSchema>;
-export type RiskManagement = z.infer<typeof RiskManagementSchema>;
+export type EthicsAndSafety = z.infer<typeof EthicsAndSafetySchema>;
+export type UsageAndLimitations = z.infer<typeof UsageAndLimitationsSchema>;
+export type HealthcareExtension = z.infer<typeof HealthcareExtensionSchema>;
 export type Provenance = z.infer<typeof ProvenanceSchema>;
 export type Representativeness = z.infer<typeof RepresentativenessSchema>;
 
 export type ClinicalContext = z.infer<typeof ClinicalContextEnum>;
 export type CareSetting = z.infer<typeof CareSettingEnum>;
-export type DataSource = z.infer<typeof DataSourceEnum>;
 
 /**
  * Partial type for form state (all fields optional for progressive filling)

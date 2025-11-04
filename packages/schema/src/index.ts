@@ -1,21 +1,24 @@
 /**
  * @modelcard/schema
- * Shared Zod schemas and TypeScript types for Healthcare Model Cards
+ * Shared Zod schemas and TypeScript types for Model Cards
+ * Based on Google Model Card Standard with Healthcare Extensions
  */
 
 // Export all schemas
 export {
   ModelCardSchema,
   OwnerSchema,
-  IntendedUseSchema,
-  DataSchema,
+  ModelDetailsSchema,
+  TrainingDataSchema,
+  ImplementationSchema,
   EvaluationSchema,
-  RiskManagementSchema,
+  EthicsAndSafetySchema,
+  UsageAndLimitationsSchema,
+  HealthcareExtensionSchema,
   ProvenanceSchema,
   RepresentativenessSchema,
   ClinicalContextEnum,
   CareSettingEnum,
-  DataSourceEnum,
   validateModelCard,
   parseModelCard,
 } from './modelcard.schema';
@@ -24,14 +27,16 @@ export {
 export type {
   ModelCard,
   Owner,
-  IntendedUse,
-  Data,
+  ModelDetails,
+  TrainingData,
+  Implementation,
   Evaluation,
-  RiskManagement,
+  EthicsAndSafety,
+  UsageAndLimitations,
+  HealthcareExtension,
   Provenance,
   Representativeness,
   ClinicalContext,
   CareSetting,
-  DataSource,
   PartialModelCard,
 } from './types';
