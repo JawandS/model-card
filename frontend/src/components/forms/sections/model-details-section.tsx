@@ -14,9 +14,10 @@ import { TextareaWithAssist } from '@/components/ui/textarea-with-assist'
 
 interface ModelDetailsSectionProps {
   form: UseFormReturn<ModelCard>
+  showOptionalFields?: boolean
 }
 
-export function ModelDetailsSection({ form }: ModelDetailsSectionProps) {
+export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDetailsSectionProps) {
   return (
     <div className="space-y-6">
       <div className="pb-3 border-b border-border/50">
@@ -28,9 +29,30 @@ export function ModelDetailsSection({ form }: ModelDetailsSectionProps) {
         </p>
       </div>
 
+      {/* Version field is always shown as it's required */}
       <FormField
         control={form.control}
-        name="model_details.description"
+        name="model_details.version"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Version *</FormLabel>
+            <FormControl>
+              <Input placeholder="e.g., 1.0.0" {...field} />
+            </FormControl>
+            <FormDescription>
+              Version identifier for this model
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* Optional fields - only show when showOptionalFields is true */}
+      {showOptionalFields && (
+        <>
+          <FormField
+            control={form.control}
+            name="model_details.description"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Description</FormLabel>
@@ -53,102 +75,87 @@ export function ModelDetailsSection({ form }: ModelDetailsSectionProps) {
         )}
       />
 
-      <FormField
-        control={form.control}
-        name="model_details.version"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Version *</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g., 1.0.0" {...field} />
-            </FormControl>
-            <FormDescription>
-              Version identifier for this model
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+          <FormField
+            control={form.control}
+            name="model_details.license"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>License</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Apache 2.0, MIT, Proprietary" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The license under which the model is released
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <FormField
-        control={form.control}
-        name="model_details.license"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>License</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g., Apache 2.0, MIT, Proprietary" {...field} />
-            </FormControl>
-            <FormDescription>
-              The license under which the model is released
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+          <FormField
+            control={form.control}
+            name="model_details.citation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Citation</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="BibTeX or other citation format for this model"
+                    className="min-h-[80px] font-mono text-sm"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  How others should cite this model
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <FormField
-        control={form.control}
-        name="model_details.citation"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Citation</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="BibTeX or other citation format for this model"
-                className="min-h-[80px] font-mono text-sm"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              How others should cite this model
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+          <FormField
+            control={form.control}
+            name="model_details.input_format"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Input Format</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Describe the expected input format, features, and data types"
+                    className="min-h-[80px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Specification of model inputs
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <FormField
-        control={form.control}
-        name="model_details.input_format"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Input Format</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Describe the expected input format, features, and data types"
-                className="min-h-[80px]"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              Specification of model inputs
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="model_details.output_format"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Output Format</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Describe the model output format, predictions, and interpretation"
-                className="min-h-[80px]"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              Specification of model outputs
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+          <FormField
+            control={form.control}
+            name="model_details.output_format"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Output Format</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Describe the model output format, predictions, and interpretation"
+                    className="min-h-[80px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Specification of model outputs
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </>
+      )}
     </div>
   )
 }

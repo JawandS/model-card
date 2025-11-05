@@ -17,10 +17,11 @@ import { UsageAndLimitationsSection } from './sections/usage-and-limitations-sec
 import { HealthcareExtensionSection } from './sections/healthcare-extension-section'
 import { ProvenanceSection } from './sections/provenance-section'
 import { ModelCardPreview } from '../model-card-preview'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Filter, FilterX } from 'lucide-react'
 
 export function ModelCardForm() {
   const [showPreview, setShowPreview] = React.useState(true)
+  const [showOptionalFields, setShowOptionalFields] = React.useState(true)
   const [formData, setFormData] = React.useState<PartialModelCard>({})
 
   const form = useForm<ModelCard>({
@@ -138,23 +139,45 @@ export function ModelCardForm() {
       <div className="flex flex-col min-h-0">
         <Card className="overflow-hidden flex flex-col h-full">
           <CardHeader className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-border/50 flex-shrink-0">
-            <CardTitle className="text-2xl">Model Card Information</CardTitle>
-            <CardDescription className="text-base">
-              Document your ML model following the Google Model Card standard
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-2xl">Model Card Information</CardTitle>
+                <CardDescription className="text-base mt-2">
+                  Document your ML model following the Google Model Card standard
+                </CardDescription>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowOptionalFields(!showOptionalFields)}
+                className="rounded-lg"
+                title={showOptionalFields ? "Hide optional fields" : "Show optional fields"}
+              >
+                {showOptionalFields ? (
+                  <FilterX className="h-5 w-5" />
+                ) : (
+                  <Filter className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="p-8 overflow-y-auto flex-1 min-h-0">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <BasicInfoSection form={form} />
-                <ModelDetailsSection form={form} />
-                <TrainingDataSection form={form} />
-                <ImplementationSection form={form} />
-                <EvaluationSection form={form} />
-                <EthicsAndSafetySection form={form} />
-                <UsageAndLimitationsSection form={form} />
-                <HealthcareExtensionSection form={form} />
-                <ProvenanceSection form={form} />
+                <ModelDetailsSection form={form} showOptionalFields={showOptionalFields} />
+                {showOptionalFields && (
+                  <>
+                    <TrainingDataSection form={form} />
+                    <ImplementationSection form={form} />
+                    <EvaluationSection form={form} />
+                    <EthicsAndSafetySection form={form} />
+                    <UsageAndLimitationsSection form={form} />
+                    <HealthcareExtensionSection form={form} />
+                    <ProvenanceSection form={form} />
+                  </>
+                )}
               </form>
             </Form>
           </CardContent>
