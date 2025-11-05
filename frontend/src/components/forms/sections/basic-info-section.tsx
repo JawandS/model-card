@@ -22,7 +22,7 @@ export function BasicInfoSection({ form }: BasicInfoSectionProps) {
           Basic Information
         </h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Essential details about your model
+          Essential identifier for your model
         </p>
       </div>
 
@@ -33,65 +33,10 @@ export function BasicInfoSection({ form }: BasicInfoSectionProps) {
           <FormItem>
             <FormLabel>Model Name *</FormLabel>
             <FormControl>
-              <Input placeholder="e.g., Diabetes Risk Predictor v2" {...field} />
+              <Input placeholder="e.g., Image Classification Model" {...field} />
             </FormControl>
             <FormDescription>
-              The name of your machine learning model
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="model_version"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Model Version *</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g., 2.1.0" {...field} />
-            </FormControl>
-            <FormDescription>
-              Version identifier for this model
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="owner.organization"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Organization *</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g., HealthTech AI Labs" {...field} />
-            </FormControl>
-            <FormDescription>
-              The organization that owns or developed this model
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="owner.contact"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Contact Email</FormLabel>
-            <FormControl>
-              <Input
-                type="email"
-                placeholder="e.g., ml-team@healthtech.com"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              Optional contact email for inquiries about this model
+              The unique name of your machine learning model
             </FormDescription>
             <FormMessage />
           </FormItem>

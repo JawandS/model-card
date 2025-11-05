@@ -5,166 +5,113 @@ interface ModelCardPreviewProps {
 }
 
 export function ModelCardPreview({ data }: ModelCardPreviewProps) {
+  const hasContent = (obj: any): boolean => {
+    if (!obj) return false
+    return Object.values(obj).some(v => v && (typeof v !== 'object' || hasContent(v)))
+  }
+
   return (
     <div className="space-y-6 text-sm">
       {/* Basic Info */}
-      {(data.name || data.model_version || data.owner) && (
+      {data.name && (
         <div>
-          <h3 className="text-lg font-bold mb-3">{data.name || 'Untitled Model'}</h3>
-          {data.model_version && (
-            <p className="text-muted-foreground mb-2">Version: {data.model_version}</p>
+          <h3 className="text-lg font-bold mb-3">{data.name}</h3>
+        </div>
+      )}
+
+      {/* Model Details */}
+      {hasContent(data.model_details) && (
+        <div className="border-t pt-4">
+          <h4 className="font-semibold mb-2">Model Details</h4>
+          {data.model_details?.version && (
+            <p className="text-muted-foreground mb-2">Version: {data.model_details.version}</p>
           )}
-          {data.owner?.organization && (
-            <p className="text-muted-foreground">Owner: {data.owner.organization}</p>
+          {data.model_details?.description && (
+            <p className="mb-2">{data.model_details.description}</p>
           )}
-          {data.owner?.contact && (
-            <p className="text-muted-foreground">Contact: {data.owner.contact}</p>
+          {data.model_details?.license && (
+            <p className="text-xs text-muted-foreground">License: {data.model_details.license}</p>
           )}
         </div>
       )}
 
-      {/* Intended Use */}
-      {data.intended_use && (
+      {/* Training Data */}
+      {hasContent(data.training_data) && (
         <div className="border-t pt-4">
-          <h4 className="font-semibold mb-2">Intended Use</h4>
-          {data.intended_use.summary && (
-            <p className="mb-2">{data.intended_use.summary}</p>
+          <h4 className="font-semibold mb-2">Training Data</h4>
+          {data.training_data?.description && <p className="mb-2">{data.training_data.description}</p>}
+          {data.training_data?.source && (
+            <p className="text-xs"><span className="font-medium">Source:</span> {data.training_data.source}</p>
           )}
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            {data.intended_use.clinical_context && (
-              <div>
-                <span className="font-medium">Clinical Context: </span>
-                <span className="capitalize">{data.intended_use.clinical_context}</span>
-              </div>
-            )}
-            {data.intended_use.care_setting && (
-              <div>
-                <span className="font-medium">Care Setting: </span>
-                <span className="capitalize">{data.intended_use.care_setting === 'ed' ? 'Emergency Department' : data.intended_use.care_setting}</span>
-              </div>
-            )}
-          </div>
-          {data.intended_use.contraindications && (
-            <div className="mt-2">
-              <span className="font-medium">Contraindications: </span>
-              <p className="text-muted-foreground">{data.intended_use.contraindications}</p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Data */}
-      {data.data && (
-        <div className="border-t pt-4">
-          <h4 className="font-semibold mb-2">Data</h4>
-          <div className="space-y-1 text-xs">
-            {data.data.source && (
-              <p>
-                <span className="font-medium">Source: </span>
-                <span className="capitalize">{data.data.source === 'ehr' ? 'EHR' : data.data.source}</span>
-              </p>
-            )}
-            {data.data.time_window && (
-              <p>
-                <span className="font-medium">Time Window: </span>
-                {data.data.time_window}
-              </p>
-            )}
-            {data.data.geography && (
-              <p>
-                <span className="font-medium">Geography: </span>
-                {data.data.geography}
-              </p>
-            )}
-          </div>
-
-          {/* Representativeness */}
-          {data.data.representativeness && Object.values(data.data.representativeness).some(v => v) && (
-            <div className="mt-3 pl-3 border-l-2 border-muted">
-              <h5 className="font-medium text-xs mb-2">Data Representativeness</h5>
-              <div className="space-y-1 text-xs text-muted-foreground">
-                {data.data.representativeness.population_frame && (
-                  <p><strong>Population:</strong> {data.data.representativeness.population_frame}</p>
-                )}
-                {data.data.representativeness.age_distribution && (
-                  <p><strong>Age:</strong> {data.data.representativeness.age_distribution}</p>
-                )}
-                {data.data.representativeness.sex_distribution && (
-                  <p><strong>Sex:</strong> {data.data.representativeness.sex_distribution}</p>
-                )}
-              </div>
-            </div>
+          {data.training_data?.size && (
+            <p className="text-xs"><span className="font-medium">Size:</span> {data.training_data.size}</p>
           )}
         </div>
       )}
 
       {/* Evaluation */}
-      {data.evaluation?.overall_metrics && (
+      {hasContent(data.evaluation) && (
         <div className="border-t pt-4">
           <h4 className="font-semibold mb-2">Evaluation</h4>
-          <div className="space-y-2 text-xs">
-            <div>
-              <p className="font-medium">Overall Metrics</p>
-              <p className="text-muted-foreground whitespace-pre-wrap">{data.evaluation.overall_metrics}</p>
+          {data.evaluation?.metrics && <p className="mb-2">{data.evaluation.metrics}</p>}
+          {data.evaluation?.benchmark_results && (
+            <p className="text-xs text-muted-foreground">{data.evaluation.benchmark_results}</p>
+          )}
+        </div>
+      )}
+
+      {/* Ethics and Safety */}
+      {hasContent(data.ethics_and_safety) && (
+        <div className="border-t pt-4">
+          <h4 className="font-semibold mb-2">Ethics and Safety</h4>
+          {data.ethics_and_safety?.bias_analysis && (
+            <div className="mb-2">
+              <p className="text-xs font-medium">Bias Analysis</p>
+              <p className="text-xs text-muted-foreground">{data.ethics_and_safety.bias_analysis}</p>
             </div>
-            {data.evaluation.subgroup_analysis && (
-              <div>
-                <p className="font-medium">Subgroup Analysis</p>
-                <p className="text-muted-foreground whitespace-pre-wrap">{data.evaluation.subgroup_analysis}</p>
-              </div>
-            )}
-            {data.evaluation.limitations && (
-              <div>
-                <p className="font-medium">Limitations</p>
-                <p className="text-muted-foreground whitespace-pre-wrap">{data.evaluation.limitations}</p>
-              </div>
-            )}
-          </div>
+          )}
+          {data.ethics_and_safety?.fairness_assessment && (
+            <div>
+              <p className="text-xs font-medium">Fairness Assessment</p>
+              <p className="text-xs text-muted-foreground">{data.ethics_and_safety.fairness_assessment}</p>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Risk Management */}
-      {data.risk_management && Object.values(data.risk_management).some(v => v) && (
+      {/* Usage and Limitations */}
+      {hasContent(data.usage_and_limitations) && (
         <div className="border-t pt-4">
-          <h4 className="font-semibold mb-2">Risk Management</h4>
-          <div className="space-y-2 text-xs">
-            {data.risk_management.failure_modes && (
-              <div>
-                <p className="font-medium">Failure Modes</p>
-                <p className="text-muted-foreground whitespace-pre-wrap">{data.risk_management.failure_modes}</p>
-              </div>
-            )}
-            {data.risk_management.human_oversight && (
-              <div>
-                <p className="font-medium">Human Oversight</p>
-                <p className="text-muted-foreground whitespace-pre-wrap">{data.risk_management.human_oversight}</p>
-              </div>
-            )}
-          </div>
+          <h4 className="font-semibold mb-2">Usage and Limitations</h4>
+          {data.usage_and_limitations?.intended_use && (
+            <p className="mb-2">{data.usage_and_limitations.intended_use}</p>
+          )}
+          {data.usage_and_limitations?.limitations && (
+            <div className="mt-2">
+              <p className="text-xs font-medium">Limitations</p>
+              <p className="text-xs text-muted-foreground">{data.usage_and_limitations.limitations}</p>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Provenance */}
-      {data.provenance && Object.values(data.provenance).some(v => v) && (
+      {/* Healthcare Extension */}
+      {hasContent(data.healthcare) && (
         <div className="border-t pt-4">
-          <h4 className="font-semibold mb-2">Provenance</h4>
-          <div className="space-y-1 text-xs text-muted-foreground">
-            {data.provenance.created_at && (
-              <p><strong>Created:</strong> {data.provenance.created_at}</p>
-            )}
-            {data.provenance.created_by && (
-              <p><strong>Created By:</strong> {data.provenance.created_by}</p>
-            )}
-            {data.provenance.dataset_id && (
-              <p><strong>Dataset ID:</strong> {data.provenance.dataset_id}</p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {!data.name && !data.model_version && (
-        <div className="text-center text-muted-foreground py-8">
-          <p>Start filling out the form to see a preview</p>
+          <h4 className="font-semibold mb-2">Healthcare Extension</h4>
+          {data.healthcare?.clinical_context && (
+            <p className="text-xs mb-1">
+              <span className="font-medium">Clinical Context:</span> {data.healthcare.clinical_context}
+            </p>
+          )}
+          {data.healthcare?.care_setting && (
+            <p className="text-xs mb-1">
+              <span className="font-medium">Care Setting:</span> {data.healthcare.care_setting}
+            </p>
+          )}
+          {data.healthcare?.patient_population && (
+            <p className="text-xs text-muted-foreground mt-2">{data.healthcare.patient_population}</p>
+          )}
         </div>
       )}
     </div>

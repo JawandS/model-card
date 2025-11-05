@@ -8,39 +8,40 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-interface EvaluationSectionProps {
+interface TrainingDataSectionProps {
   form: UseFormReturn<ModelCard>
 }
 
-export function EvaluationSection({ form }: EvaluationSectionProps) {
+export function TrainingDataSection({ form }: TrainingDataSectionProps) {
   return (
     <div className="space-y-6">
       <div className="pb-3 border-b border-border/50">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-400 dark:to-red-400 bg-clip-text text-transparent">
-          Evaluation
+        <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+          Training Data
         </h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Performance evaluation and benchmark results
+          Information about the data used to train the model
         </p>
       </div>
 
       <FormField
         control={form.control}
-        name="evaluation.benchmark_results"
+        name="training_data.description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Benchmark Results</FormLabel>
+            <FormLabel>Description</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="e.g., MMLU: 85%, HumanEval: 78%, Custom benchmark results..."
+                placeholder="Describe the training dataset, its composition, and key characteristics"
                 className="min-h-[100px]"
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              Results from standardized benchmarks
+              Overview of the training data
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -49,19 +50,15 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
 
       <FormField
         control={form.control}
-        name="evaluation.metrics"
+        name="training_data.source"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Metrics</FormLabel>
+            <FormLabel>Source</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="e.g., Accuracy: 92%, Precision: 0.89, Recall: 0.87, F1: 0.88..."
-                className="min-h-[100px]"
-                {...field}
-              />
+              <Input placeholder="e.g., ImageNet, Internal Dataset, Public Repository" {...field} />
             </FormControl>
             <FormDescription>
-              Performance metrics used to evaluate the model
+              Where the training data came from
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -70,19 +67,19 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
 
       <FormField
         control={form.control}
-        name="evaluation.datasets"
+        name="training_data.preprocessing"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Evaluation Datasets</FormLabel>
+            <FormLabel>Preprocessing</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Describe the datasets used for evaluation..."
+                placeholder="Describe preprocessing steps, data cleaning, augmentation, etc."
                 className="min-h-[80px]"
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              Datasets used to evaluate model performance
+              How the data was processed before training
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -91,19 +88,15 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
 
       <FormField
         control={form.control}
-        name="evaluation.factors"
+        name="training_data.size"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Factors / Subgroup Analysis</FormLabel>
+            <FormLabel>Size</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="Describe performance across different demographic, phenotypic, or intersectional subgroups (e.g., age, gender, race, geography)..."
-                className="min-h-[100px]"
-                {...field}
-              />
+              <Input placeholder="e.g., 1M examples, 10GB, 500k tokens" {...field} />
             </FormControl>
             <FormDescription>
-              Analysis of model performance across different subgroups and factors
+              The size or scale of the training dataset
             </FormDescription>
             <FormMessage />
           </FormItem>
