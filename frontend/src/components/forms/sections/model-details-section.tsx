@@ -68,7 +68,7 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
               />
             </FormControl>
             <FormDescription>
-              A comprehensive description of the model (AI assistance available)
+              A comprehensive description of the model
             </FormDescription>
             <FormMessage />
           </FormItem>

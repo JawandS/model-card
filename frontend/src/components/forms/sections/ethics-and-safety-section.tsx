@@ -108,7 +108,7 @@ export function EthicsAndSafetySection({ form }: EthicsAndSafetySectionProps) {
               />
             </FormControl>
             <FormDescription>
-              Analysis of bias in model predictions and outcomes (AI assistance available)
+              Analysis of bias in model predictions and outcomes
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -133,7 +133,7 @@ export function EthicsAndSafetySection({ form }: EthicsAndSafetySectionProps) {
               />
             </FormControl>
             <FormDescription>
-              Assessment of fairness across demographic and other relevant groups (AI assistance available)
+              Assessment of fairness across demographic and other relevant groups
             </FormDescription>
             <FormMessage />
           </FormItem>

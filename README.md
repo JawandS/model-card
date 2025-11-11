@@ -10,6 +10,7 @@ A modern, elegant monorepo for generating comprehensive model cards for healthca
 - **Live Preview**: See your model card as you fill out the form
 - **Multiple Export Formats**: Export to JSON, PDF, Markdown, and HTML
 - **Auto-save**: Form data persists in localStorage
+- **AI-Assisted Field Completion** (Optional): OpenAI-powered suggestions for model card fields
 - **Healthcare-Specific**: Tailored schema for clinical ML models with fields for:
   - Clinical context and care settings
   - Data sources (EHR, claims, imaging, etc.)
@@ -98,6 +99,31 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 cd frontend
 npm start
 ```
+
+## Configuration
+
+### AI-Assisted Field Completion (Optional)
+
+The application includes an optional AI assist feature that uses OpenAI's API to help generate content for model card fields.
+
+**To enable AI assist:**
+
+1. Create a `.env.local` file in the `frontend/` directory:
+   ```bash
+   cd frontend
+   cp .env.local.example .env.local
+   ```
+
+2. Add your OpenAI API key:
+   ```bash
+   OPENAI_API_KEY=sk-proj-your-key-here
+   ```
+
+3. Restart the development server
+
+When configured, an "AI Assist" button will appear on text fields throughout the form. If no API key is configured, the application works perfectly fine without this feature - the AI assist buttons simply won't be displayed.
+
+**Note:** AI assist uses the GPT-4o-mini model, which incurs costs based on usage. See [OpenAI's pricing](https://openai.com/api/pricing/) for details.
 
 ## Usage
 
