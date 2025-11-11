@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
-
 export const runtime = 'edge'
 
 interface AssistRequest {
@@ -21,6 +17,10 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
 
     const body: AssistRequest = await request.json()
     const { fieldName, fieldDescription, contextData } = body
