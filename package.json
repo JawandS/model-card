@@ -5,7 +5,8 @@
   "description": "Monorepo for Healthcare Model Card Generator",
   "scripts": {
     "setup": "npm install && cd packages/schema && npm install && npm run build && cd ../../frontend && npm install",
-    "start": "cd packages/schema && npm run build && cd ../../frontend && npm run dev",
+    "build": "npm install && cd packages/schema && npm install && npm run build && cd ../../frontend && npm install && npm run build",
+    "start": "cd frontend && npm start",
     "dev": "cd packages/schema && npm run build && cd ../../frontend && npm run dev"
   },
   "keywords": [
