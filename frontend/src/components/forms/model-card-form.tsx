@@ -9,13 +9,15 @@ import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { BasicInfoSection } from './sections/basic-info-section'
 import { ModelDetailsSection } from './sections/model-details-section'
+import { ModelSourcesSection } from './sections/model-sources-section'
 import { TrainingDataSection } from './sections/training-data-section'
-import { ImplementationSection } from './sections/implementation-section'
 import { EvaluationSection } from './sections/evaluation-section'
 import { EthicsAndSafetySection } from './sections/ethics-and-safety-section'
 import { UsageAndLimitationsSection } from './sections/usage-and-limitations-section'
-import { HealthcareExtensionSection } from './sections/healthcare-extension-section'
-import { ProvenanceSection } from './sections/provenance-section'
+import { EnvironmentalImpactSection } from './sections/environmental-impact-section'
+import { TechnicalSpecsSection } from './sections/technical-specs-section'
+import { CitationSection } from './sections/citation-section'
+import { AdditionalInfoSection } from './sections/additional-info-section'
 import { ModelCardPreview } from '../model-card-preview'
 import { Eye, EyeOff, Filter, FilterX } from 'lucide-react'
 
@@ -27,73 +29,68 @@ export function ModelCardForm() {
   const form = useForm<ModelCard>({
     resolver: zodResolver(ModelCardSchema),
     defaultValues: {
-      name: '',
-      model_details: {
-        description: '',
-        version: '',
-        owners: [],
-        license: '',
-        citation: '',
-        references: [],
-        input_format: '',
-        output_format: '',
+      card_data: undefined,
+      model_id: '',
+      model_summary: '',
+      model_description: '',
+      developers: '',
+      funded_by: '',
+      shared_by: '',
+      model_type: '',
+      language: '',
+      license: '',
+      base_model: '',
+      model_sources: {
+        repo: '',
+        paper: '',
+        demo: '',
       },
-      training_data: {
-        description: '',
-        source: '',
+      uses: {
+        direct_use: '',
+        downstream_use: '',
+        out_of_scope_use: '',
+      },
+      bias_risks: {
+        bias_risks_limitations: '',
+        bias_recommendations: '',
+      },
+      get_started_code: '',
+      training_details: {
+        training_data: '',
         preprocessing: '',
-        size: '',
-      },
-      implementation: {
-        hardware: '',
-        software: '',
-        framework: '',
+        training_regime: '',
+        speeds_sizes_times: '',
       },
       evaluation: {
-        benchmark_results: '',
-        metrics: '',
-        datasets: '',
-        factors: '',
+        testing_data: '',
+        testing_factors: '',
+        testing_metrics: '',
+        results: '',
+        results_summary: '',
       },
-      ethics_and_safety: {
-        approach: '',
-        risks: '',
-        harms: '',
-        bias_analysis: '',
-        fairness_assessment: '',
-        use_cases: [],
-        out_of_scope_uses: [],
+      environmental_impact: {
+        hardware_type: '',
+        hours_used: '',
+        cloud_provider: '',
+        cloud_region: '',
+        co2_emitted: '',
       },
-      usage_and_limitations: {
-        intended_use: '',
-        limitations: '',
-        ethical_considerations: '',
-        benefits: '',
+      technical_specs: {
+        model_specs: '',
+        compute_infrastructure: '',
+        hardware_requirements: '',
+        software: '',
       },
-      healthcare: {
-        clinical_context: undefined,
-        care_setting: undefined,
-        contraindications: '',
-        patient_population: '',
-        clinical_validation: '',
-        representativeness: {
-          population_frame: '',
-          payer_mix: '',
-          age_distribution: '',
-          sex_distribution: '',
-          race_ethnicity_notes: '',
-          geographic_distribution: '',
-          missingness: '',
-        },
-        failure_modes: '',
-        human_oversight: '',
-        monitoring_plan: '',
+      citation: {
+        citation_bibtex: '',
+        citation_apa: '',
       },
-      provenance: {
-        created_at: '',
-        created_by: '',
-        last_updated: '',
-        version_history: '',
+      additional_info: {
+        model_examination: '',
+        glossary: '',
+        more_information: '',
+        model_card_authors: '',
+        model_card_contact: '',
       },
     },
     mode: 'onChange',
@@ -143,7 +140,7 @@ export function ModelCardForm() {
               <div>
                 <CardTitle className="text-2xl">Model Card Information</CardTitle>
                 <CardDescription className="text-base mt-2">
-                  Document your ML model following the Google Model Card standard
+                  Document your ML model following the HuggingFace Model Card standard
                 </CardDescription>
               </div>
               <Button
@@ -169,13 +166,15 @@ export function ModelCardForm() {
                 <ModelDetailsSection form={form} showOptionalFields={showOptionalFields} />
                 {showOptionalFields && (
                   <>
-                    <TrainingDataSection form={form} />
-                    <ImplementationSection form={form} />
-                    <EvaluationSection form={form} />
-                    <EthicsAndSafetySection form={form} />
+                    <ModelSourcesSection form={form} />
                     <UsageAndLimitationsSection form={form} />
-                    <HealthcareExtensionSection form={form} />
-                    <ProvenanceSection form={form} />
+                    <EthicsAndSafetySection form={form} />
+                    <TrainingDataSection form={form} />
+                    <EvaluationSection form={form} />
+                    <EnvironmentalImpactSection form={form} />
+                    <TechnicalSpecsSection form={form} />
+                    <CitationSection form={form} />
+                    <AdditionalInfoSection form={form} />
                   </>
                 )}
               </form>

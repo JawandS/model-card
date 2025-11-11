@@ -22,67 +22,25 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
           Evaluation
         </h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Performance evaluation and benchmark results
+          Testing data, metrics, and performance results
         </p>
       </div>
 
       <FormField
         control={form.control}
-        name="evaluation.benchmark_results"
+        name="evaluation.testing_data"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Benchmark Results</FormLabel>
+            <FormLabel>Testing Data</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="e.g., MMLU: 85%, HumanEval: 78%, Custom benchmark results..."
-                className="min-h-[100px]"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              Results from standardized benchmarks
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="evaluation.metrics"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Metrics</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="e.g., Accuracy: 92%, Precision: 0.89, Recall: 0.87, F1: 0.88..."
-                className="min-h-[100px]"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              Performance metrics used to evaluate the model
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="evaluation.datasets"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Evaluation Datasets</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Describe the datasets used for evaluation..."
+                placeholder="Describe testing data or link to its Dataset Card..."
                 className="min-h-[80px]"
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              Datasets used to evaluate model performance
+              Dataset(s) used for evaluation
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -91,19 +49,82 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
 
       <FormField
         control={form.control}
-        name="evaluation.factors"
+        name="evaluation.testing_factors"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Factors / Subgroup Analysis</FormLabel>
+            <FormLabel>Factors</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Describe performance across different demographic, phenotypic, or intersectional subgroups (e.g., age, gender, race, geography)..."
+                placeholder="Describe characteristics that influence model behavior (e.g., subpopulations, domains)..."
                 className="min-h-[100px]"
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              Analysis of model performance across different subgroups and factors
+              Factors for disaggregated evaluation (subgroups, domains, etc.)
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="evaluation.testing_metrics"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Metrics</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="List evaluation metrics used (e.g., Accuracy, Precision, Recall, F1, BLEU, ROUGE)..."
+                className="min-h-[100px]"
+                {...field}
+              />
+            </FormControl>
+            <FormDescription>
+              Metrics used for evaluation
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="evaluation.results"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Results</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Provide evaluation results based on the factors and metrics defined above..."
+                className="min-h-[120px]"
+                {...field}
+              />
+            </FormControl>
+            <FormDescription>
+              Evaluation results (should be based on factors and metrics above)
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="evaluation.results_summary"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Results Summary</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Provide a brief summary/TL;DR of the results for general audiences..."
+                className="min-h-[80px]"
+                {...field}
+              />
+            </FormControl>
+            <FormDescription>
+              Summary of results (TL;DR for general audiences)
             </FormDescription>
             <FormMessage />
           </FormItem>

@@ -29,36 +29,15 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
         </p>
       </div>
 
-      {/* Version field is always shown as it's required */}
       <FormField
         control={form.control}
-        name="model_details.version"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Version *</FormLabel>
-            <FormControl>
-              <Input placeholder="e.g., 1.0.0" {...field} />
-            </FormControl>
-            <FormDescription>
-              Version identifier for this model
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* Optional fields - only show when showOptionalFields is true */}
-      {showOptionalFields && (
-        <>
-          <FormField
-            control={form.control}
-            name="model_details.description"
+        name="model_description"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
               <TextareaWithAssist
-                placeholder="Describe what this model does, its architecture, and key characteristics"
+                placeholder="Provide a longer summary of what this model is, including architecture, version, and key characteristics"
                 className="min-h-[100px] pr-24"
                 fieldName="Model Description"
                 fieldDescription="A comprehensive description of what the model does, its architecture, and key characteristics"
@@ -75,14 +54,101 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
         )}
       />
 
+      <FormField
+        control={form.control}
+        name="developers"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Developed by *</FormLabel>
+            <FormControl>
+              <Input placeholder="e.g., John Doe, Acme Corp" {...field} />
+            </FormControl>
+            <FormDescription>
+              List the people or organization who built the model
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {showOptionalFields && (
+        <>
           <FormField
             control={form.control}
-            name="model_details.license"
+            name="funded_by"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Funded by</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., NSF Grant #12345, Internal R&D" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Funding sources that supported development of this model
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="shared_by"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Shared by</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., HuggingFace, GitHub User" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The person/organization making the model available online
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="model_type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Model Type</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Transformer, CNN, Supervised Learning" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Type of model (architecture, learning method, or modality)
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="language"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Language(s)</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., English, Multilingual (en, es, fr)" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Natural language(s) for NLP models
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="license"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>License</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., Apache 2.0, MIT, Proprietary" {...field} />
+                  <Input placeholder="e.g., apache-2.0, mit, cc-by-4.0" {...field} />
                 </FormControl>
                 <FormDescription>
                   The license under which the model is released
@@ -94,61 +160,15 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
 
           <FormField
             control={form.control}
-            name="model_details.citation"
+            name="base_model"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Citation</FormLabel>
+                <FormLabel>Finetuned from Model</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="BibTeX or other citation format for this model"
-                    className="min-h-[80px] font-mono text-sm"
-                    {...field}
-                  />
+                  <Input placeholder="e.g., bert-base-uncased, gpt-3" {...field} />
                 </FormControl>
                 <FormDescription>
-                  How others should cite this model
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="model_details.input_format"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Input Format</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe the expected input format, features, and data types"
-                    className="min-h-[80px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Specification of model inputs
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="model_details.output_format"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Output Format</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe the model output format, predictions, and interpretation"
-                    className="min-h-[80px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Specification of model outputs
+                  If this model was finetuned, link to the base model
                 </FormDescription>
                 <FormMessage />
               </FormItem>

@@ -9,39 +9,34 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 
-interface ImplementationSectionProps {
+interface ModelSourcesSectionProps {
   form: UseFormReturn<ModelCard>
 }
 
-export function ImplementationSection({ form }: ImplementationSectionProps) {
+export function ModelSourcesSection({ form }: ModelSourcesSectionProps) {
   return (
     <div className="space-y-6">
       <div className="pb-3 border-b border-border/50">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
-          Implementation
+        <h3 className="text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
+          Model Sources
         </h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Technical details about model implementation
+          Links to repository, paper, and demo (optional)
         </p>
       </div>
 
       <FormField
         control={form.control}
-        name="implementation.hardware"
+        name="model_sources.repo"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Hardware</FormLabel>
+            <FormLabel>Repository</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="e.g., 8x NVIDIA A100 GPUs, TPUv4, CPU specifications"
-                className="min-h-[80px]"
-                {...field}
-              />
+              <Input placeholder="e.g., https://github.com/user/repo" type="url" {...field} />
             </FormControl>
             <FormDescription>
-              Hardware used for training and inference
+              Link to the code repository
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -50,15 +45,15 @@ export function ImplementationSection({ form }: ImplementationSectionProps) {
 
       <FormField
         control={form.control}
-        name="implementation.software"
+        name="model_sources.paper"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Software</FormLabel>
+            <FormLabel>Paper</FormLabel>
             <FormControl>
-              <Input placeholder="e.g., Python 3.9, CUDA 11.8" {...field} />
+              <Input placeholder="e.g., https://arxiv.org/abs/..." type="url" {...field} />
             </FormControl>
             <FormDescription>
-              Software environment and dependencies
+              Link to research paper introducing the model
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -67,15 +62,15 @@ export function ImplementationSection({ form }: ImplementationSectionProps) {
 
       <FormField
         control={form.control}
-        name="implementation.framework"
+        name="model_sources.demo"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Framework</FormLabel>
+            <FormLabel>Demo</FormLabel>
             <FormControl>
-              <Input placeholder="e.g., PyTorch 2.0, TensorFlow 2.13, JAX" {...field} />
+              <Input placeholder="e.g., https://huggingface.co/spaces/..." type="url" {...field} />
             </FormControl>
             <FormDescription>
-              ML framework and version used
+              Link to demo or interactive application
             </FormDescription>
             <FormMessage />
           </FormItem>

@@ -1,24 +1,22 @@
 /**
  * @modelcard/schema
  * Shared Zod schemas and TypeScript types for Model Cards
- * Based on Google Model Card Standard with Healthcare Extensions
+ * Based on HuggingFace Model Card Standard
  */
 
 // Export all schemas
 export {
   ModelCardSchema,
-  OwnerSchema,
-  ModelDetailsSchema,
-  TrainingDataSchema,
-  ImplementationSchema,
+  CardDataSchema,
+  ModelSourcesSchema,
+  UsesSchema,
+  BiasRisksLimitationsSchema,
+  TrainingDetailsSchema,
   EvaluationSchema,
-  EthicsAndSafetySchema,
-  UsageAndLimitationsSchema,
-  HealthcareExtensionSchema,
-  ProvenanceSchema,
-  RepresentativenessSchema,
-  ClinicalContextEnum,
-  CareSettingEnum,
+  EnvironmentalImpactSchema,
+  TechnicalSpecsSchema,
+  CitationSchema,
+  AdditionalInfoSchema,
   validateModelCard,
   parseModelCard,
 } from './modelcard.schema';
@@ -26,17 +24,15 @@ export {
 // Export all types
 export type {
   ModelCard,
-  Owner,
-  ModelDetails,
-  TrainingData,
-  Implementation,
+  CardData,
+  ModelSources,
+  Uses,
+  BiasRisksLimitations,
+  TrainingDetails,
   Evaluation,
-  EthicsAndSafety,
-  UsageAndLimitations,
-  HealthcareExtension,
-  Provenance,
-  Representativeness,
-  ClinicalContext,
-  CareSetting,
+  EnvironmentalImpact,
+  TechnicalSpecs,
+  Citation,
+  AdditionalInfo,
   PartialModelCard,
 } from './types';

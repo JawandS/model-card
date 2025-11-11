@@ -19,28 +19,28 @@ export function UsageAndLimitationsSection({ form }: UsageAndLimitationsSectionP
     <div className="space-y-6">
       <div className="pb-3 border-b border-border/50">
         <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
-          Usage and Limitations
+          Uses
         </h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Intended use cases, limitations, and ethical considerations
+          How the model is intended to be used and out-of-scope uses
         </p>
       </div>
 
       <FormField
         control={form.control}
-        name="usage_and_limitations.intended_use"
+        name="uses.direct_use"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Intended Use</FormLabel>
+            <FormLabel>Direct Use</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Describe the intended use cases and contexts for this model..."
+                placeholder="Explain how the model can be used without fine-tuning, post-processing, or plugging into a pipeline..."
                 className="min-h-[100px]"
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              How the model is intended to be used
+              How the model can be used directly (without fine-tuning)
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -49,19 +49,19 @@ export function UsageAndLimitationsSection({ form }: UsageAndLimitationsSectionP
 
       <FormField
         control={form.control}
-        name="usage_and_limitations.limitations"
+        name="uses.downstream_use"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Limitations</FormLabel>
+            <FormLabel>Downstream Use (optional)</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Describe known limitations, edge cases, and when the model should not be used..."
+                placeholder="Explain how this model can be used when fine-tuned for a task or plugged into a larger ecosystem/app..."
                 className="min-h-[100px]"
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              Technical and practical limitations of the model
+              How the model can be used when fine-tuned or integrated into larger systems
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -70,40 +70,19 @@ export function UsageAndLimitationsSection({ form }: UsageAndLimitationsSectionP
 
       <FormField
         control={form.control}
-        name="usage_and_limitations.ethical_considerations"
+        name="uses.out_of_scope_use"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Ethical Considerations</FormLabel>
+            <FormLabel>Out-of-Scope Use</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Describe ethical considerations for deploying and using this model..."
-                className="min-h-[100px]"
+                placeholder="List how the model may foreseeably be misused and address what users ought not do with the model..."
+                className="min-h-[120px]"
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              Important ethical considerations for model deployment
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="usage_and_limitations.benefits"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Benefits</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Describe the expected benefits and positive impacts of using this model..."
-                className="min-h-[100px]"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              Expected benefits and positive outcomes
+              Foreseeable misuse cases and what the model should NOT be used for
             </FormDescription>
             <FormMessage />
           </FormItem>

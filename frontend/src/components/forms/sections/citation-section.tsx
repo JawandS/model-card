@@ -8,36 +8,39 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-interface BasicInfoSectionProps {
+interface CitationSectionProps {
   form: UseFormReturn<ModelCard>
 }
 
-export function BasicInfoSection({ form }: BasicInfoSectionProps) {
+export function CitationSection({ form }: CitationSectionProps) {
   return (
     <div className="space-y-6">
       <div className="pb-3 border-b border-border/50">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-          Basic Information
+        <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+          Citation
         </h3>
         <p className="text-sm text-muted-foreground mt-1">
-          Essential identifier and summary for your model
+          How to cite this model (optional)
         </p>
       </div>
 
       <FormField
         control={form.control}
-        name="model_id"
+        name="citation.citation_bibtex"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Model ID *</FormLabel>
+            <FormLabel>BibTeX</FormLabel>
             <FormControl>
-              <Input placeholder="e.g., my-awesome-model" {...field} />
+              <Textarea
+                placeholder="@article{author2024model,&#10;  title={Model Name},&#10;  author={Author Name},&#10;  year={2024}&#10;}"
+                className="min-h-[120px] font-mono text-sm"
+                {...field}
+              />
             </FormControl>
             <FormDescription>
-              The unique identifier for your machine learning model
+              BibTeX citation for this model
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -46,19 +49,19 @@ export function BasicInfoSection({ form }: BasicInfoSectionProps) {
 
       <FormField
         control={form.control}
-        name="model_summary"
+        name="citation.citation_apa"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Model Summary</FormLabel>
+            <FormLabel>APA</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Provide a quick 1-2 sentence summary of what the model is"
+                placeholder="Author, A. (2024). Model Name. Publisher."
                 className="min-h-[80px]"
                 {...field}
               />
             </FormControl>
             <FormDescription>
-              A brief summary of what the model does (1-2 sentences)
+              APA citation for this model
             </FormDescription>
             <FormMessage />
           </FormItem>

@@ -1,38 +1,33 @@
 import { z } from 'zod';
 import {
   ModelCardSchema,
-  OwnerSchema,
-  ModelDetailsSchema,
-  TrainingDataSchema,
-  ImplementationSchema,
+  CardDataSchema,
+  ModelSourcesSchema,
+  UsesSchema,
+  BiasRisksLimitationsSchema,
+  TrainingDetailsSchema,
   EvaluationSchema,
-  EthicsAndSafetySchema,
-  UsageAndLimitationsSchema,
-  HealthcareExtensionSchema,
-  ProvenanceSchema,
-  RepresentativenessSchema,
-  ClinicalContextEnum,
-  CareSettingEnum,
+  EnvironmentalImpactSchema,
+  TechnicalSpecsSchema,
+  CitationSchema,
+  AdditionalInfoSchema,
 } from './modelcard.schema';
 
 /**
- * TypeScript types inferred from Zod schemas
+ * TypeScript types inferred from Zod schemas (HuggingFace Model Card Standard)
  */
 
 export type ModelCard = z.infer<typeof ModelCardSchema>;
-export type Owner = z.infer<typeof OwnerSchema>;
-export type ModelDetails = z.infer<typeof ModelDetailsSchema>;
-export type TrainingData = z.infer<typeof TrainingDataSchema>;
-export type Implementation = z.infer<typeof ImplementationSchema>;
+export type CardData = z.infer<typeof CardDataSchema>;
+export type ModelSources = z.infer<typeof ModelSourcesSchema>;
+export type Uses = z.infer<typeof UsesSchema>;
+export type BiasRisksLimitations = z.infer<typeof BiasRisksLimitationsSchema>;
+export type TrainingDetails = z.infer<typeof TrainingDetailsSchema>;
 export type Evaluation = z.infer<typeof EvaluationSchema>;
-export type EthicsAndSafety = z.infer<typeof EthicsAndSafetySchema>;
-export type UsageAndLimitations = z.infer<typeof UsageAndLimitationsSchema>;
-export type HealthcareExtension = z.infer<typeof HealthcareExtensionSchema>;
-export type Provenance = z.infer<typeof ProvenanceSchema>;
-export type Representativeness = z.infer<typeof RepresentativenessSchema>;
-
-export type ClinicalContext = z.infer<typeof ClinicalContextEnum>;
-export type CareSetting = z.infer<typeof CareSettingEnum>;
+export type EnvironmentalImpact = z.infer<typeof EnvironmentalImpactSchema>;
+export type TechnicalSpecs = z.infer<typeof TechnicalSpecsSchema>;
+export type Citation = z.infer<typeof CitationSchema>;
+export type AdditionalInfo = z.infer<typeof AdditionalInfoSchema>;
 
 /**
  * Partial type for form state (all fields optional for progressive filling)

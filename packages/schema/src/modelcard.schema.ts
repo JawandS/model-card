@@ -1,141 +1,132 @@
 import { z } from 'zod';
 
 /**
- * Model Card Schema (Based on Google Model Card Standard)
- * Extended with healthcare-specific fields for ML models in healthcare
+ * Model Card Schema (Based on HuggingFace Model Card Standard)
  *
- * Reference: https://modelcards.withgoogle.com/
+ * Reference: https://huggingface.co/docs/hub/model-cards
+ * Template: https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/templates/modelcard_template.md
  */
 
-// Healthcare-specific Enums (optional extensions)
-export const ClinicalContextEnum = z.enum([
-  'screening',
-  'triage',
-  'diagnosis',
-  'monitoring',
-  'administrative',
-  'prognosis',
-  'treatment_planning',
-]);
+// YAML Frontmatter (card_data) - for HuggingFace Hub metadata
+export const CardDataSchema = z.record(z.any()).optional();
 
-export const CareSettingEnum = z.enum([
-  'inpatient',
-  'outpatient',
-  'ed',
-  'telehealth',
-  'home_care',
-  'long_term_care',
-  'other',
-]);
-
-// Sub-schemas following Google Model Card structure
-
-// Model Details (Model Information)
-export const OwnerSchema = z.object({
-  name: z.string().min(1, 'Owner name/organization is required'),
-  contact: z.string().email('Invalid email format').optional(),
+// Model Sources
+export const ModelSourcesSchema = z.object({
+  repo: z.string().url('Invalid repository URL').optional(),
+  paper: z.string().url('Invalid paper URL').optional(),
+  demo: z.string().url('Invalid demo URL').optional(),
 });
 
-export const ModelDetailsSchema = z.object({
-  description: z.string().optional(),
-  version: z.string().min(1, 'Model version is required'),
-  owners: z.array(OwnerSchema).optional(),
-  license: z.string().optional(),
-  citation: z.string().optional(),
-  references: z.array(z.string()).optional(),
-  input_format: z.string().optional(),
-  output_format: z.string().optional(),
+// Uses Section
+export const UsesSchema = z.object({
+  direct_use: z.string().optional(),
+  downstream_use: z.string().optional(),
+  out_of_scope_use: z.string().optional(),
 });
 
-// Training Data (Model Data)
-export const TrainingDataSchema = z.object({
-  description: z.string().optional(),
-  source: z.string().optional(),
+// Bias, Risks, and Limitations
+export const BiasRisksLimitationsSchema = z.object({
+  bias_risks_limitations: z.string().optional(),
+  bias_recommendations: z.string().optional(),
+});
+
+// Training Details
+export const TrainingDetailsSchema = z.object({
+  training_data: z.string().optional(),
   preprocessing: z.string().optional(),
-  size: z.string().optional(),
+  training_regime: z.string().optional(), // fp32, fp16, bf16, etc.
+  speeds_sizes_times: z.string().optional(),
 });
 
-// Implementation Information
-export const ImplementationSchema = z.object({
-  hardware: z.string().optional(),
-  software: z.string().optional(),
-  framework: z.string().optional(),
-});
-
-// Evaluation
+// Evaluation Section
 export const EvaluationSchema = z.object({
-  benchmark_results: z.string().optional(),
-  metrics: z.string().optional(),
-  datasets: z.string().optional(),
-  factors: z.string().optional(), // For demographic/subgroup analysis
+  testing_data: z.string().optional(),
+  testing_factors: z.string().optional(),
+  testing_metrics: z.string().optional(),
+  results: z.string().optional(),
+  results_summary: z.string().optional(),
 });
 
-// Ethics and Safety (includes bias considerations)
-export const EthicsAndSafetySchema = z.object({
-  approach: z.string().optional(),
-  risks: z.string().optional(),
-  harms: z.string().optional(),
-  bias_analysis: z.string().optional(), // Specific field for bias
-  fairness_assessment: z.string().optional(), // Fairness across groups
-  use_cases: z.array(z.string()).optional(),
-  out_of_scope_uses: z.array(z.string()).optional(),
+// Environmental Impact
+export const EnvironmentalImpactSchema = z.object({
+  hardware_type: z.string().optional(),
+  hours_used: z.string().optional(),
+  cloud_provider: z.string().optional(),
+  cloud_region: z.string().optional(),
+  co2_emitted: z.string().optional(),
 });
 
-// Usage and Limitations
-export const UsageAndLimitationsSchema = z.object({
-  intended_use: z.string().optional(),
-  limitations: z.string().optional(),
-  ethical_considerations: z.string().optional(),
-  benefits: z.string().optional(),
+// Technical Specifications
+export const TechnicalSpecsSchema = z.object({
+  model_specs: z.string().optional(),
+  compute_infrastructure: z.string().optional(),
+  hardware_requirements: z.string().optional(),
+  software: z.string().optional(),
 });
 
-// Healthcare Extension (optional)
-export const RepresentativenessSchema = z.object({
-  population_frame: z.string().optional(),
-  payer_mix: z.string().optional(),
-  age_distribution: z.string().optional(),
-  sex_distribution: z.string().optional(),
-  race_ethnicity_notes: z.string().optional(),
-  geographic_distribution: z.string().optional(),
-  missingness: z.string().optional(),
+// Citation
+export const CitationSchema = z.object({
+  citation_bibtex: z.string().optional(),
+  citation_apa: z.string().optional(),
 });
 
-export const HealthcareExtensionSchema = z.object({
-  clinical_context: ClinicalContextEnum.optional(),
-  care_setting: CareSettingEnum.optional(),
-  contraindications: z.string().optional(),
-  patient_population: z.string().optional(),
-  clinical_validation: z.string().optional(),
-  representativeness: RepresentativenessSchema.optional(),
-  failure_modes: z.string().optional(),
-  human_oversight: z.string().optional(),
-  monitoring_plan: z.string().optional(),
+// Additional Information
+export const AdditionalInfoSchema = z.object({
+  model_examination: z.string().optional(),
+  glossary: z.string().optional(),
+  more_information: z.string().optional(),
+  model_card_authors: z.string().optional(),
+  model_card_contact: z.string().optional(),
 });
 
-// Provenance
-export const ProvenanceSchema = z.object({
-  created_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format').optional(),
-  created_by: z.string().optional(),
-  last_updated: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format').optional(),
-  version_history: z.string().optional(),
-});
-
-// Main Model Card Schema (Google Model Card Standard + Healthcare Extensions)
+// Main Model Card Schema (HuggingFace Standard)
 export const ModelCardSchema = z.object({
+  // YAML Frontmatter
+  card_data: CardDataSchema,
+
   // Basic Information
-  name: z.string().min(1, 'Model name is required'),
+  model_id: z.string().min(1, 'Model ID is required'),
+  model_summary: z.string().optional(),
 
-  // Google Model Card Standard Sections
-  model_details: ModelDetailsSchema,
-  training_data: TrainingDataSchema.optional(),
-  implementation: ImplementationSchema.optional(),
+  // Model Details Section
+  model_description: z.string().optional(),
+  developers: z.string().min(1, 'Developer information is required'),
+  funded_by: z.string().optional(),
+  shared_by: z.string().optional(),
+  model_type: z.string().optional(),
+  language: z.string().optional(), // For NLP models
+  license: z.string().optional(),
+  base_model: z.string().optional(), // For finetuned models
+
+  // Model Sources (optional)
+  model_sources: ModelSourcesSchema.optional(),
+
+  // Uses Section
+  uses: UsesSchema.optional(),
+
+  // Bias, Risks, and Limitations
+  bias_risks: BiasRisksLimitationsSchema.optional(),
+
+  // How to Get Started with the Model (required)
+  get_started_code: z.string().optional(),
+
+  // Training Details
+  training_details: TrainingDetailsSchema.optional(),
+
+  // Evaluation
   evaluation: EvaluationSchema.optional(),
-  ethics_and_safety: EthicsAndSafetySchema.optional(),
-  usage_and_limitations: UsageAndLimitationsSchema.optional(),
 
-  // Optional Extensions
-  healthcare: HealthcareExtensionSchema.optional(),
-  provenance: ProvenanceSchema.optional(),
+  // Environmental Impact
+  environmental_impact: EnvironmentalImpactSchema.optional(),
+
+  // Technical Specifications (optional)
+  technical_specs: TechnicalSpecsSchema.optional(),
+
+  // Citation (optional)
+  citation: CitationSchema.optional(),
+
+  // Additional Information
+  additional_info: AdditionalInfoSchema.optional(),
 });
 
 // Helper function to validate and parse model card data
