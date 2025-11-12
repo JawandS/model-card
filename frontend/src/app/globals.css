@@ -6,11 +6,11 @@
   :root {
     /* Society of Actuaries Professional Color Palette */
     /* Backgrounds & Surfaces */
-    --background: 210 20% 98%;
+    --background: 215 18% 93%;
     --foreground: 215 25% 15%;
-    --card: 0 0% 100%;
+    --card: 215 12% 96%;
     --card-foreground: 215 25% 15%;
-    --popover: 0 0% 100%;
+    --popover: 215 12% 96%;
     --popover-foreground: 215 25% 15%;
 
     /* Primary: Professional Navy Blue */
@@ -18,7 +18,7 @@
     --primary-foreground: 210 20% 98%;
 
     /* Secondary: Slate Gray */
-    --secondary: 215 15% 90%;
+    --secondary: 215 15% 88%;
     --secondary-foreground: 215 25% 15%;
 
     /* Accent: Sophisticated Teal */
@@ -26,10 +26,10 @@
     --accent-foreground: 210 20% 98%;
 
     /* Muted & Borders */
-    --muted: 215 20% 94%;
+    --muted: 215 18% 90%;
     --muted-foreground: 215 15% 45%;
-    --border: 215 20% 88%;
-    --input: 215 20% 88%;
+    --border: 215 15% 85%;
+    --input: 215 15% 85%;
 
     /* Focus & Selection */
     --ring: 185 60% 40%;
