@@ -19,8 +19,8 @@ interface BasicInfoSectionProps {
 export function BasicInfoSection({ form, showOptionalFields = true }: BasicInfoSectionProps) {
   return (
     <div className="space-y-6">
-      <div className="pb-3 border-b border-border/50">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+      <div className="pb-3 border-b border-border">
+        <h3 className="section-header">
           Basic Information
         </h3>
         <p className="text-sm text-muted-foreground mt-1">

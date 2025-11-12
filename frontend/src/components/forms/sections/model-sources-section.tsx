@@ -17,8 +17,8 @@ interface ModelSourcesSectionProps {
 export function ModelSourcesSection({ form }: ModelSourcesSectionProps) {
   return (
     <div className="space-y-6">
-      <div className="pb-3 border-b border-border/50">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
+      <div className="pb-3 border-b border-border">
+        <h3 className="section-header">
           Model Sources
         </h3>
         <p className="text-sm text-muted-foreground mt-1">

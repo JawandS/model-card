@@ -101,11 +101,11 @@ export function ExportModal() {
 
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg">
-              <Download className="h-8 w-8 text-white" />
+            <div className="p-3 rounded-xl bg-accent shadow-md">
+              <Download className="h-8 w-8 text-accent-foreground" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold text-primary">
                 Export Model Card
               </h2>
               <p className="text-muted-foreground text-base mt-1">

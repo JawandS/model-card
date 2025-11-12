@@ -92,11 +92,11 @@ export function ModelCardForm() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full animate-in fade-in slide-in-from-bottom duration-700">
       {/* Form Section */}
       <div className="flex flex-col min-h-0">
-        <Card className="overflow-hidden flex flex-col h-full">
-          <CardHeader className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-border/50 flex-shrink-0">
+        <Card className="overflow-hidden flex flex-col h-full shadow-sm">
+          <CardHeader className="bg-primary/5 border-b border-border flex-shrink-0">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-2xl">Model Card Information</CardTitle>
+                <CardTitle className="text-2xl text-primary">Model Card Information</CardTitle>
                 <CardDescription className="text-base mt-2">
                   Document your ML model following the HuggingFace Model Card standard
                 </CardDescription>
@@ -143,10 +143,10 @@ export function ModelCardForm() {
 
       {/* Preview Section */}
       <div className="flex flex-col min-h-0">
-        <Card className="overflow-hidden flex flex-col h-full">
-          <CardHeader className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-border/50 flex-shrink-0">
+        <Card className="overflow-hidden flex flex-col h-full shadow-sm">
+          <CardHeader className="bg-accent/5 border-b border-border flex-shrink-0">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xl flex items-center gap-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-accent">
                 <Eye className="h-5 w-5" />
                 Live Preview
               </CardTitle>

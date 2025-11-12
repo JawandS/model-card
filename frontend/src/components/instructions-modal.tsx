@@ -42,12 +42,12 @@ export function InstructionsModal() {
 
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg">
-              <Stethoscope className="h-8 w-8 text-white" />
+            <div className="p-3 rounded-xl bg-primary shadow-md">
+              <Stethoscope className="h-8 w-8 text-primary-foreground" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                Healthcare Model Card Generator
+              <h2 className="text-3xl font-bold text-primary">
+                Model Card Generator
               </h2>
               <p className="text-muted-foreground text-base mt-1">
                 Create comprehensive, compliant documentation for your ML models

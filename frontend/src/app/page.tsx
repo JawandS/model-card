@@ -8,20 +8,26 @@ import { ExportModal } from '@/components/export-modal'
 export default function Home() {
   return (
     <main className="h-screen gradient-bg relative overflow-hidden flex flex-col">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl" />
-        <div className="absolute top-60 -left-40 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 right-1/3 w-80 h-80 bg-indigo-400/20 rounded-full blur-3xl" />
+      {/* Subtle professional background accent */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+        <div className="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-1/2 h-1/2 bg-accent/5 rounded-full blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10 flex flex-col h-full overflow-hidden">
         {/* Header */}
-        <div className="flex justify-start items-center gap-3 py-6 pl-8 flex-shrink-0">
-          <InstructionsModal />
-          <ExportModal />
-          <ThemeToggle />
-        </div>
+        <header className="flex justify-between items-center gap-4 py-6 px-8 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold accent-gradient">
+              Model Card Generator
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <InstructionsModal />
+            <ExportModal />
+            <ThemeToggle />
+          </div>
+        </header>
 
         {/* Main Content */}
         <div className="flex-1 overflow-hidden pb-6">

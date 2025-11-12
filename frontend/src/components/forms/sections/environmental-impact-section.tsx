@@ -17,8 +17,8 @@ interface EnvironmentalImpactSectionProps {
 export function EnvironmentalImpactSection({ form }: EnvironmentalImpactSectionProps) {
   return (
     <div className="space-y-6">
-      <div className="pb-3 border-b border-border/50">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-teal-600 dark:from-green-400 dark:to-teal-400 bg-clip-text text-transparent">
+      <div className="pb-3 border-b border-border">
+        <h3 className="section-header">
           Environmental Impact
         </h3>
         <p className="text-sm text-muted-foreground mt-1">

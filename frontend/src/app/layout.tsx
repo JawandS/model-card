@@ -1,10 +1,17 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ToastProvider } from '@/hooks/use-toast'
 
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
+
 export const metadata: Metadata = {
-  title: 'Model Card Generator',
+  title: 'Model Card Generator | Society of Actuaries',
   description: 'Create comprehensive model cards for ML models following the Google Model Card standard',
   icons: {
     icon: '/favicon.svg',
@@ -20,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-sans">
+      <body className={inter.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

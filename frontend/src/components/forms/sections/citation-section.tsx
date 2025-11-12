@@ -17,8 +17,8 @@ interface CitationSectionProps {
 export function CitationSection({ form }: CitationSectionProps) {
   return (
     <div className="space-y-6">
-      <div className="pb-3 border-b border-border/50">
-        <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+      <div className="pb-3 border-b border-border">
+        <h3 className="section-header">
           Citation
         </h3>
         <p className="text-sm text-muted-foreground mt-1">
