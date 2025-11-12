@@ -2,6 +2,8 @@
 
 A modern, elegant monorepo for generating comprehensive model cards for machine learning models. Built with Next.js, TypeScript, Zod validation, and shadcn/ui components. Follows the **HuggingFace Model Card Standard**.
 
+## Updated 11/12/2025
+
 ## Features
 
 - **Elegant Next.js Frontend**: Modern, responsive UI with dark mode support
