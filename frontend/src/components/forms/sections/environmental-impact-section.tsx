@@ -95,7 +95,16 @@ export function EnvironmentalImpactSection({ form }: EnvironmentalImpactSectionP
               <Input placeholder="e.g., 125 kg CO2eq" {...field} />
             </FormControl>
             <FormDescription>
-              Carbon emissions (use ML Impact calculator: https://mlco2.github.io/impact)
+              Carbon emissions (use{' '}
+              <a
+                href="https://mlco2.github.io/impact"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent hover:text-accent/80 underline underline-offset-2 font-medium"
+              >
+                ML Impact calculator
+              </a>
+              )
             </FormDescription>
             <FormMessage />
           </FormItem>
