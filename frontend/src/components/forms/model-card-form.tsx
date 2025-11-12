@@ -23,40 +23,83 @@ import { ModelCardPreview } from '../model-card-preview'
 import { ProgressTracker } from '../progress-tracker'
 import { SaveIndicator } from '../save-indicator'
 import { SectionProgressIndicator } from '../section-progress-indicator'
+import { ResetConfirmationModal } from '../reset-confirmation-modal'
 import { SECTION_CONFIGS } from '@/lib/section-config'
-import { Eye, EyeOff, Filter, FilterX } from 'lucide-react'
+import { Eye, EyeOff, RotateCcw } from 'lucide-react'
 
 export function ModelCardForm() {
   const [showPreview, setShowPreview] = React.useState(true)
-  const [showOptionalFields, setShowOptionalFields] = React.useState(true)
   const [formData, setFormData] = React.useState<PartialModelCard>({})
   const [isSaving, setIsSaving] = React.useState(false)
   const [lastSaved, setLastSaved] = React.useState<Date | undefined>()
+  const [isResetModalOpen, setIsResetModalOpen] = React.useState(false)
 
   const form = useForm<ModelCard>({
     resolver: zodResolver(ModelCardSchema),
     defaultValues: {
       card_data: undefined,
-      model_id: '',  // Required field
-      model_summary: undefined,
-      model_description: undefined,
-      developers: '',  // Required field
-      funded_by: undefined,
-      shared_by: undefined,
-      model_type: undefined,
-      language: undefined,
-      license: undefined,
-      base_model: undefined,
-      model_sources: undefined,
-      uses: undefined,
-      bias_risks: undefined,
-      get_started_code: undefined,
-      training_details: undefined,
-      evaluation: undefined,
-      environmental_impact: undefined,
-      technical_specs: undefined,
-      citation: undefined,
-      additional_info: undefined,
+      model_id: '',
+      model_summary: '',
+      model_description: '',
+      developers: '',
+      funded_by: '',
+      shared_by: '',
+      model_type: '',
+      language: '',
+      license: '',
+      base_model: '',
+      model_sources: {
+        repo: '',
+        paper: '',
+        demo: '',
+      },
+      uses: {
+        direct_use: '',
+        downstream_use: '',
+        out_of_scope_use: '',
+      },
+      bias_risks: {
+        bias_risks_limitations: '',
+        bias_recommendations: '',
+      },
+      get_started_code: '',
+      training_details: {
+        training_data: '',
+        preprocessing: '',
+        training_regime: '',
+        speeds_sizes_times: '',
+      },
+      evaluation: {
+        testing_data: '',
+        testing_factors: '',
+        testing_metrics: '',
+        results: '',
+        results_summary: '',
+      },
+      environmental_impact: {
+        hardware_type: '',
+        hours_used: '',
+        cloud_provider: '',
+        cloud_region: '',
+        co2_emitted: '',
+      },
+      technical_specs: {
+        model_specs: '',
+        compute_infrastructure: '',
+        hardware_requirements: '',
+        software: '',
+      },
+      citation: {
+        citation_bibtex: '',
+        citation_apa: '',
+      },
+      additional_info: {
+        model_examination: '',
+        glossary: '',
+        more_information: '',
+        model_card_authors: '',
+        model_card_contact: '',
+      },
     },
     mode: 'onChange',
   })
@@ -95,6 +138,81 @@ export function ModelCardForm() {
     }
   }, [form])
 
+  const handleReset = () => {
+    // Reset the form to default values with all nested objects explicitly cleared
+    form.reset({
+      card_data: undefined,
+      model_id: '',
+      model_summary: '',
+      model_description: '',
+      developers: '',
+      funded_by: '',
+      shared_by: '',
+      model_type: '',
+      language: '',
+      license: '',
+      base_model: '',
+      model_sources: {
+        repo: '',
+        paper: '',
+        demo: '',
+      },
+      uses: {
+        direct_use: '',
+        downstream_use: '',
+        out_of_scope_use: '',
+      },
+      bias_risks: {
+        bias_risks_limitations: '',
+        bias_recommendations: '',
+      },
+      get_started_code: '',
+      training_details: {
+        training_data: '',
+        preprocessing: '',
+        training_regime: '',
+        speeds_sizes_times: '',
+      },
+      evaluation: {
+        testing_data: '',
+        testing_factors: '',
+        testing_metrics: '',
+        results: '',
+        results_summary: '',
+      },
+      environmental_impact: {
+        hardware_type: '',
+        hours_used: '',
+        cloud_provider: '',
+        cloud_region: '',
+        co2_emitted: '',
+      },
+      technical_specs: {
+        model_specs: '',
+        compute_infrastructure: '',
+        hardware_requirements: '',
+        software: '',
+      },
+      citation: {
+        citation_bibtex: '',
+        citation_apa: '',
+      },
+      additional_info: {
+        model_examination: '',
+        glossary: '',
+        more_information: '',
+        model_card_authors: '',
+        model_card_contact: '',
+      },
+    })
+
+    // Clear localStorage
+    localStorage.removeItem('modelcard-draft')
+
+    // Reset save state
+    setLastSaved(undefined)
+  }
+
   const onSubmit = (data: ModelCard) => {
     console.log('Form submitted:', data)
     // Validation passed, ready to export or save
@@ -117,19 +235,15 @@ export function ModelCardForm() {
                 type="button"
                 variant="ghost"
                 size="icon"
-                onClick={() => setShowOptionalFields(!showOptionalFields)}
-                className="rounded-lg"
-                title={showOptionalFields ? "Hide optional fields" : "Show optional fields"}
+                onClick={() => setIsResetModalOpen(true)}
+                className="rounded-lg hover:bg-destructive/10 hover:text-destructive"
+                title="Reset all fields"
               >
-                {showOptionalFields ? (
-                  <FilterX className="h-5 w-5" />
-                ) : (
-                  <Filter className="h-5 w-5" />
-                )}
+                <RotateCcw className="h-5 w-5" />
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <ProgressTracker formData={formData} showOptionalFields={showOptionalFields} />
+              <ProgressTracker formData={formData} showOptionalFields={true} />
               <SaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
             </div>
           </CardHeader>
@@ -150,7 +264,7 @@ export function ModelCardForm() {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <BasicInfoSection form={form} showOptionalFields={showOptionalFields} />
+                      <BasicInfoSection form={form} showOptionalFields={true} />
                     </AccordionContent>
                   </AccordionItem>
 
@@ -167,148 +281,144 @@ export function ModelCardForm() {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <ModelDetailsSection form={form} showOptionalFields={showOptionalFields} />
+                      <ModelDetailsSection form={form} showOptionalFields={true} />
                     </AccordionContent>
                   </AccordionItem>
 
-                  {showOptionalFields && (
-                    <>
-                      <AccordionItem value="model-sources">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Model Sources</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[2]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <ModelSourcesSection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
+                  <AccordionItem value="model-sources">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Model Sources</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[2]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ModelSourcesSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
 
-                      <AccordionItem value="uses">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Uses</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[3]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <UsageAndLimitationsSection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
+                  <AccordionItem value="uses">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Uses</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[3]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <UsageAndLimitationsSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
 
-                      <AccordionItem value="bias-risks">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Bias, Risks, and Limitations</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[4]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <EthicsAndSafetySection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
+                  <AccordionItem value="bias-risks">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Bias, Risks, and Limitations</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[4]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EthicsAndSafetySection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
 
-                      <AccordionItem value="training">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Training Details</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[5]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <TrainingDataSection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
+                  <AccordionItem value="training">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Training Details</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[5]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <TrainingDataSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
 
-                      <AccordionItem value="evaluation">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Evaluation</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[6]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <EvaluationSection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
+                  <AccordionItem value="evaluation">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Evaluation</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[6]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EvaluationSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
 
-                      <AccordionItem value="environmental">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Environmental Impact</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[7]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <EnvironmentalImpactSection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
+                  <AccordionItem value="environmental">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Environmental Impact</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[7]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EnvironmentalImpactSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
 
-                      <AccordionItem value="technical">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Technical Specifications</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[8]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <TechnicalSpecsSection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
+                  <AccordionItem value="technical">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Technical Specifications</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[8]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <TechnicalSpecsSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
 
-                      <AccordionItem value="citation">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Citation</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[9]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <CitationSection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
+                  <AccordionItem value="citation">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Citation</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[9]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <CitationSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
 
-                      <AccordionItem value="additional">
-                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span>Additional Information</span>
-                            <SectionProgressIndicator
-                              formData={formData}
-                              section={SECTION_CONFIGS[10]}
-                            />
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <AdditionalInfoSection form={form} />
-                        </AccordionContent>
-                      </AccordionItem>
-                    </>
-                  )}
+                  <AccordionItem value="additional">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>Additional Information</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[10]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <AdditionalInfoSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
                 </Accordion>
               </form>
             </Form>
@@ -350,6 +460,13 @@ export function ModelCardForm() {
           )}
         </Card>
       </div>
+
+      {/* Reset Confirmation Modal */}
+      <ResetConfirmationModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+        onConfirm={handleReset}
+      />
     </div>
   )
 }
