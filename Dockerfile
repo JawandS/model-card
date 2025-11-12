@@ -1,5 +1,6 @@
 # Multi-stage Dockerfile for Model Card Generator
 # Optimized for Railway deployment
+# Fixed: deps stage now has access to built schema package
 
 FROM node:20-alpine AS base
 
