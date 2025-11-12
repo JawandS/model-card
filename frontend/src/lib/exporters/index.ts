@@ -556,7 +556,7 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
     <div class="header">
       <div class="header-content">
         <h1>Model Card for ${escapeHtml(data.model_id)}</h1>
-        ${hasContent(data.model_summary) ? `<div class="summary">${escapeHtml(data.model_summary)}</div>` : ''}
+        ${hasContent(data.model_summary) ? `<div class="summary">${escapeHtml(data.model_summary!)}</div>` : ''}
       </div>
       ${theme === 'auto' ? `
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -582,56 +582,50 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
 
   // Model Details Section
   if (hasContent(data.model_description) || hasContent(data.developers) || hasContent(data.model_type) ||
-      hasContent(data.license) || hasContent(data.model_languages) || hasContent(data.base_model)) {
+      hasContent(data.license) || hasContent(data.language) || hasContent(data.base_model)) {
     html += `    <div class="section">
       <h2>Model Details</h2>
 `
     if (hasContent(data.model_description)) {
-      html += `      <p>${escapeHtml(data.model_description)}</p>\n`
+      html += `      <p>${escapeHtml(data.model_description!)}</p>\n`
     }
     if (hasContent(data.developers)) {
       html += `      <div class="key-value"><span class="key">Developers:</span> <span class="value">${escapeHtml(data.developers)}</span></div>\n`
     }
     if (hasContent(data.funded_by)) {
-      html += `      <div class="key-value"><span class="key">Funded by:</span> <span class="value">${escapeHtml(data.funded_by)}</span></div>\n`
+      html += `      <div class="key-value"><span class="key">Funded by:</span> <span class="value">${escapeHtml(data.funded_by!)}</span></div>\n`
     }
     if (hasContent(data.shared_by)) {
-      html += `      <div class="key-value"><span class="key">Shared by:</span> <span class="value">${escapeHtml(data.shared_by)}</span></div>\n`
+      html += `      <div class="key-value"><span class="key">Shared by:</span> <span class="value">${escapeHtml(data.shared_by!)}</span></div>\n`
     }
     if (hasContent(data.model_type)) {
-      html += `      <div class="key-value"><span class="key">Model type:</span> <span class="value">${escapeHtml(data.model_type)}</span></div>\n`
+      html += `      <div class="key-value"><span class="key">Model type:</span> <span class="value">${escapeHtml(data.model_type!)}</span></div>\n`
     }
-    if (hasContent(data.model_languages) && Array.isArray(data.model_languages)) {
-      html += `      <div class="key-value"><span class="key">Languages:</span> <span class="value">${data.model_languages.map(escapeHtml).join(', ')}</span></div>\n`
+    if (hasContent(data.language)) {
+      html += `      <div class="key-value"><span class="key">Language:</span> <span class="value">${escapeHtml(data.language!)}</span></div>\n`
     }
     if (hasContent(data.license)) {
-      html += `      <div class="key-value"><span class="key">License:</span> <span class="value">${escapeHtml(data.license)}</span></div>\n`
+      html += `      <div class="key-value"><span class="key">License:</span> <span class="value">${escapeHtml(data.license!)}</span></div>\n`
     }
     if (hasContent(data.base_model)) {
-      html += `      <div class="key-value"><span class="key">Base model:</span> <span class="value">${escapeHtml(data.base_model)}</span></div>\n`
-    }
-    if (hasContent(data.model_function)) {
-      html += `      <div class="key-value"><span class="key">Model function:</span> <span class="value">${escapeHtml(data.model_function)}</span></div>\n`
-    }
-    if (hasContent(data.feedback)) {
-      html += `      <div class="key-value"><span class="key">Feedback:</span> <span class="value">${escapeHtml(data.feedback)}</span></div>\n`
+      html += `      <div class="key-value"><span class="key">Base model:</span> <span class="value">${escapeHtml(data.base_model!)}</span></div>\n`
     }
     html += `    </div>\n`
   }
 
   // Model Sources Section
-  if (hasContent(data.model_sources?.repository) || hasContent(data.model_sources?.paper) || hasContent(data.model_sources?.demo)) {
+  if (hasContent(data.model_sources?.repo) || hasContent(data.model_sources?.paper) || hasContent(data.model_sources?.demo)) {
     html += `    <div class="section">
       <h2>Model Sources</h2>
 `
-    if (hasContent(data.model_sources?.repository)) {
-      html += `      <div class="key-value"><span class="key">Repository:</span> <span class="value"><a href="${escapeHtml(data.model_sources.repository)}" target="_blank">${escapeHtml(data.model_sources.repository)}</a></span></div>\n`
+    if (hasContent(data.model_sources?.repo)) {
+      html += `      <div class="key-value"><span class="key">Repository:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.repo!)}" target="_blank">${escapeHtml(data.model_sources!.repo!)}</a></span></div>\n`
     }
     if (hasContent(data.model_sources?.paper)) {
-      html += `      <div class="key-value"><span class="key">Paper:</span> <span class="value"><a href="${escapeHtml(data.model_sources.paper)}" target="_blank">${escapeHtml(data.model_sources.paper)}</a></span></div>\n`
+      html += `      <div class="key-value"><span class="key">Paper:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.paper!)}" target="_blank">${escapeHtml(data.model_sources!.paper!)}</a></span></div>\n`
     }
     if (hasContent(data.model_sources?.demo)) {
-      html += `      <div class="key-value"><span class="key">Demo:</span> <span class="value"><a href="${escapeHtml(data.model_sources.demo)}" target="_blank">${escapeHtml(data.model_sources.demo)}</a></span></div>\n`
+      html += `      <div class="key-value"><span class="key">Demo:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.demo!)}" target="_blank">${escapeHtml(data.model_sources!.demo!)}</a></span></div>\n`
     }
     html += `    </div>\n`
   }
@@ -642,13 +636,13 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Uses</h2>
 `
     if (hasContent(data.uses?.direct_use)) {
-      html += `      <h3>Direct Use</h3>\n      <p>${escapeHtml(data.uses.direct_use)}</p>\n`
+      html += `      <h3>Direct Use</h3>\n      <p>${escapeHtml(data.uses!.direct_use!)}</p>\n`
     }
     if (hasContent(data.uses?.downstream_use)) {
-      html += `      <h3>Downstream Use</h3>\n      <p>${escapeHtml(data.uses.downstream_use)}</p>\n`
+      html += `      <h3>Downstream Use</h3>\n      <p>${escapeHtml(data.uses!.downstream_use!)}</p>\n`
     }
     if (hasContent(data.uses?.out_of_scope_use)) {
-      html += `      <h3>Out-of-Scope Use</h3>\n      <p>${escapeHtml(data.uses.out_of_scope_use)}</p>\n`
+      html += `      <h3>Out-of-Scope Use</h3>\n      <p>${escapeHtml(data.uses!.out_of_scope_use!)}</p>\n`
     }
     html += `    </div>\n`
   }
@@ -659,10 +653,10 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Bias, Risks, and Limitations</h2>
 `
     if (hasContent(data.bias_risks?.bias_risks_limitations)) {
-      html += `      <p>${escapeHtml(data.bias_risks.bias_risks_limitations)}</p>\n`
+      html += `      <p>${escapeHtml(data.bias_risks!.bias_risks_limitations!)}</p>\n`
     }
     if (hasContent(data.bias_risks?.bias_recommendations)) {
-      html += `      <h3>Recommendations</h3>\n      <p>${escapeHtml(data.bias_risks.bias_recommendations)}</p>\n`
+      html += `      <h3>Recommendations</h3>\n      <p>${escapeHtml(data.bias_risks!.bias_recommendations!)}</p>\n`
     }
     html += `    </div>\n`
   }
@@ -671,27 +665,27 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
   if (hasContent(data.get_started_code)) {
     html += `    <div class="section">
       <h2>How to Get Started with the Model</h2>
-      <pre><code>${escapeHtml(data.get_started_code)}</code></pre>
+      <pre><code>${escapeHtml(data.get_started_code!)}</code></pre>
     </div>\n`
   }
 
   // Training Details Section
-  if (hasContent(data.training?.training_data) || hasContent(data.training?.preprocessing) ||
-      hasContent(data.training?.training_regime) || hasContent(data.training?.speeds_sizes_times)) {
+  if (hasContent(data.training_details?.training_data) || hasContent(data.training_details?.preprocessing) ||
+      hasContent(data.training_details?.training_regime) || hasContent(data.training_details?.speeds_sizes_times)) {
     html += `    <div class="section">
       <h2>Training Details</h2>
 `
-    if (hasContent(data.training?.training_data)) {
-      html += `      <h3>Training Data</h3>\n      <p>${escapeHtml(data.training.training_data)}</p>\n`
+    if (hasContent(data.training_details?.training_data)) {
+      html += `      <h3>Training Data</h3>\n      <p>${escapeHtml(data.training_details!.training_data!)}</p>\n`
     }
-    if (hasContent(data.training?.preprocessing)) {
-      html += `      <h3>Preprocessing</h3>\n      <p>${escapeHtml(data.training.preprocessing)}</p>\n`
+    if (hasContent(data.training_details?.preprocessing)) {
+      html += `      <h3>Preprocessing</h3>\n      <p>${escapeHtml(data.training_details!.preprocessing!)}</p>\n`
     }
-    if (hasContent(data.training?.training_regime)) {
-      html += `      <h3>Training Regime</h3>\n      <p>${escapeHtml(data.training.training_regime)}</p>\n`
+    if (hasContent(data.training_details?.training_regime)) {
+      html += `      <h3>Training Regime</h3>\n      <p>${escapeHtml(data.training_details!.training_regime!)}</p>\n`
     }
-    if (hasContent(data.training?.speeds_sizes_times)) {
-      html += `      <h3>Speeds, Sizes, Times</h3>\n      <p>${escapeHtml(data.training.speeds_sizes_times)}</p>\n`
+    if (hasContent(data.training_details?.speeds_sizes_times)) {
+      html += `      <h3>Speeds, Sizes, Times</h3>\n      <p>${escapeHtml(data.training_details!.speeds_sizes_times!)}</p>\n`
     }
     html += `    </div>\n`
   }
@@ -704,19 +698,19 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Evaluation</h2>
 `
     if (hasContent(data.evaluation?.testing_data)) {
-      html += `      <h3>Testing Data</h3>\n      <p>${escapeHtml(data.evaluation.testing_data)}</p>\n`
+      html += `      <h3>Testing Data</h3>\n      <p>${escapeHtml(data.evaluation!.testing_data!)}</p>\n`
     }
     if (hasContent(data.evaluation?.testing_factors)) {
-      html += `      <h3>Testing Factors</h3>\n      <p>${escapeHtml(data.evaluation.testing_factors)}</p>\n`
+      html += `      <h3>Testing Factors</h3>\n      <p>${escapeHtml(data.evaluation!.testing_factors!)}</p>\n`
     }
     if (hasContent(data.evaluation?.testing_metrics)) {
-      html += `      <h3>Testing Metrics</h3>\n      <p>${escapeHtml(data.evaluation.testing_metrics)}</p>\n`
+      html += `      <h3>Testing Metrics</h3>\n      <p>${escapeHtml(data.evaluation!.testing_metrics!)}</p>\n`
     }
     if (hasContent(data.evaluation?.results)) {
-      html += `      <h3>Results</h3>\n      <p>${escapeHtml(data.evaluation.results)}</p>\n`
+      html += `      <h3>Results</h3>\n      <p>${escapeHtml(data.evaluation!.results!)}</p>\n`
     }
     if (hasContent(data.evaluation?.results_summary)) {
-      html += `      <h3>Summary</h3>\n      <p>${escapeHtml(data.evaluation.results_summary)}</p>\n`
+      html += `      <h3>Summary</h3>\n      <p>${escapeHtml(data.evaluation!.results_summary!)}</p>\n`
     }
     html += `    </div>\n`
   }
@@ -730,19 +724,19 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <div class="grid">
 `
     if (hasContent(data.environmental_impact?.hardware_type)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">Hardware Type</div><div class="grid-item-value">${escapeHtml(data.environmental_impact.hardware_type)}</div></div>\n`
+      html += `        <div class="grid-item"><div class="grid-item-title">Hardware Type</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.hardware_type!)}</div></div>\n`
     }
     if (hasContent(data.environmental_impact?.hours_used)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">Hours Used</div><div class="grid-item-value">${escapeHtml(data.environmental_impact.hours_used)}</div></div>\n`
+      html += `        <div class="grid-item"><div class="grid-item-title">Hours Used</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.hours_used!)}</div></div>\n`
     }
     if (hasContent(data.environmental_impact?.cloud_provider)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">Cloud Provider</div><div class="grid-item-value">${escapeHtml(data.environmental_impact.cloud_provider)}</div></div>\n`
+      html += `        <div class="grid-item"><div class="grid-item-title">Cloud Provider</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.cloud_provider!)}</div></div>\n`
     }
     if (hasContent(data.environmental_impact?.cloud_region)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">Cloud Region</div><div class="grid-item-value">${escapeHtml(data.environmental_impact.cloud_region)}</div></div>\n`
+      html += `        <div class="grid-item"><div class="grid-item-title">Cloud Region</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.cloud_region!)}</div></div>\n`
     }
     if (hasContent(data.environmental_impact?.co2_emitted)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">CO₂ Emitted</div><div class="grid-item-value">${escapeHtml(data.environmental_impact.co2_emitted)}</div></div>\n`
+      html += `        <div class="grid-item"><div class="grid-item-title">CO₂ Emitted</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.co2_emitted!)}</div></div>\n`
     }
     html += `      </div>
     </div>\n`
@@ -750,21 +744,21 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
 
   // Technical Specifications Section
   if (hasContent(data.technical_specs?.model_specs) || hasContent(data.technical_specs?.compute_infrastructure) ||
-      hasContent(data.technical_specs?.hardware) || hasContent(data.technical_specs?.software)) {
+      hasContent(data.technical_specs?.hardware_requirements) || hasContent(data.technical_specs?.software)) {
     html += `    <div class="section">
       <h2>Technical Specifications</h2>
 `
     if (hasContent(data.technical_specs?.model_specs)) {
-      html += `      <h3>Model Architecture and Objective</h3>\n      <p>${escapeHtml(data.technical_specs.model_specs)}</p>\n`
+      html += `      <h3>Model Architecture and Objective</h3>\n      <p>${escapeHtml(data.technical_specs!.model_specs!)}</p>\n`
     }
     if (hasContent(data.technical_specs?.compute_infrastructure)) {
-      html += `      <h3>Compute Infrastructure</h3>\n      <p>${escapeHtml(data.technical_specs.compute_infrastructure)}</p>\n`
+      html += `      <h3>Compute Infrastructure</h3>\n      <p>${escapeHtml(data.technical_specs!.compute_infrastructure!)}</p>\n`
     }
-    if (hasContent(data.technical_specs?.hardware)) {
-      html += `      <h3>Hardware</h3>\n      <p>${escapeHtml(data.technical_specs.hardware)}</p>\n`
+    if (hasContent(data.technical_specs?.hardware_requirements)) {
+      html += `      <h3>Hardware Requirements</h3>\n      <p>${escapeHtml(data.technical_specs!.hardware_requirements!)}</p>\n`
     }
     if (hasContent(data.technical_specs?.software)) {
-      html += `      <h3>Software</h3>\n      <p>${escapeHtml(data.technical_specs.software)}</p>\n`
+      html += `      <h3>Software</h3>\n      <p>${escapeHtml(data.technical_specs!.software!)}</p>\n`
     }
     html += `    </div>\n`
   }
@@ -775,10 +769,10 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Citation</h2>
 `
     if (hasContent(data.citation?.citation_bibtex)) {
-      html += `      <h3>BibTeX</h3>\n      <pre><code>${escapeHtml(data.citation.citation_bibtex)}</code></pre>\n`
+      html += `      <h3>BibTeX</h3>\n      <pre><code>${escapeHtml(data.citation!.citation_bibtex!)}</code></pre>\n`
     }
     if (hasContent(data.citation?.citation_apa)) {
-      html += `      <h3>APA</h3>\n      <p>${escapeHtml(data.citation.citation_apa)}</p>\n`
+      html += `      <h3>APA</h3>\n      <p>${escapeHtml(data.citation!.citation_apa!)}</p>\n`
     }
     html += `    </div>\n`
   }
@@ -791,19 +785,19 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Additional Information</h2>
 `
     if (hasContent(data.additional_info?.model_examination)) {
-      html += `      <h3>Model Examination</h3>\n      <p>${escapeHtml(data.additional_info.model_examination)}</p>\n`
+      html += `      <h3>Model Examination</h3>\n      <p>${escapeHtml(data.additional_info!.model_examination!)}</p>\n`
     }
     if (hasContent(data.additional_info?.glossary)) {
-      html += `      <h3>Glossary</h3>\n      <p>${escapeHtml(data.additional_info.glossary)}</p>\n`
+      html += `      <h3>Glossary</h3>\n      <p>${escapeHtml(data.additional_info!.glossary!)}</p>\n`
     }
     if (hasContent(data.additional_info?.more_information)) {
-      html += `      <h3>More Information</h3>\n      <p>${escapeHtml(data.additional_info.more_information)}</p>\n`
+      html += `      <h3>More Information</h3>\n      <p>${escapeHtml(data.additional_info!.more_information!)}</p>\n`
     }
     if (hasContent(data.additional_info?.model_card_authors)) {
-      html += `      <div class="key-value"><span class="key">Model Card Authors:</span> <span class="value">${escapeHtml(data.additional_info.model_card_authors)}</span></div>\n`
+      html += `      <div class="key-value"><span class="key">Model Card Authors:</span> <span class="value">${escapeHtml(data.additional_info!.model_card_authors!)}</span></div>\n`
     }
     if (hasContent(data.additional_info?.model_card_contact)) {
-      html += `      <div class="key-value"><span class="key">Model Card Contact:</span> <span class="value">${escapeHtml(data.additional_info.model_card_contact)}</span></div>\n`
+      html += `      <div class="key-value"><span class="key">Model Card Contact:</span> <span class="value">${escapeHtml(data.additional_info!.model_card_contact!)}</span></div>\n`
     }
     html += `    </div>\n`
   }
@@ -812,7 +806,7 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
   if (hasContent(data.card_data)) {
     html += `    <div class="section">
       <h2>Model Card Metadata</h2>
-      ${renderKeyValue(data.card_data)}
+      ${renderKeyValue(data.card_data!)}
     </div>\n`
   }
 

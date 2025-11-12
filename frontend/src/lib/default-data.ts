@@ -21,12 +21,10 @@ export const DEFAULT_MODEL_CARD_DATA: ModelCard = {
   language: 'English (en)',
   license: 'apache-2.0',
   base_model: 'bert-base-uncased',
-  model_function: 'Text Classification',
-  feedback: 'For questions or feedback, please open an issue on our GitHub repository.',
 
   // Model sources
   model_sources: {
-    repository: 'https://github.com/acme-corp/my-awesome-model',
+    repo: 'https://github.com/acme-corp/my-awesome-model',
     paper: 'https://arxiv.org/abs/2401.12345',
     demo: 'https://huggingface.co/spaces/acme/model-demo',
   },
@@ -57,7 +55,7 @@ outputs = model(**inputs)
 predictions = outputs.logits.softmax(dim=-1)`,
 
   // Training details
-  training: {
+  training_details: {
     training_data: 'The model was trained on a combination of publicly available sentiment datasets including SST-2, IMDB reviews, and Twitter sentiment data, totaling approximately 500,000 examples. See the dataset card at https://huggingface.co/datasets/acme/sentiment-combined for more details.',
     preprocessing: 'Text was lowercased and tokenized using the BERT WordPiece tokenizer with a vocabulary size of 30,000. Special tokens [CLS] and [SEP] were added for sequence classification. Maximum sequence length was set to 512 tokens with truncation and padding applied as needed.',
     training_regime: 'fp16 mixed precision',
@@ -86,7 +84,7 @@ predictions = outputs.logits.softmax(dim=-1)`,
   technical_specs: {
     model_specs: '12-layer transformer encoder with 768 hidden dimensions, 12 attention heads, and 110M parameters. Uses GELU activation and learned positional embeddings. Classification head consists of a dropout layer (p=0.1) followed by a linear projection to 3 classes.',
     compute_infrastructure: 'Training performed on AWS EC2 p4d.24xlarge instances with NVLink-connected A100 GPUs. Used PyTorch DistributedDataParallel for multi-GPU training.',
-    hardware: 'Minimum 8GB GPU memory for inference. CPU inference supported but significantly slower (10-20x). Recommended: NVIDIA T4 or better for production deployment. Model requires approximately 500MB disk space.',
+    hardware_requirements: 'Minimum 8GB GPU memory for inference. CPU inference supported but significantly slower (10-20x). Recommended: NVIDIA T4 or better for production deployment. Model requires approximately 500MB disk space.',
     software: 'PyTorch 2.0.1, transformers 4.30.2, tokenizers 0.13.3, CUDA 11.8, Python 3.9+',
   },
 
