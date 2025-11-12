@@ -112,6 +112,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
     id: 'additional',
     title: 'Additional Information',
     fields: [
+      'get_started_code',
       'additional_info.model_examination',
       'additional_info.glossary',
       'additional_info.more_information',
