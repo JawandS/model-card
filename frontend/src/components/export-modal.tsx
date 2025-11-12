@@ -148,12 +148,12 @@ export function ExportModal() {
               type="button"
               variant="outline"
               onClick={() => handleExport('json')}
-              className="w-full justify-start group h-auto py-4"
+              className="w-full justify-start group h-auto py-4 hover:bg-accent/10"
             >
-              <FileJson className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform flex-shrink-0" />
+              <FileJson className="mr-3 h-5 w-5 group-hover:scale-110 group-hover:text-foreground transition-all flex-shrink-0" />
               <div className="text-left">
-                <div className="font-semibold">JSON</div>
-                <div className="text-xs text-muted-foreground">Machine-readable format</div>
+                <div className="font-semibold group-hover:text-foreground">JSON</div>
+                <div className="text-xs text-muted-foreground group-hover:text-foreground/80">Machine-readable format</div>
               </div>
             </Button>
 
@@ -161,12 +161,12 @@ export function ExportModal() {
               type="button"
               variant="outline"
               onClick={() => handleExport('pdf')}
-              className="w-full justify-start group h-auto py-4"
+              className="w-full justify-start group h-auto py-4 hover:bg-accent/10"
             >
-              <FileType className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform flex-shrink-0" />
+              <FileType className="mr-3 h-5 w-5 group-hover:scale-110 group-hover:text-foreground transition-all flex-shrink-0" />
               <div className="text-left">
-                <div className="font-semibold">PDF</div>
-                <div className="text-xs text-muted-foreground">Formatted document for sharing</div>
+                <div className="font-semibold group-hover:text-foreground">PDF</div>
+                <div className="text-xs text-muted-foreground group-hover:text-foreground/80">Formatted document for sharing</div>
               </div>
             </Button>
 
@@ -174,12 +174,12 @@ export function ExportModal() {
               type="button"
               variant="outline"
               onClick={() => handleExport('markdown')}
-              className="w-full justify-start group h-auto py-4"
+              className="w-full justify-start group h-auto py-4 hover:bg-accent/10"
             >
-              <FileText className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform flex-shrink-0" />
+              <FileText className="mr-3 h-5 w-5 group-hover:scale-110 group-hover:text-foreground transition-all flex-shrink-0" />
               <div className="text-left">
-                <div className="font-semibold">Markdown</div>
-                <div className="text-xs text-muted-foreground">For documentation and version control</div>
+                <div className="font-semibold group-hover:text-foreground">Markdown</div>
+                <div className="text-xs text-muted-foreground group-hover:text-foreground/80">For documentation and version control</div>
               </div>
             </Button>
 
@@ -187,12 +187,12 @@ export function ExportModal() {
               type="button"
               variant="outline"
               onClick={() => handleExport('html')}
-              className="w-full justify-start group h-auto py-4"
+              className="w-full justify-start group h-auto py-4 hover:bg-accent/10"
             >
-              <Download className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform flex-shrink-0" />
+              <Download className="mr-3 h-5 w-5 group-hover:scale-110 group-hover:text-foreground transition-all flex-shrink-0" />
               <div className="text-left">
-                <div className="font-semibold">HTML</div>
-                <div className="text-xs text-muted-foreground">Web-ready format</div>
+                <div className="font-semibold group-hover:text-foreground">HTML</div>
+                <div className="text-xs text-muted-foreground group-hover:text-foreground/80">Web-ready format</div>
               </div>
             </Button>
           </div>
