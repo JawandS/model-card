@@ -101,6 +101,7 @@ export function ExportModal() {
         size="icon"
         onClick={() => setIsOpen(true)}
         className="rounded-xl shadow-lg hover:shadow-xl h-12 w-12"
+        title="Export model card"
       >
         <Download className="h-6 w-6" />
         <span className="sr-only">Export Model Card</span>
@@ -121,6 +122,7 @@ export function ExportModal() {
           <button
             onClick={() => setIsOpen(false)}
             className="absolute top-4 right-4 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            title="Close"
           >
             <X className="h-5 w-5" />
           </button>
