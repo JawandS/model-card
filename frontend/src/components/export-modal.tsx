@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button'
 import { ModelCardSchema, type ModelCard, type PartialModelCard } from '@modelcard/schema'
 import { exportToJSON, exportToPDF, exportToMarkdown, exportToHTML } from '@/lib/exporters'
 import { cleanEmptyStrings } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
 
 export function ExportModal() {
   const [isOpen, setIsOpen] = React.useState(false)
+  const { toast } = useToast()
 
   const handleExport = (format: 'json' | 'pdf' | 'markdown' | 'html') => {
     // Load data from localStorage
@@ -49,23 +51,47 @@ export function ExportModal() {
 
     const validData = result.data
 
-    switch (format) {
-      case 'json':
-        exportToJSON(validData)
-        break
-      case 'pdf':
-        exportToPDF(validData)
-        break
-      case 'markdown':
-        exportToMarkdown(validData)
-        break
-      case 'html':
-        exportToHTML(validData)
-        break
-    }
+    try {
+      switch (format) {
+        case 'json':
+          exportToJSON(validData)
+          toast({
+            title: 'JSON exported successfully!',
+            description: 'Your model card has been downloaded.',
+          })
+          break
+        case 'pdf':
+          exportToPDF(validData)
+          toast({
+            title: 'PDF exported successfully!',
+            description: 'Your model card has been downloaded.',
+          })
+          break
+        case 'markdown':
+          exportToMarkdown(validData)
+          toast({
+            title: 'Markdown exported successfully!',
+            description: 'Your model card has been downloaded.',
+          })
+          break
+        case 'html':
+          exportToHTML(validData)
+          toast({
+            title: 'HTML exported successfully!',
+            description: 'Your model card has been downloaded.',
+          })
+          break
+      }
 
-    // Close modal after export
-    setIsOpen(false)
+      // Close modal after export
+      setIsOpen(false)
+    } catch (error) {
+      toast({
+        title: 'Export failed',
+        description: 'There was an error exporting your model card.',
+        variant: 'destructive',
+      })
+    }
   }
 
   return (

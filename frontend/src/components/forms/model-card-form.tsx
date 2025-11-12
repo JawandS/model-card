@@ -20,12 +20,18 @@ import { TechnicalSpecsSection } from './sections/technical-specs-section'
 import { CitationSection } from './sections/citation-section'
 import { AdditionalInfoSection } from './sections/additional-info-section'
 import { ModelCardPreview } from '../model-card-preview'
+import { ProgressTracker } from '../progress-tracker'
+import { SaveIndicator } from '../save-indicator'
+import { SectionProgressIndicator } from '../section-progress-indicator'
+import { SECTION_CONFIGS } from '@/lib/section-config'
 import { Eye, EyeOff, Filter, FilterX } from 'lucide-react'
 
 export function ModelCardForm() {
   const [showPreview, setShowPreview] = React.useState(true)
   const [showOptionalFields, setShowOptionalFields] = React.useState(true)
   const [formData, setFormData] = React.useState<PartialModelCard>({})
+  const [isSaving, setIsSaving] = React.useState(false)
+  const [lastSaved, setLastSaved] = React.useState<Date | undefined>()
 
   const form = useForm<ModelCard>({
     resolver: zodResolver(ModelCardSchema),
@@ -66,7 +72,12 @@ export function ModelCardForm() {
   // Save to localStorage
   React.useEffect(() => {
     const subscription = form.watch((value) => {
+      setIsSaving(true)
       localStorage.setItem('modelcard-draft', JSON.stringify(value))
+      setTimeout(() => {
+        setIsSaving(false)
+        setLastSaved(new Date())
+      }, 300) // Brief delay to show saving state
     })
     return () => subscription.unsubscribe()
   }, [form])
@@ -95,7 +106,7 @@ export function ModelCardForm() {
       <div className="flex flex-col min-h-0">
         <Card className="overflow-hidden flex flex-col h-full shadow-sm">
           <CardHeader className="bg-primary/5 border-b border-border flex-shrink-0">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-3">
               <div>
                 <CardTitle className="text-2xl text-primary">Model Card Information</CardTitle>
                 <CardDescription className="text-base mt-2">
@@ -117,6 +128,10 @@ export function ModelCardForm() {
                 )}
               </Button>
             </div>
+            <div className="flex items-center justify-between">
+              <ProgressTracker formData={formData} showOptionalFields={showOptionalFields} />
+              <SaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
+            </div>
           </CardHeader>
           <CardContent className="p-6 overflow-y-auto flex-1 min-h-0">
             <Form {...form}>
@@ -124,7 +139,15 @@ export function ModelCardForm() {
                 <Accordion type="multiple" className="w-full">
                   <AccordionItem value="basic-info">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                      Basic Information
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>
+                          Basic Information <span className="text-destructive">*</span>
+                        </span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[0]}
+                        />
+                      </div>
                     </AccordionTrigger>
                     <AccordionContent>
                       <BasicInfoSection form={form} showOptionalFields={showOptionalFields} />
@@ -133,7 +156,15 @@ export function ModelCardForm() {
 
                   <AccordionItem value="model-details">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                      Model Details
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>
+                          Model Details <span className="text-destructive">*</span>
+                        </span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[1]}
+                        />
+                      </div>
                     </AccordionTrigger>
                     <AccordionContent>
                       <ModelDetailsSection form={form} showOptionalFields={showOptionalFields} />
@@ -144,7 +175,13 @@ export function ModelCardForm() {
                     <>
                       <AccordionItem value="model-sources">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Model Sources
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Model Sources</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[2]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <ModelSourcesSection form={form} />
@@ -153,7 +190,13 @@ export function ModelCardForm() {
 
                       <AccordionItem value="uses">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Uses
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Uses</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[3]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <UsageAndLimitationsSection form={form} />
@@ -162,7 +205,13 @@ export function ModelCardForm() {
 
                       <AccordionItem value="bias-risks">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Bias, Risks, and Limitations
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Bias, Risks, and Limitations</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[4]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <EthicsAndSafetySection form={form} />
@@ -171,7 +220,13 @@ export function ModelCardForm() {
 
                       <AccordionItem value="training">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Training Details
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Training Details</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[5]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <TrainingDataSection form={form} />
@@ -180,7 +235,13 @@ export function ModelCardForm() {
 
                       <AccordionItem value="evaluation">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Evaluation
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Evaluation</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[6]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <EvaluationSection form={form} />
@@ -189,7 +250,13 @@ export function ModelCardForm() {
 
                       <AccordionItem value="environmental">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Environmental Impact
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Environmental Impact</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[7]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <EnvironmentalImpactSection form={form} />
@@ -198,7 +265,13 @@ export function ModelCardForm() {
 
                       <AccordionItem value="technical">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Technical Specifications
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Technical Specifications</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[8]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <TechnicalSpecsSection form={form} />
@@ -207,7 +280,13 @@ export function ModelCardForm() {
 
                       <AccordionItem value="citation">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Citation
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Citation</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[9]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <CitationSection form={form} />
@@ -216,7 +295,13 @@ export function ModelCardForm() {
 
                       <AccordionItem value="additional">
                         <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
-                          Additional Information
+                          <div className="flex items-center justify-between w-full pr-2">
+                            <span>Additional Information</span>
+                            <SectionProgressIndicator
+                              formData={formData}
+                              section={SECTION_CONFIGS[10]}
+                            />
+                          </div>
                         </AccordionTrigger>
                         <AccordionContent>
                           <AdditionalInfoSection form={form} />

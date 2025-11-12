@@ -24,7 +24,7 @@ export function BasicInfoSection({ form, showOptionalFields = true }: BasicInfoS
         name="model_id"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Model ID *</FormLabel>
+            <FormLabel>Model ID <span className="text-destructive">*</span></FormLabel>
             <FormControl>
               <Input placeholder="e.g., my-awesome-model" {...field} />
             </FormControl>

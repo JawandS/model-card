@@ -25,7 +25,9 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
         name="developers"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Developed by *</FormLabel>
+                <FormLabel>
+                  Developed by <span className="text-destructive">*</span>
+                </FormLabel>
             <FormControl>
               <Input placeholder="e.g., John Doe, Acme Corp" {...field} />
             </FormControl>
