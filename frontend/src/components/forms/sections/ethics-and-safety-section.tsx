@@ -17,16 +17,7 @@ interface EthicsAndSafetySectionProps {
 
 export function EthicsAndSafetySection({ form }: EthicsAndSafetySectionProps) {
   return (
-    <div className="space-y-6">
-      <div className="pb-3 border-b border-border">
-        <h3 className="section-header">
-          Bias, Risks, and Limitations
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Known issues, biases, risks, and limitations of the model
-        </p>
-      </div>
-
+    <div className="space-y-6 pt-2">
       <FormField
         control={form.control}
         name="bias_risks.bias_risks_limitations"

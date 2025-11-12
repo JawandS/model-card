@@ -17,16 +17,7 @@ interface TrainingDataSectionProps {
 
 export function TrainingDataSection({ form }: TrainingDataSectionProps) {
   return (
-    <div className="space-y-6">
-      <div className="pb-3 border-b border-border">
-        <h3 className="section-header">
-          Training Details
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Information about the data and training procedure
-        </p>
-      </div>
-
+    <div className="space-y-6 pt-2">
       <FormField
         control={form.control}
         name="training_details.training_data"

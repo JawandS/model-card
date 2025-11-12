@@ -18,16 +18,7 @@ interface BasicInfoSectionProps {
 
 export function BasicInfoSection({ form, showOptionalFields = true }: BasicInfoSectionProps) {
   return (
-    <div className="space-y-6">
-      <div className="pb-3 border-b border-border">
-        <h3 className="section-header">
-          Basic Information
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Essential identifier and summary for your model
-        </p>
-      </div>
-
+    <div className="space-y-6 pt-2">
       <FormField
         control={form.control}
         name="model_id"

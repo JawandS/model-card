@@ -7,6 +7,7 @@ import { ModelCardSchema, type ModelCard, type PartialModelCard } from '@modelca
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { BasicInfoSection } from './sections/basic-info-section'
 import { ModelDetailsSection } from './sections/model-details-section'
 import { ModelSourcesSection } from './sections/model-sources-section'
@@ -117,24 +118,113 @@ export function ModelCardForm() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="p-8 overflow-y-auto flex-1 min-h-0">
+          <CardContent className="p-6 overflow-y-auto flex-1 min-h-0">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <BasicInfoSection form={form} showOptionalFields={showOptionalFields} />
-                <ModelDetailsSection form={form} showOptionalFields={showOptionalFields} />
-                {showOptionalFields && (
-                  <>
-                    <ModelSourcesSection form={form} />
-                    <UsageAndLimitationsSection form={form} />
-                    <EthicsAndSafetySection form={form} />
-                    <TrainingDataSection form={form} />
-                    <EvaluationSection form={form} />
-                    <EnvironmentalImpactSection form={form} />
-                    <TechnicalSpecsSection form={form} />
-                    <CitationSection form={form} />
-                    <AdditionalInfoSection form={form} />
-                  </>
-                )}
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <Accordion type="multiple" className="w-full">
+                  <AccordionItem value="basic-info">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      Basic Information
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <BasicInfoSection form={form} showOptionalFields={showOptionalFields} />
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="model-details">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      Model Details
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ModelDetailsSection form={form} showOptionalFields={showOptionalFields} />
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  {showOptionalFields && (
+                    <>
+                      <AccordionItem value="model-sources">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Model Sources
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <ModelSourcesSection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="uses">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Uses
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <UsageAndLimitationsSection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="bias-risks">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Bias, Risks, and Limitations
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <EthicsAndSafetySection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="training">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Training Details
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <TrainingDataSection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="evaluation">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Evaluation
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <EvaluationSection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="environmental">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Environmental Impact
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <EnvironmentalImpactSection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="technical">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Technical Specifications
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <TechnicalSpecsSection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="citation">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Citation
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <CitationSection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="additional">
+                        <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                          Additional Information
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <AdditionalInfoSection form={form} />
+                        </AccordionContent>
+                      </AccordionItem>
+                    </>
+                  )}
+                </Accordion>
               </form>
             </Form>
           </CardContent>

@@ -16,16 +16,7 @@ interface UsageAndLimitationsSectionProps {
 
 export function UsageAndLimitationsSection({ form }: UsageAndLimitationsSectionProps) {
   return (
-    <div className="space-y-6">
-      <div className="pb-3 border-b border-border">
-        <h3 className="section-header">
-          Uses
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          How the model is intended to be used and out-of-scope uses
-        </p>
-      </div>
-
+    <div className="space-y-6 pt-2">
       <FormField
         control={form.control}
         name="uses.direct_use"

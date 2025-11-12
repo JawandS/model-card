@@ -16,16 +16,7 @@ interface ModelSourcesSectionProps {
 
 export function ModelSourcesSection({ form }: ModelSourcesSectionProps) {
   return (
-    <div className="space-y-6">
-      <div className="pb-3 border-b border-border">
-        <h3 className="section-header">
-          Model Sources
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Links to repository, paper, and demo (optional)
-        </p>
-      </div>
-
+    <div className="space-y-6 pt-2">
       <FormField
         control={form.control}
         name="model_sources.repo"

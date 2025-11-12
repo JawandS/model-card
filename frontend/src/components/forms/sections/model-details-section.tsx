@@ -19,16 +19,7 @@ interface ModelDetailsSectionProps {
 
 export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDetailsSectionProps) {
   return (
-    <div className="space-y-6">
-      <div className="pb-3 border-b border-border">
-        <h3 className="section-header">
-          Model Details
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Detailed information about the model
-        </p>
-      </div>
-
+    <div className="space-y-6 pt-2">
       <FormField
         control={form.control}
         name="developers"

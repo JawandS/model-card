@@ -16,16 +16,7 @@ interface EnvironmentalImpactSectionProps {
 
 export function EnvironmentalImpactSection({ form }: EnvironmentalImpactSectionProps) {
   return (
-    <div className="space-y-6">
-      <div className="pb-3 border-b border-border">
-        <h3 className="section-header">
-          Environmental Impact
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Information to calculate environmental impacts (optional)
-        </p>
-      </div>
-
+    <div className="space-y-6 pt-2">
       <FormField
         control={form.control}
         name="environmental_impact.hardware_type"
