@@ -3,35 +3,35 @@
 
 FROM node:20-alpine AS base
 
-# Install dependencies only when needed
+# Install schema dependencies and build
+FROM base AS schema-builder
+WORKDIR /app/packages/schema
+
+# Copy schema package files
+COPY packages/schema/package.json packages/schema/package-lock.json* ./
+RUN npm ci
+
+# Copy schema source and build
+COPY packages/schema ./
+RUN npm run build
+
+# Install frontend dependencies
 FROM base AS deps
-WORKDIR /app
+WORKDIR /app/frontend
 
 # Copy package files
-COPY package.json ./
-COPY packages/schema/package.json ./packages/schema/
-COPY frontend/package.json ./frontend/
-
-# Install dependencies for all packages
-RUN npm install && \
-    cd packages/schema && npm install && \
-    cd ../../frontend && npm install
-
-# Build schema package
-FROM base AS schema-builder
-WORKDIR /app
-COPY --from=deps /app/packages/schema/node_modules ./packages/schema/node_modules
-COPY packages/schema ./packages/schema
-RUN cd packages/schema && npm run build
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci
 
 # Build frontend
 FROM base AS builder
 WORKDIR /app
 
-# Copy dependencies
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/frontend/node_modules ./frontend/node_modules
+# Copy built schema package
 COPY --from=schema-builder /app/packages/schema ./packages/schema
+
+# Copy frontend dependencies
+COPY --from=deps /app/frontend/node_modules ./frontend/node_modules
 
 # Copy frontend source
 COPY frontend ./frontend
