@@ -1,11 +1,16 @@
 'use client'
 
+import * as React from 'react'
 import { ModelCardForm } from '@/components/forms/model-card-form'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { InstructionsModal } from '@/components/instructions-modal'
 import { ExportModal } from '@/components/export-modal'
+import { Button } from '@/components/ui/button'
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function Home() {
+  const [showPreview, setShowPreview] = React.useState(true)
+
   return (
     <main className="h-screen gradient-bg relative overflow-hidden flex flex-col">
       {/* Subtle professional background accent */}
@@ -23,6 +28,20 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setShowPreview(!showPreview)}
+              className="rounded-xl shadow-lg hover:shadow-xl h-12 w-12"
+              title={showPreview ? "Hide preview" : "Show preview"}
+            >
+              {showPreview ? (
+                <EyeOff className="h-6 w-6" />
+              ) : (
+                <Eye className="h-6 w-6" />
+              )}
+              <span className="sr-only">{showPreview ? "Hide preview" : "Show preview"}</span>
+            </Button>
             <InstructionsModal />
             <ExportModal />
             <ThemeToggle />
@@ -31,7 +50,7 @@ export default function Home() {
 
         {/* Main Content */}
         <div className="flex-1 overflow-hidden pb-6">
-          <ModelCardForm />
+          <ModelCardForm showPreview={showPreview} />
         </div>
       </div>
     </main>

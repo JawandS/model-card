@@ -25,14 +25,18 @@ import { SaveIndicator } from '../save-indicator'
 import { SectionProgressIndicator } from '../section-progress-indicator'
 import { ResetConfirmationModal } from '../reset-confirmation-modal'
 import { SECTION_CONFIGS } from '@/lib/section-config'
-import { Eye, EyeOff, RotateCcw } from 'lucide-react'
+import { Eye, RotateCcw } from 'lucide-react'
 
-export function ModelCardForm() {
-  const [showPreview, setShowPreview] = React.useState(true)
+interface ModelCardFormProps {
+  showPreview?: boolean
+}
+
+export function ModelCardForm({ showPreview = true }: ModelCardFormProps) {
   const [formData, setFormData] = React.useState<PartialModelCard>({})
   const [isSaving, setIsSaving] = React.useState(false)
   const [lastSaved, setLastSaved] = React.useState<Date | undefined>()
   const [isResetModalOpen, setIsResetModalOpen] = React.useState(false)
+  const [previewKey, setPreviewKey] = React.useState(0)
 
   const form = useForm<ModelCard>({
     resolver: zodResolver(ModelCardSchema),
@@ -138,6 +142,13 @@ export function ModelCardForm() {
     }
   }, [form])
 
+  // Force preview to update when it becomes visible
+  React.useEffect(() => {
+    if (showPreview) {
+      setPreviewKey(prev => prev + 1)
+    }
+  }, [showPreview])
+
   const handleReset = () => {
     // Reset the form to default values with all nested objects explicitly cleared
     form.reset({
@@ -219,7 +230,9 @@ export function ModelCardForm() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full animate-in fade-in slide-in-from-bottom duration-700">
+    <div className={`grid gap-6 h-full animate-in fade-in slide-in-from-bottom duration-700 ${
+      showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'
+    }`}>
       {/* Form Section */}
       <div className="flex flex-col min-h-0">
         <Card className="overflow-hidden flex flex-col h-full shadow-sm">
@@ -427,39 +440,24 @@ export function ModelCardForm() {
       </div>
 
       {/* Preview Section */}
-      <div className="flex flex-col min-h-0">
-        <Card className="overflow-hidden flex flex-col h-full shadow-sm">
-          <CardHeader className="bg-accent/5 border-b border-border flex-shrink-0">
-            <div className="flex items-center justify-between">
+      {showPreview && (
+        <div className="flex flex-col min-h-0" key="preview-panel">
+          <Card className="overflow-hidden flex flex-col h-full shadow-sm">
+            <CardHeader className="bg-accent/5 border-b border-border flex-shrink-0">
               <CardTitle className="text-xl flex items-center gap-2 text-accent">
                 <Eye className="h-5 w-5" />
                 Live Preview
               </CardTitle>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowPreview(!showPreview)}
-                className="rounded-lg"
-              >
-                {showPreview ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </Button>
-            </div>
-            <CardDescription>
-              Real-time preview of your documentation
-            </CardDescription>
-          </CardHeader>
-          {showPreview && (
+              <CardDescription>
+                Real-time preview of your documentation
+              </CardDescription>
+            </CardHeader>
             <CardContent className="p-6 overflow-y-auto flex-1 min-h-0">
-              <ModelCardPreview data={formData} />
+              <ModelCardPreview data={formData} key={previewKey} />
             </CardContent>
-          )}
-        </Card>
-      </div>
+          </Card>
+        </div>
+      )}
 
       {/* Reset Confirmation Modal */}
       <ResetConfirmationModal
