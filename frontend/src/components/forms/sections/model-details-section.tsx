@@ -31,31 +31,6 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
 
       <FormField
         control={form.control}
-        name="model_description"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Description</FormLabel>
-            <FormControl>
-              <TextareaWithAssist
-                placeholder="Provide a longer summary of what this model is, including architecture, version, and key characteristics"
-                className="min-h-[100px] pr-24"
-                fieldName="Model Description"
-                fieldDescription="A comprehensive description of what the model does, its architecture, and key characteristics"
-                contextData={form.getValues()}
-                onValueChange={field.onChange}
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              A comprehensive description of the model
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
         name="developers"
         render={({ field }) => (
           <FormItem>
@@ -73,6 +48,31 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
 
       {showOptionalFields && (
         <>
+          <FormField
+            control={form.control}
+            name="model_description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <TextareaWithAssist
+                    placeholder="Provide a longer summary of what this model is, including architecture, version, and key characteristics"
+                    className="min-h-[100px] pr-24"
+                    fieldName="Model Description"
+                    fieldDescription="A comprehensive description of what the model does, its architecture, and key characteristics"
+                    contextData={form.getValues()}
+                    onValueChange={field.onChange}
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  A comprehensive description of the model
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="funded_by"

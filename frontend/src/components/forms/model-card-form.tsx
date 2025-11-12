@@ -30,68 +30,26 @@ export function ModelCardForm() {
     resolver: zodResolver(ModelCardSchema),
     defaultValues: {
       card_data: undefined,
-      model_id: '',
-      model_summary: '',
-      model_description: '',
-      developers: '',
-      funded_by: '',
-      shared_by: '',
-      model_type: '',
-      language: '',
-      license: '',
-      base_model: '',
-      model_sources: {
-        repo: '',
-        paper: '',
-        demo: '',
-      },
-      uses: {
-        direct_use: '',
-        downstream_use: '',
-        out_of_scope_use: '',
-      },
-      bias_risks: {
-        bias_risks_limitations: '',
-        bias_recommendations: '',
-      },
-      get_started_code: '',
-      training_details: {
-        training_data: '',
-        preprocessing: '',
-        training_regime: '',
-        speeds_sizes_times: '',
-      },
-      evaluation: {
-        testing_data: '',
-        testing_factors: '',
-        testing_metrics: '',
-        results: '',
-        results_summary: '',
-      },
-      environmental_impact: {
-        hardware_type: '',
-        hours_used: '',
-        cloud_provider: '',
-        cloud_region: '',
-        co2_emitted: '',
-      },
-      technical_specs: {
-        model_specs: '',
-        compute_infrastructure: '',
-        hardware_requirements: '',
-        software: '',
-      },
-      citation: {
-        citation_bibtex: '',
-        citation_apa: '',
-      },
-      additional_info: {
-        model_examination: '',
-        glossary: '',
-        more_information: '',
-        model_card_authors: '',
-        model_card_contact: '',
-      },
+      model_id: '',  // Required field
+      model_summary: undefined,
+      model_description: undefined,
+      developers: '',  // Required field
+      funded_by: undefined,
+      shared_by: undefined,
+      model_type: undefined,
+      language: undefined,
+      license: undefined,
+      base_model: undefined,
+      model_sources: undefined,
+      uses: undefined,
+      bias_risks: undefined,
+      get_started_code: undefined,
+      training_details: undefined,
+      evaluation: undefined,
+      environmental_impact: undefined,
+      technical_specs: undefined,
+      citation: undefined,
+      additional_info: undefined,
     },
     mode: 'onChange',
   })
@@ -162,7 +120,7 @@ export function ModelCardForm() {
           <CardContent className="p-8 overflow-y-auto flex-1 min-h-0">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <BasicInfoSection form={form} />
+                <BasicInfoSection form={form} showOptionalFields={showOptionalFields} />
                 <ModelDetailsSection form={form} showOptionalFields={showOptionalFields} />
                 {showOptionalFields && (
                   <>

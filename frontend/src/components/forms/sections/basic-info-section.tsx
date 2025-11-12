@@ -13,9 +13,10 @@ import { Textarea } from '@/components/ui/textarea'
 
 interface BasicInfoSectionProps {
   form: UseFormReturn<ModelCard>
+  showOptionalFields?: boolean
 }
 
-export function BasicInfoSection({ form }: BasicInfoSectionProps) {
+export function BasicInfoSection({ form, showOptionalFields = true }: BasicInfoSectionProps) {
   return (
     <div className="space-y-6">
       <div className="pb-3 border-b border-border/50">
@@ -44,26 +45,28 @@ export function BasicInfoSection({ form }: BasicInfoSectionProps) {
         )}
       />
 
-      <FormField
-        control={form.control}
-        name="model_summary"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Model Summary</FormLabel>
-            <FormControl>
-              <Textarea
-                placeholder="Provide a quick 1-2 sentence summary of what the model is"
-                className="min-h-[80px]"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription>
-              A brief summary of what the model does (1-2 sentences)
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      {showOptionalFields && (
+        <FormField
+          control={form.control}
+          name="model_summary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Model Summary</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Provide a quick 1-2 sentence summary of what the model is"
+                  className="min-h-[80px]"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                A brief summary of what the model does (1-2 sentences)
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
     </div>
   )
 }

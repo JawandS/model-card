@@ -5,6 +5,7 @@ import { Download, X, FileJson, FileType, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModelCardSchema, type ModelCard, type PartialModelCard } from '@modelcard/schema'
 import { exportToJSON, exportToPDF, exportToMarkdown, exportToHTML } from '@/lib/exporters'
+import { cleanEmptyStrings } from '@/lib/utils'
 
 export function ExportModal() {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -25,10 +26,24 @@ export function ExportModal() {
       return
     }
 
-    const result = ModelCardSchema.safeParse(formData)
+    // Clean empty strings from the data (converts '' to undefined)
+    // This prevents validation failures for optional fields with format constraints (e.g., URLs)
+    const cleanedData = cleanEmptyStrings(formData)
+
+    const result = ModelCardSchema.safeParse(cleanedData)
 
     if (!result.success) {
-      alert('Please complete all required fields before exporting.')
+      // Build detailed error message
+      const errors = result.error.errors
+      const errorMessages = errors.map(err => {
+        const field = err.path.join('.')
+        return `  • ${field}: ${err.message}`
+      }).join('\n')
+
+      alert(
+        `Validation failed. Please fix the following:\n\n${errorMessages}\n\n` +
+        `Required fields: model_id, developers`
+      )
       return
     }
 
