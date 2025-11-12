@@ -17,10 +17,14 @@ RUN npm run build
 
 # Install frontend dependencies
 FROM base AS deps
-WORKDIR /app/frontend
+WORKDIR /app
 
-# Copy package files
-COPY frontend/package.json frontend/package-lock.json* ./
+# Copy built schema package (needed for frontend's local dependency)
+COPY --from=schema-builder /app/packages/schema ./packages/schema
+
+# Copy frontend package files
+COPY frontend/package.json frontend/package-lock.json* ./frontend/
+WORKDIR /app/frontend
 RUN npm ci
 
 # Build frontend
