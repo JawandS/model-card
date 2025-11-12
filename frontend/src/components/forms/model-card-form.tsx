@@ -116,17 +116,35 @@ export function ModelCardForm({ showPreview = true }: ModelCardFormProps) {
     return () => subscription.unsubscribe()
   }, [form])
 
-  // Save to localStorage
+  // Save to localStorage with debounce
   React.useEffect(() => {
+    const saveTimeoutRef = { current: null as NodeJS.Timeout | null }
+
     const subscription = form.watch((value) => {
-      setIsSaving(true)
-      localStorage.setItem('modelcard-draft', JSON.stringify(value))
-      setTimeout(() => {
-        setIsSaving(false)
-        setLastSaved(new Date())
-      }, 300) // Brief delay to show saving state
+      // Clear existing timeout
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+
+      // Debounce save by 1 second
+      saveTimeoutRef.current = setTimeout(() => {
+        setIsSaving(true)
+        localStorage.setItem('modelcard-draft', JSON.stringify(value))
+
+        // Show "Saving..." briefly then update to "Saved"
+        setTimeout(() => {
+          setIsSaving(false)
+          setLastSaved(new Date())
+        }, 500)
+      }, 1000) // Wait 1 second after user stops typing
     })
-    return () => subscription.unsubscribe()
+
+    return () => {
+      subscription.unsubscribe()
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
   }, [form])
 
   // Load from localStorage on mount
