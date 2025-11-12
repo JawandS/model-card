@@ -4,16 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A modern, elegant monorepo for generating comprehensive model cards for healthcare ML models. Built with Next.js, TypeScript, Zod validation, and shadcn/ui components. Follows the **Google Model Card Standard** with healthcare-specific extensions.
+A modern, elegant monorepo for generating comprehensive model cards for ML models. Built with Next.js, TypeScript, Zod validation, and shadcn/ui components. Follows the **HuggingFace Model Card Standard**.
 
 **Key Features:**
-- Multi-section form with real-time validation
-- Live preview panel showing rendered model card
+- Multi-section accordion form with real-time validation
+- Progress tracking (overall and per-section)
+- Live preview panel with toggle
 - AI-assisted field completion (OpenAI integration)
 - Multiple export formats (JSON, PDF, Markdown, HTML)
-- Auto-save to localStorage
+- Debounced auto-save to localStorage with status indicator
+- Reset functionality with confirmation
 - Dark mode support
-- Healthcare-specific fields (clinical context, care settings, representativeness)
+- Professional UI with custom scrollbars and glass effects
 
 ## Repository Structure
 
@@ -22,63 +24,70 @@ model-card/
 ├── packages/schema/          # Shared Zod schemas & TypeScript types
 │   ├── src/
 │   │   ├── index.ts         # Package exports
-│   │   ├── modelcard.schema.ts  # Zod schema definitions (149 lines)
-│   │   └── types.ts         # TypeScript type exports
+│   │   ├── modelcard.schema.ts  # Zod schema (141 lines)
+│   │   ├── types.ts         # TypeScript type exports
+│   │   ├── modelcard_template.md
+│   │   └── annotated_modecard.md
 │   ├── package.json         # Scripts: build, dev, type-check
 │   └── tsconfig.json
 │
 ├── frontend/                 # Next.js 14 application
 │   ├── src/
 │   │   ├── app/             # Next.js App Router
-│   │   │   ├── api/llm-assist/route.ts  # OpenAI API endpoint
-│   │   │   ├── layout.tsx   # Root layout with theme provider
-│   │   │   ├── page.tsx     # Main page (form + preview layout)
+│   │   │   ├── api/
+│   │   │   │   ├── llm-assist/route.ts  # OpenAI API endpoint
+│   │   │   │   └── config/route.ts
+│   │   │   ├── layout.tsx   # Root layout with providers
+│   │   │   ├── page.tsx     # Main page (form + preview)
 │   │   │   └── globals.css
 │   │   ├── components/
 │   │   │   ├── forms/
-│   │   │   │   ├── model-card-form.tsx  # Main form component (223 lines)
-│   │   │   │   └── sections/   # Form section components (9 files)
+│   │   │   │   ├── model-card-form.tsx  # Main form (488 lines)
+│   │   │   │   └── sections/   # Form section components (11 files)
 │   │   │   │       ├── basic-info-section.tsx
 │   │   │   │       ├── model-details-section.tsx
-│   │   │   │       ├── training-data-section.tsx
-│   │   │   │       ├── implementation-section.tsx
-│   │   │   │       ├── evaluation-section.tsx
-│   │   │   │       ├── ethics-and-safety-section.tsx
+│   │   │   │       ├── model-sources-section.tsx
 │   │   │   │       ├── usage-and-limitations-section.tsx
-│   │   │   │       ├── healthcare-extension-section.tsx
-│   │   │   │       └── provenance-section.tsx
+│   │   │   │       ├── ethics-and-safety-section.tsx
+│   │   │   │       ├── training-data-section.tsx
+│   │   │   │       ├── evaluation-section.tsx
+│   │   │   │       ├── environmental-impact-section.tsx
+│   │   │   │       ├── technical-specs-section.tsx
+│   │   │   │       ├── citation-section.tsx
+│   │   │   │       └── additional-info-section.tsx
 │   │   │   ├── ui/          # shadcn/ui components
-│   │   │   │   ├── button.tsx
-│   │   │   │   ├── card.tsx
-│   │   │   │   ├── form.tsx
-│   │   │   │   ├── input.tsx
-│   │   │   │   ├── textarea.tsx
-│   │   │   │   ├── textarea-with-assist.tsx  # AI-enhanced textarea
-│   │   │   │   ├── label.tsx
-│   │   │   │   └── select.tsx
-│   │   │   ├── model-card-preview.tsx  # Live preview component
-│   │   │   ├── export-modal.tsx        # Export format selector
-│   │   │   ├── instructions-modal.tsx
-│   │   │   ├── llm-assist-button.tsx   # AI assistance button
+│   │   │   │   ├── button.tsx, card.tsx, form.tsx
+│   │   │   │   ├── input.tsx, textarea.tsx, label.tsx
+│   │   │   │   ├── select.tsx, accordion.tsx
+│   │   │   │   └── textarea-with-assist.tsx  # AI-enhanced
+│   │   │   ├── model-card-preview.tsx        # Live preview
+│   │   │   ├── export-modal.tsx              # Export selector
+│   │   │   ├── instructions-modal.tsx        # Help modal
+│   │   │   ├── alert-modal.tsx               # Alert system
+│   │   │   ├── reset-confirmation-modal.tsx  # Reset confirm
+│   │   │   ├── progress-tracker.tsx          # Overall progress
+│   │   │   ├── section-progress-indicator.tsx # Section progress
+│   │   │   ├── save-indicator.tsx            # Save status
+│   │   │   ├── llm-assist-button.tsx
 │   │   │   ├── theme-provider.tsx
 │   │   │   └── theme-toggle.tsx
 │   │   ├── hooks/
-│   │   │   └── use-toast.tsx
+│   │   │   ├── use-toast.tsx
+│   │   │   └── use-alert-modal.tsx  # Alert modal hook
 │   │   └── lib/
-│   │       ├── exporters/
-│   │       │   └── index.ts  # Export functions (JSON, PDF, MD, HTML)
+│   │       ├── exporters/index.ts   # Export functions
+│   │       ├── section-config.ts    # Section/progress config
 │   │       └── utils.ts
-│   ├── package.json         # Scripts: dev, build, start, lint, type-check
-│   ├── next.config.js       # Transpiles @modelcard/schema
-│   ├── tailwind.config.ts   # Tailwind + shadcn/ui theme
+│   ├── package.json
+│   ├── next.config.js
+│   ├── tailwind.config.ts
 │   ├── tsconfig.json
-│   ├── .env.local.example   # OPENAI_API_KEY template
-│   └── components.json      # shadcn/ui config
+│   ├── .env.local.example
+│   └── components.json
 │
-├── package.json             # Root scripts: setup, start, dev
-├── run.sh                   # Convenience script (builds schema, starts dev)
-├── README.md                # User-facing documentation
-└── QUICKSTART.md            # Quick start guide
+├── package.json             # Root scripts
+├── run.sh                   # Dev server script
+└── README.md
 ```
 
 ## Technology Stack
@@ -86,153 +95,105 @@ model-card/
 ### Frontend
 - **Framework:** Next.js 14.2 (App Router)
 - **Language:** TypeScript 5.3
-- **Validation:** Zod 3.23 (shared schema package)
+- **Validation:** Zod 3.23
 - **Forms:** react-hook-form 7.50 + @hookform/resolvers
 - **UI Components:** shadcn/ui + Radix UI primitives
 - **Styling:** Tailwind CSS 3.4 + tailwindcss-animate
 - **Icons:** lucide-react 0.316
-- **Theme:** next-themes 0.2 (dark mode)
+- **Theme:** next-themes 0.2
 - **PDF Export:** jsPDF 2.5
 - **AI Assistance:** OpenAI SDK 6.8 (gpt-4o-mini)
 
 ### Schema Package
 - **Validation:** Zod 3.23
-- **Build Tool:** tsup 8.0 (bundles CJS, ESM, DTS)
+- **Build Tool:** tsup 8.0
 - **TypeScript:** 5.3
 
 ## Development Workflows
 
 ### Setup & Installation
 
-**Initial Setup:**
 ```bash
-# Option 1: Using root package.json
+# Initial setup
 npm run setup  # Installs all deps + builds schema
 
-# Option 2: Manual
-cd packages/schema && npm install && npm run build && cd ../..
-cd frontend && npm install && cd ..
+# Or manual
+cd packages/schema && npm install && npm run build
+cd ../../frontend && npm install
 ```
 
 ### Development
 
-**Start dev server:**
 ```bash
-# Option 1: Using convenience script (recommended)
-./run.sh  # Checks deps, kills port 3000, starts dev server
+# Start dev server (recommended)
+./run.sh  # Checks deps, kills port 3000, starts dev
 
-# Option 2: Using root package.json
+# Or using npm
 npm run dev  # Builds schema + starts Next.js dev
 
-# Option 3: Manual
-cd packages/schema && npm run build && cd ../../frontend && npm run dev
+# Development server runs at http://localhost:3000
 ```
 
-**Development server:** http://localhost:3000
-
-**Watch mode for schema:**
-```bash
-cd packages/schema
-npm run dev  # Watches for changes and rebuilds
-```
-
-### Building
-
-**Production build:**
-```bash
-# Frontend only (requires schema already built)
-cd frontend
-npm run build  # Creates .next/standalone output
-
-# Full production build
-cd packages/schema && npm run build && cd ../../frontend && npm run build
-```
-
-**Start production server:**
-```bash
-cd frontend
-npm start  # Starts production server on port 3000
-```
-
-### Type Checking
+### Building & Type Checking
 
 ```bash
-# Schema package
-cd packages/schema
-npm run type-check
+# Production build
+cd packages/schema && npm run build
+cd ../../frontend && npm run build
 
-# Frontend
-cd frontend
-npm run type-check
-npm run lint
+# Type checking
+cd frontend && npm run type-check && npm run lint
 ```
 
-## Architecture Deep Dive
+## Architecture
 
-### 1. Monorepo Structure & Dependencies
+### 1. Schema Architecture (HuggingFace Standard)
 
-**Dependency Flow:**
-```
-packages/schema (independent)
-    ↓
-frontend (depends on @modelcard/schema via file:../packages/schema)
-```
+**File: packages/schema/src/modelcard.schema.ts (141 lines)**
 
-**Key Configuration:**
-- `frontend/next.config.js`: Transpiles `@modelcard/schema` using `transpilePackages`
-- Schema built to `packages/schema/dist/` with CJS, ESM, and TypeScript definitions
-- Frontend imports: `import { ModelCardSchema, type ModelCard } from '@modelcard/schema'`
-
-### 2. Schema Package Architecture
-
-**File: packages/schema/src/modelcard.schema.ts (149 lines)**
-
-Based on Google Model Card Standard with healthcare extensions:
+Based on the HuggingFace Model Card standard (https://huggingface.co/docs/hub/model-cards).
 
 **Schema Hierarchy:**
 ```
 ModelCardSchema
 ├── name: string (required)
 ├── model_details: ModelDetailsSchema (required)
-│   ├── version: string (required)
+│   ├── model_id: string (required)
 │   ├── description?: string
-│   ├── owners?: OwnerSchema[]
+│   ├── developers?: string[]
+│   ├── shared_by?: string
+│   ├── model_type?: string
+│   ├── model_languages?: string[]
 │   ├── license?: string
-│   ├── citation?: string
-│   ├── references?: string[]
-│   ├── input_format?: string
-│   └── output_format?: string
-├── training_data?: TrainingDataSchema
-├── implementation?: ImplementationSchema
+│   ├── finetuned_from?: string
+│   ├── model_function?: string
+│   └── feedback?: string
+├── model_sources?: ModelSourcesSchema
+│   ├── repository?: string (URL)
+│   ├── paper?: string (URL)
+│   ├── demo?: string (URL)
+├── uses?: UsesSchema
+│   ├── direct_use?: string
+│   ├── downstream_use?: string
+│   ├── out_of_scope_use?: string
+├── bias_risks_limitations?: BiasRisksLimitationsSchema
+├── training_details?: TrainingDetailsSchema
 ├── evaluation?: EvaluationSchema
-├── ethics_and_safety?: EthicsAndSafetySchema
-│   ├── bias_analysis?: string
-│   ├── fairness_assessment?: string
-│   └── ...
-├── usage_and_limitations?: UsageAndLimitationsSchema
-├── healthcare?: HealthcareExtensionSchema
-│   ├── clinical_context?: ClinicalContextEnum
-│   ├── care_setting?: CareSettingEnum
-│   ├── representativeness?: RepresentativenessSchema
-│   └── ...
-└── provenance?: ProvenanceSchema
+├── environmental_impact?: EnvironmentalImpactSchema
+├── technical_specifications?: TechnicalSpecificationsSchema
+├── citation?: CitationSchema
+├── additional_information?: AdditionalInformationSchema
 ```
 
 **Exports (packages/schema/src/index.ts):**
-- All Zod schemas (for validation)
-- All TypeScript types (inferred from schemas)
+- All Zod schemas for validation
+- TypeScript types (inferred from schemas)
 - Helper functions: `validateModelCard()`, `parseModelCard()`
-- `PartialModelCard` type (for progressive form filling)
+- `PartialModelCard` type for progressive form filling
 
-**Healthcare-Specific Enums:**
-```typescript
-ClinicalContextEnum: 'screening' | 'triage' | 'diagnosis' | 'monitoring' | ...
-CareSettingEnum: 'inpatient' | 'outpatient' | 'ed' | 'telehealth' | ...
-```
+### 2. Form Architecture & Data Flow
 
-### 3. Form Architecture & Data Flow
-
-**Main Form Component: frontend/src/components/forms/model-card-form.tsx (223 lines)**
+**Main Form Component: frontend/src/components/forms/model-card-form.tsx (488 lines)**
 
 **Data Flow:**
 ```
@@ -242,61 +203,75 @@ react-hook-form (useForm with zodResolver)
     ↓
 Real-time validation (ModelCardSchema)
     ↓
-form.watch() subscription
+Debounced save (1 second)
     ↓
-├── Update preview (setFormData)
-└── Save to localStorage (modelcard-draft)
+├── localStorage.setItem('modelcard-draft')
+├── SaveIndicator update ("Saving..." → "Saved Xs ago")
+└── Progress calculation
+    ↓
+    ├── calculateSectionCompletion() for each section
+    └── calculateOverallCompletion() for overall progress
 ```
 
-**Form State Management:**
+**Form Features:**
+- **11 accordion sections** (collapsible, multiple open)
+- **Progress tracking** (overall + per-section indicators)
+- **Save indicator** (real-time status with time-ago)
+- **Reset button** (with confirmation modal)
+- **Preview toggle** (show/hide right panel)
+- **Auto-save** (debounced 1s)
+- **Auto-load** (from localStorage on mount)
+- **AI assistance** (on select textarea fields)
+
+**Form Sections:**
+1. Basic Information* (required)
+2. Model Details* (required)
+3. Model Sources
+4. Uses
+5. Bias, Risks, and Limitations
+6. Training Details
+7. Evaluation
+8. Environmental Impact
+9. Technical Specifications
+10. Citation
+11. Additional Information
+
+Each section component receives `form` prop and renders `FormField` components with validation.
+
+### 3. Progress Tracking System
+
+**Components:**
+- **`progress-tracker.tsx`**: Overall completion percentage, circular indicator, progress bar
+- **`section-progress-indicator.tsx`**: Per-section field completion with CheckCircle when complete
+- **`section-config.ts`**: Centralized section configuration and completion calculation logic
+
+**Functions:**
+- `calculateSectionCompletion(formData, section)`: Returns { filledFields, totalFields, percentage }
+- `calculateOverallCompletion(formData, showOptionalFields)`: Returns overall completion percentage
+- `getNestedValue(obj, path)`: Get nested object values via dot notation
+- `isFieldFilled(value)`: Check if field has meaningful content
+
+### 4. Alert Modal System
+
+**Components:**
+- **`alert-modal.tsx`**: Modal with variants (error, warning, info, success), custom actions
+- **`use-alert-modal.tsx`**: Context provider and hook for global alert state
+
+**Usage:**
 ```typescript
-const form = useForm<ModelCard>({
-  resolver: zodResolver(ModelCardSchema),  // Zod validation
-  defaultValues: { /* ... */ },
-  mode: 'onChange'  // Real-time validation
+const { showAlert } = useAlertModal()
+
+showAlert({
+  variant: 'error',
+  title: 'Validation Error',
+  message: 'Please fix the following errors...',
+  actions: [{ label: 'OK', variant: 'default' }]
 })
 ```
 
-**Key Features:**
-1. **Auto-save:** `useEffect` watches form and saves to localStorage
-2. **Auto-load:** On mount, loads from localStorage if available
-3. **Live preview:** `useEffect` watches form and updates preview state
-4. **Optional fields toggle:** Shows/hides non-required sections
-5. **Preview toggle:** Shows/hides right panel
+**Integration:** Added to `layout.tsx` as `<AlertModalProvider>`
 
-**Form Sections:**
-Each section is a separate component that receives `form` prop:
-- Renders `FormField` components from shadcn/ui
-- Uses `form.control` for field registration
-- Displays validation errors via `FormMessage`
-- Some fields use `TextareaWithAssist` for AI assistance
-
-**Example Section Pattern:**
-```typescript
-export function ModelDetailsSection({ form, showOptionalFields }) {
-  return (
-    <FormField
-      control={form.control}
-      name="model_details.description"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Description</FormLabel>
-          <FormControl>
-            <TextareaWithAssist
-              fieldName="Model Description"
-              contextData={form.getValues()}
-              onValueChange={field.onChange}
-              {...field}
-            />
-          </FormControl>
-        </FormItem>
-      )}
-    />
-  )
-}
-```
-
-### 4. AI Assistance Feature
+### 5. AI Assistance Feature
 
 **Architecture:**
 ```
@@ -308,8 +283,6 @@ Next.js API Route (Edge Runtime)
     ↓
 OpenAI API (gpt-4o-mini)
     ↓ (suggestion returned)
-onValueChange callback
-    ↓
 field.onChange (react-hook-form)
 ```
 
@@ -319,41 +292,7 @@ field.onChange (react-hook-form)
 - **Input:** `{ fieldName, fieldDescription, contextData }`
 - **Output:** `{ suggestion }` or `{ error }`
 
-**System Prompt:**
-- Expert assistant for model card documentation
-- Concise, professional, technical language
-- Provides templates when context is limited
-- Special attention to bias/fairness fields
-
-**Configuration:**
-- Requires `OPENAI_API_KEY` in `.env.local`
-- Example file: `frontend/.env.local.example`
-
-### 5. Preview Architecture
-
-**Component: frontend/src/components/model-card-preview.tsx**
-
-**Data Flow:**
-```
-form.watch() → setFormData(PartialModelCard) → ModelCardPreview component
-```
-
-**Rendering Logic:**
-- Receives `data: PartialModelCard` (all fields optional)
-- `hasContent(obj)` helper checks if section has any data
-- Only renders sections with content
-- Responsive text sizes and spacing
-- Matches Google Model Card structure
-
-**Example:**
-```typescript
-{hasContent(data.model_details) && (
-  <div className="border-t pt-4">
-    <h4 className="font-semibold">Model Details</h4>
-    {data.model_details?.version && <p>Version: {data.model_details.version}</p>}
-  </div>
-)}
-```
+**Configuration:** Requires `OPENAI_API_KEY` in `frontend/.env.local`
 
 ### 6. Export Architecture
 
@@ -365,6 +304,8 @@ User clicks export button
     ↓
 Load from localStorage
     ↓
+cleanEmptyStrings() (convert empty strings to undefined)
+    ↓
 Validate with ModelCardSchema.safeParse()
     ↓ (if valid)
 Call exporter function (JSON/PDF/MD/HTML)
@@ -373,186 +314,56 @@ Download file
 ```
 
 **Exporters: frontend/src/lib/exporters/index.ts**
+- **JSON**: Machine-readable, full schema
+- **Markdown**: Documentation, version control
+- **HTML**: Web-friendly with embedded styles
+- **PDF**: Professional document (uses jsPDF)
 
-**Available Formats:**
-1. **JSON:** `exportToJSON(data)` - Machine-readable, full schema
-2. **Markdown:** `exportToMarkdown(data)` - Documentation, version control
-3. **HTML:** `exportToHTML(data)` - Web-friendly with embedded styles
-4. **PDF:** `exportToPDF(data)` - Professional document (uses jsPDF)
+**Validation:** Shows detailed error messages in alert modal if validation fails.
 
-**Validation:**
-- Exports only work if form data passes full schema validation
-- Uses `ModelCardSchema.safeParse()` to check completeness
-- Alerts user if required fields are missing
+### 7. UI Components & Styling
 
-### 7. Routing & Page Structure
+**Key UI Components:**
+- **Accordion** (`ui/accordion.tsx`): Collapsible sections with animated expand/collapse
+- **Alert Modal** (`alert-modal.tsx`): Professional modal system with backdrop blur
+- **Save Indicator** (`save-indicator.tsx`): Real-time save status with pulse animation
+- **Progress Indicators**: Circular progress with percentages and field counts
 
-**Next.js App Router Structure:**
-```
-app/
-├── layout.tsx           # Root layout (ThemeProvider, metadata)
-├── page.tsx             # Main page (form + preview grid)
-├── globals.css          # Global styles, CSS variables
-└── api/llm-assist/route.ts  # AI assistance API
-```
+**Styling Features:**
+- **Custom scrollbars**: Webkit and Firefox support, matches theme colors
+- **Glass morphism**: `.glass` class for frosted glass effects
+- **Professional color palette**: Society of Actuaries theme (navy blue + teal)
+- **Dark mode**: High contrast with `next-themes`
+- **Animations**: Fade-in, slide-in, smooth transitions
 
-**Main Page (app/page.tsx):**
-```
-<main>  (gradient background)
-  <header>  (InstructionsModal, ExportModal, ThemeToggle)
-  <div>  (grid container)
-    <ModelCardForm />  (left: form, right: preview)
-  </div>
-</main>
-```
-
-**Layout:**
-- Uses client-side rendering (`'use client'`)
-- Two-column grid on large screens (lg:grid-cols-2)
-- Responsive single column on small screens
-- Decorative gradient background elements
-- Frosted glass effect (glass class) for modals
-
-## Key Technical Decisions
-
-### 1. Monorepo with Local Package
-- **Why:** Share schema between frontend and potential future backend
-- **How:** Local file dependency in package.json
-- **Trade-off:** Must build schema before frontend (handled by scripts)
-
-### 2. Zod for Validation
-- **Why:** Type-safe runtime validation, DX benefits
-- **How:** Single source of truth (schema) generates TypeScript types
-- **Trade-off:** Schema changes require rebuild of package
-
-### 3. react-hook-form + zodResolver
-- **Why:** Performant forms with minimal re-renders
-- **How:** Integrates Zod schema with react-hook-form
-- **Trade-off:** Learning curve for nested field names
-
-### 4. localStorage Auto-save
-- **Why:** Prevent data loss, no backend needed
-- **How:** Watch form values, JSON.stringify to localStorage
-- **Trade-off:** Limited to single browser, not synced
-
-### 5. Next.js App Router
-- **Why:** Modern React patterns, built-in API routes
-- **How:** App directory with server/client components
-- **Trade-off:** Some features require 'use client' directive
-
-### 6. Edge Runtime for AI API
-- **Why:** Faster cold starts, global distribution
-- **How:** Export `runtime = 'edge'` from API route
-- **Trade-off:** Limited Node.js APIs available
-
-### 7. shadcn/ui Components
-- **Why:** Copy-paste components, full control, type-safe
-- **How:** Components in src/components/ui, customizable
-- **Trade-off:** No npm package updates (manual updates)
+**Global Styles: frontend/src/app/globals.css**
+- CSS variables for light/dark mode
+- Custom utility classes (`.glass`, `.gradient-bg`, `.accent-gradient`)
+- Custom scrollbar styling (lines 104-136)
 
 ## Common Development Tasks
 
 ### Adding a New Form Field
 
-1. **Update Schema:**
-   ```typescript
-   // packages/schema/src/modelcard.schema.ts
-   export const MyNewSectionSchema = z.object({
-     my_field: z.string().optional(),
-   })
-
-   export const ModelCardSchema = z.object({
-     // ...
-     my_section: MyNewSectionSchema.optional(),
-   })
-   ```
-
-2. **Rebuild Schema:**
-   ```bash
-   cd packages/schema && npm run build
-   ```
-
-3. **Export Types:**
-   ```typescript
-   // packages/schema/src/index.ts
-   export { MyNewSectionSchema } from './modelcard.schema'
-   export type { MyNewSection } from './types'
-   ```
-
-4. **Add Form Section:**
-   ```typescript
-   // frontend/src/components/forms/sections/my-section.tsx
-   export function MySection({ form }: { form: UseFormReturn<ModelCard> }) {
-     return (
-       <FormField
-         control={form.control}
-         name="my_section.my_field"
-         render={({ field }) => (/* ... */)}
-       />
-     )
-   }
-   ```
-
-5. **Add to Main Form:**
-   ```typescript
-   // frontend/src/components/forms/model-card-form.tsx
-   import { MySection } from './sections/my-section'
-   // Add to defaultValues
-   // Add <MySection form={form} /> to form JSX
-   ```
-
-6. **Update Preview (optional):**
-   ```typescript
-   // frontend/src/components/model-card-preview.tsx
-   {hasContent(data.my_section) && (
-     <div>...</div>
-   )}
-   ```
-
-### Updating Export Formats
-
-**Edit:** `frontend/src/lib/exporters/index.ts`
-
-Each exporter function receives `data: ModelCard` and triggers download.
-
-**Example (adding new section to Markdown):**
-```typescript
-export function exportToMarkdown(data: ModelCard) {
-  let markdown = `# ${data.name}\n\n`
-
-  if (data.my_section?.my_field) {
-    markdown += `## My Section\n\n${data.my_section.my_field}\n\n`
-  }
-
-  // ... download logic
-}
-```
+1. **Update Schema** (`packages/schema/src/modelcard.schema.ts`)
+2. **Rebuild Schema** (`cd packages/schema && npm run build`)
+3. **Add Form Field** (in appropriate section component)
+4. **Update section-config.ts** (add field to section's `fields` array)
+5. **Update Preview** (optional, in `model-card-preview.tsx`)
+6. **Update Exporters** (optional, in `lib/exporters/index.ts`)
 
 ### Customizing AI Assistance
 
 **Edit:** `frontend/src/app/api/llm-assist/route.ts`
-
-**Customize:**
-- System prompt (lines 39-49)
-- Model (`gpt-4o-mini` → `gpt-4`, etc.)
-- Temperature, max_tokens
-- Context building logic (lines 29-37)
+- Modify system prompt
+- Change model (e.g., `gpt-4`)
+- Adjust temperature or max_tokens
 
 ### Styling Changes
 
 **Global Styles:** `frontend/src/app/globals.css`
-- CSS variables for light/dark mode
-- Custom utility classes (.glass, .gradient-bg)
-
 **Tailwind Config:** `frontend/tailwind.config.ts`
-- Theme colors (HSL-based)
-- Custom animations
-- Border radius variables
-
-**Component Styles:** Inline Tailwind classes
-- Gradient text: `bg-gradient-to-r ... bg-clip-text text-transparent`
-- Glass effect: `bg-background/95 backdrop-blur-sm`
-- Animations: `animate-in fade-in slide-in-from-bottom`
+**Component Styles:** Inline Tailwind classes in components
 
 ## Environment Variables
 
@@ -562,7 +373,7 @@ export function exportToMarkdown(data: ModelCard) {
 OPENAI_API_KEY=sk-...  # Required for AI assistance feature
 ```
 
-**Note:** If not set, AI assist will return error message prompting user to configure.
+**Note:** If not set, AI assist will show error prompting user to configure.
 
 ## Build Output
 
@@ -583,81 +394,43 @@ frontend/.next/
 └── types/            # Generated TypeScript types
 ```
 
-## Testing Notes
+## Key Technical Decisions
 
-**Currently:** No automated tests configured
+### 1. Monorepo with Local Package
+- **Why:** Share schema between frontend and potential future backend
+- **Trade-off:** Must build schema before frontend
 
-**Type Safety:**
-- All form fields are type-checked via Zod schema
-- TypeScript catches type errors at build time
-- Runtime validation via Zod during form submission
+### 2. Zod for Validation
+- **Why:** Type-safe runtime validation, single source of truth
+- **Trade-off:** Schema changes require package rebuild
 
-**Manual Testing:**
-1. Fill out form, verify live preview updates
-2. Test validation (required fields, email format, date format)
-3. Test localStorage persistence (refresh page)
-4. Test all export formats
-5. Test AI assistance (requires API key)
-6. Test dark mode toggle
-7. Test optional fields toggle
+### 3. react-hook-form + zodResolver
+- **Why:** Performant forms with minimal re-renders
+- **Trade-off:** Learning curve for nested field names
 
-## Known Limitations & Future Enhancements
+### 4. localStorage with Debounced Auto-save
+- **Why:** Prevent data loss, no backend needed
+- **How:** 1-second debounce prevents excessive writes
+- **Trade-off:** Limited to single browser
 
-**Current Limitations:**
-1. No backend - data only stored in localStorage
-2. No user authentication or multi-user support
-3. No version history or change tracking
-4. No collaboration features
-5. PDF export is basic (uses jsPDF limitations)
-6. No automated tests
+### 5. Accordion UI for Sections
+- **Why:** Reduce scrolling, improve navigation for long forms
+- **Trade-off:** Adds complexity to form layout
 
-**Planned Features (from README):**
-1. FastAPI backend with uv for storage/retrieval
-2. User authentication with access control
-3. Version history tracking
-4. Real-time collaboration
-5. Pre-filled templates for common model types
-6. Automated validation reports (regulatory compliance)
+### 6. Progress Tracking System
+- **Why:** User feedback, motivates completion
+- **How:** Centralized section-config.ts for maintainability
+- **Trade-off:** Additional calculation overhead
 
-## Git Workflow
-
-**Current Branch:** `claude/refine-google-model-card-011CUoeiZ7rvh8zoRdSvuxne`
-**Main Branch:** `main`
-
-**Recent Commits:**
-- a286130: filter optional fields
-- 866e209: update dependencies
-- b88af70: Refactor to Google standard with healthcare extensions + AI
-- 2f76b41: fix export
-- f9c8564: mv export card
-
-**No Special Git Rules:** Standard development workflow
-
-## Performance Considerations
-
-**Optimizations:**
-1. **Form Performance:** react-hook-form minimizes re-renders
-2. **Build Performance:** tsup for fast schema builds
-3. **Bundle Size:** Next.js automatic code splitting
-4. **Runtime Performance:** Zod validation is fast (<1ms)
-5. **API Performance:** Edge runtime for AI assistance
-
-**Potential Bottlenecks:**
-1. Large form data in localStorage (JSON.stringify on every change)
-2. PDF generation for large documents (jsPDF performance)
-3. Preview re-renders (currently re-renders on every keystroke)
-
-**Optimization Opportunities:**
-1. Debounce localStorage saves
-2. Memoize preview component
-3. Virtual scrolling for long forms
-4. Lazy load form sections
-5. Streaming AI responses
+### 7. Modal System vs Toasts
+- **Why:** Better visibility for important messages
+- **How:** Context-based AlertModalProvider
+- **Trade-off:** More intrusive than toasts
 
 ## Troubleshooting
 
 **Issue:** `Cannot find module '@modelcard/schema'`
-**Solution:** Build schema package first
+**Solution:** Build schema package
 ```bash
 cd packages/schema && npm install && npm run build
 ```
@@ -666,17 +439,16 @@ cd packages/schema && npm install && npm run build
 **Solution:** Rebuild schema and restart TS server
 ```bash
 cd packages/schema && npm run build
-# Then restart TypeScript in IDE
 ```
 
 **Issue:** Port 3000 already in use
-**Solution:** `./run.sh` handles this automatically, or manually:
+**Solution:** `./run.sh` handles this, or:
 ```bash
 lsof -ti:3000 | xargs kill -9
 ```
 
 **Issue:** AI assistance not working
-**Solution:** Check OPENAI_API_KEY in `.env.local`
+**Solution:** Check `OPENAI_API_KEY` in `frontend/.env.local`
 
 **Issue:** CSS not loading
 **Solution:** Clear Next.js cache
@@ -720,7 +492,8 @@ npm run setup                 # Initial setup (all deps + build)
 - `openai@^6.8.0`: AI assistance
 - `jspdf@^2.5.2`: PDF generation
 - `next-themes@^0.2.1`: Dark mode
-- `@radix-ui/*`: UI primitives
+- `@radix-ui/react-accordion@^1.1.2`: Accordion UI
+- `@radix-ui/*`: Other UI primitives
 - `lucide-react@^0.316.0`: Icons
 - `tailwindcss@^3.4.1`: Styling
 
@@ -730,7 +503,7 @@ npm run setup                 # Initial setup (all deps + build)
 
 ## Additional Resources
 
-- **Google Model Cards:** https://modelcards.withgoogle.com/
+- **HuggingFace Model Cards:** https://huggingface.co/docs/hub/model-cards
 - **Zod Documentation:** https://zod.dev/
 - **shadcn/ui:** https://ui.shadcn.com/
 - **Next.js App Router:** https://nextjs.org/docs/app
@@ -738,5 +511,5 @@ npm run setup                 # Initial setup (all deps + build)
 
 ---
 
-**Last Updated:** 2025-11-04
-**Codebase Version:** Git commit a286130 (filter optional fields)
+**Last Updated:** 2025-11-12
+**Reference:** HuggingFace Model Card Standard

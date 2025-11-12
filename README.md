@@ -1,22 +1,19 @@
-# Healthcare Model Card Generator
+# Model Card Generator
 
-A modern, elegant monorepo for generating comprehensive model cards for healthcare ML models. Built with Next.js, TypeScript, Zod validation, and shadcn/ui components.
+A modern, elegant monorepo for generating comprehensive model cards for machine learning models. Built with Next.js, TypeScript, Zod validation, and shadcn/ui components. Follows the **HuggingFace Model Card Standard**.
 
 ## Features
 
 - **Elegant Next.js Frontend**: Modern, responsive UI with dark mode support
-- **Comprehensive Form**: Multi-section form covering all aspects of healthcare model documentation
+- **Comprehensive Form**: 11-section accordion form covering all aspects of ML model documentation
+- **Progress Tracking**: Visual indicators for overall and per-section completion
 - **Real-time Validation**: Zod schema validation with instant feedback
-- **Live Preview**: See your model card as you fill out the form
+- **Live Preview**: See your model card as you fill out the form (with toggle)
 - **Multiple Export Formats**: Export to JSON, PDF, Markdown, and HTML
-- **Auto-save**: Form data persists in localStorage
+- **Auto-save**: Form data persists to localStorage with debounced saving and status indicator
+- **Reset Functionality**: Clear all fields with confirmation modal
 - **AI-Assisted Field Completion** (Optional): OpenAI-powered suggestions for model card fields
-- **Healthcare-Specific**: Tailored schema for clinical ML models with fields for:
-  - Clinical context and care settings
-  - Data sources (EHR, claims, imaging, etc.)
-  - Subgroup analysis and fairness metrics
-  - Risk management and human oversight
-  - Model provenance
+- **Professional UI**: Custom scrollbars, glass morphism effects, smooth animations
 
 ## Project Structure
 
@@ -31,7 +28,9 @@ model-card/
 │       └── src/
 │           ├── index.ts
 │           ├── modelcard.schema.ts
-│           └── types.ts
+│           ├── types.ts
+│           ├── modelcard_template.md
+│           └── annotated_modecard.md
 └── frontend/                      # Next.js application
     ├── package.json
     ├── next.config.js
@@ -41,6 +40,7 @@ model-card/
         ├── components/            # React components
         │   ├── ui/               # shadcn/ui components
         │   └── forms/            # Model card form components
+        ├── hooks/                # Custom React hooks
         └── lib/                  # Utilities & exporters
 ```
 
@@ -121,15 +121,20 @@ The application includes an optional AI assist feature that uses OpenAI's API to
 
 3. Restart the development server
 
-When configured, an "AI Assist" button will appear on text fields throughout the form. If no API key is configured, the application works perfectly fine without this feature - the AI assist buttons simply won't be displayed.
+When configured, an "AI Assist" button will appear on text fields throughout the form. If no API key is configured, the application works perfectly fine without this feature.
 
 **Note:** AI assist uses the GPT-4o-mini model, which incurs costs based on usage. See [OpenAI's pricing](https://openai.com/api/pricing/) for details.
 
 ## Usage
 
-1. **Fill out the form**: Complete all required fields (marked with *) in the model card form
-2. **Preview your model card**: View the live preview in the right panel
-3. **Export**: Once complete, export your model card in your preferred format:
+1. **Navigate the form**: Use the accordion sections to navigate between different parts of the model card
+2. **Track progress**: View completion percentages for each section and overall progress in the header
+3. **Fill out required fields**: Complete all required fields (marked with *) - Basic Information and Model Details
+4. **Add optional information**: Expand and fill optional sections like Environmental Impact, Technical Specifications, and Citation
+5. **Watch auto-save**: The save indicator shows when your work is being saved to local storage
+6. **Preview your model card**: Toggle the preview panel on/off to see the rendered model card
+7. **Reset if needed**: Use the reset button to clear all fields (with confirmation)
+8. **Export**: Once complete, export your model card in your preferred format:
    - **JSON**: Machine-readable format for API integration
    - **PDF**: Professional document for sharing
    - **Markdown**: Version-controlled documentation
@@ -137,17 +142,22 @@ When configured, an "AI Assist" button will appear on text fields throughout the
 
 ## Model Card Schema
 
-The healthcare model card includes:
+The model card follows the [HuggingFace Model Card standard](https://huggingface.co/docs/hub/model-cards) and includes:
 
-### Required Fields
-- **Basic Info**: Model name, version, owner organization
-- **Intended Use**: Summary, clinical context, care setting
-- **Data**: Source type, time window, geography
-- **Evaluation**: Overall metrics, subgroup analysis, limitations
+### Required Sections
+- **Basic Information**: Model name
+- **Model Details**: Model ID, description, developers, model type, languages, license, and more
 
-### Optional Fields
-- **Risk Management**: Failure modes, human oversight, monitoring plans
-- **Provenance**: Creation metadata, dataset tracking
+### Optional Sections
+- **Model Sources**: Repository, paper, and demo URLs
+- **Uses**: Direct use cases, downstream applications, and out-of-scope uses
+- **Bias, Risks, and Limitations**: Analysis of potential biases and recommendations
+- **Training Details**: Training data, preprocessing, and training regime
+- **Evaluation**: Testing data, factors, metrics, and results
+- **Environmental Impact**: Hardware type, compute hours, cloud provider, and CO2 emissions
+- **Technical Specifications**: Model architecture, compute infrastructure, hardware/software requirements
+- **Citation**: BibTeX and APA citations
+- **Additional Information**: Getting started code, model examination, glossary, and authors
 
 ## Tech Stack
 
@@ -159,6 +169,7 @@ The healthcare model card includes:
 - **Forms**: react-hook-form
 - **Dark Mode**: next-themes
 - **PDF Export**: jsPDF
+- **AI Assistance**: OpenAI SDK (gpt-4o-mini)
 
 ## Future Enhancements
 
@@ -168,3 +179,9 @@ The healthcare model card includes:
 - **Collaboration**: Real-time collaboration features
 - **Templates**: Pre-filled templates for common model types
 - **Validation Reports**: Automated validation against regulatory requirements
+- **Import from HuggingFace**: Directly import existing model cards from HuggingFace Hub
+
+## Additional Resources
+
+- **HuggingFace Model Cards**: https://huggingface.co/docs/hub/model-cards
+- **Project Documentation**: See `.claude/CLAUDE.md` for technical details

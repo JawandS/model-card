@@ -62,16 +62,19 @@ export function InstructionsModal() {
             <div>
               <h3 className="text-lg font-semibold mb-2">What is a Model Card?</h3>
               <p className="text-muted-foreground leading-relaxed">
-                A model card is a documentation framework for machine learning models, providing transparency about their development, intended use, and performance characteristics. This is especially critical in healthcare applications.
+                A model card is a documentation framework for machine learning models, providing transparency about their development, intended use, and performance characteristics. This tool follows the HuggingFace Model Card standard.
               </p>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">How to Use</h3>
               <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
-                <li>Fill out all required fields marked with * in the form</li>
-                <li>Watch the live preview update as you type</li>
-                <li>Add optional sections like Risk Management and Provenance as needed</li>
+                <li>Navigate through accordion sections to fill out the form</li>
+                <li>Track your progress with completion indicators for each section</li>
+                <li>Fill out required fields (Basic Information and Model Details)</li>
+                <li>Add optional information like Environmental Impact and Citations</li>
+                <li>Watch the live preview update (toggle on/off with the eye icon)</li>
+                <li>Your work auto-saves to local storage every second</li>
                 <li>Export your completed model card in JSON, PDF, Markdown, or HTML format</li>
               </ol>
             </div>
@@ -79,18 +82,34 @@ export function InstructionsModal() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Required Sections</h3>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li><strong>Basic Information:</strong> Model name, version, and owner</li>
-                <li><strong>Intended Use:</strong> Clinical context and care settings</li>
-                <li><strong>Data Sources:</strong> Training data characteristics</li>
-                <li><strong>Evaluation:</strong> Performance metrics and validation</li>
+                <li><strong>Basic Information:</strong> Model name</li>
+                <li><strong>Model Details:</strong> Model ID, description, developers, license, and more</li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold mb-2">Optional Sections</h3>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li><strong>Risk Management:</strong> Safety considerations and oversight</li>
-                <li><strong>Provenance:</strong> Creation metadata and lineage</li>
+                <li><strong>Model Sources:</strong> Repository, paper, and demo links</li>
+                <li><strong>Uses:</strong> Intended use cases and limitations</li>
+                <li><strong>Bias & Risks:</strong> Potential issues and recommendations</li>
+                <li><strong>Training Details:</strong> Data and training process</li>
+                <li><strong>Evaluation:</strong> Performance metrics and results</li>
+                <li><strong>Environmental Impact:</strong> Carbon footprint and compute resources</li>
+                <li><strong>Technical Specs:</strong> Model architecture and infrastructure</li>
+                <li><strong>Citation:</strong> How to cite your model</li>
+                <li><strong>Additional Info:</strong> Getting started code, authors, glossary</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Features</h3>
+              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                <li>Progress tracking shows completion percentage</li>
+                <li>Accordion sections collapse/expand for easy navigation</li>
+                <li>Save indicator shows when data is being saved</li>
+                <li>Reset button clears all fields (with confirmation)</li>
+                <li>AI assistance available on select fields (if configured)</li>
               </ul>
             </div>
 
