@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ToastProvider } from '@/hooks/use-toast'
+import { AlertModalProvider } from '@/hooks/use-alert-modal'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,9 +35,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ToastProvider>
-            {children}
-          </ToastProvider>
+          <AlertModalProvider>
+            <ToastProvider>
+              {children}
+            </ToastProvider>
+          </AlertModalProvider>
         </ThemeProvider>
       </body>
     </html>

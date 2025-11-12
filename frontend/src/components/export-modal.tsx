@@ -7,16 +7,22 @@ import { ModelCardSchema, type ModelCard, type PartialModelCard } from '@modelca
 import { exportToJSON, exportToPDF, exportToMarkdown, exportToHTML } from '@/lib/exporters'
 import { cleanEmptyStrings } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
+import { useAlertModal } from '@/hooks/use-alert-modal'
 
 export function ExportModal() {
   const [isOpen, setIsOpen] = React.useState(false)
   const { toast } = useToast()
+  const { showAlert } = useAlertModal()
 
   const handleExport = (format: 'json' | 'pdf' | 'markdown' | 'html') => {
     // Load data from localStorage
     const saved = localStorage.getItem('modelcard-draft')
     if (!saved) {
-      alert('No model card data found. Please fill out the form first.')
+      showAlert({
+        variant: 'error',
+        title: 'No Data Found',
+        description: 'No model card data found. Please fill out the form first.',
+      })
       return
     }
 
@@ -24,7 +30,11 @@ export function ExportModal() {
     try {
       formData = JSON.parse(saved)
     } catch (error) {
-      alert('Failed to load model card data.')
+      showAlert({
+        variant: 'error',
+        title: 'Failed to Load Data',
+        description: 'Failed to load model card data. The saved data may be corrupted.',
+      })
       return
     }
 
@@ -35,17 +45,23 @@ export function ExportModal() {
     const result = ModelCardSchema.safeParse(cleanedData)
 
     if (!result.success) {
-      // Build detailed error message
+      // Build detailed error message as array
       const errors = result.error.errors
       const errorMessages = errors.map(err => {
         const field = err.path.join('.')
-        return `  • ${field}: ${err.message}`
-      }).join('\n')
+        return `${field}: ${err.message}`
+      })
 
-      alert(
-        `Validation failed. Please fix the following:\n\n${errorMessages}\n\n` +
-        `Required fields: model_id, developers`
-      )
+      showAlert({
+        variant: 'error',
+        title: 'Validation Failed',
+        description: [
+          'Please fix the following errors:',
+          ...errorMessages,
+          '',
+          'Required fields: model_id, developers',
+        ],
+      })
       return
     }
 
