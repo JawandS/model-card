@@ -30,6 +30,14 @@ export function MetadataSection({ form }: MetadataSectionProps) {
   // Local state for tags input to allow natural comma typing
   const [tagsInput, setTagsInput] = React.useState('')
 
+  // Initialize tagsInput from form field value
+  React.useEffect(() => {
+    const tags = form.watch('metadata.tags')
+    if (tags && Array.isArray(tags) && tags.length > 0) {
+      setTagsInput(tags.join(', '))
+    }
+  }, [form])
+
   return (
     <div className="space-y-6 pt-2">
       <FormField
@@ -73,7 +81,7 @@ export function MetadataSection({ form }: MetadataSectionProps) {
               />
             </FormControl>
             <FormDescription>
-              Language code(s) for NLP models (ISO 639-1 standard like 'en', 'fr', 'zh')
+              Language code(s) for NLP models (ISO 639-1 standard like &apos;en&apos;, &apos;fr&apos;, &apos;zh&apos;)
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -164,15 +172,7 @@ export function MetadataSection({ form }: MetadataSectionProps) {
       <FormField
         control={form.control}
         name="metadata.tags"
-        render={({ field }) => {
-          // Initialize local state from field value on first render
-          React.useEffect(() => {
-            if (field.value && Array.isArray(field.value) && field.value.length > 0) {
-              setTagsInput(field.value.join(', '))
-            }
-          }, [])
-
-          return (
+        render={({ field }) => (
             <FormItem>
               <FormLabel>Tags (optional)</FormLabel>
               <FormControl>
@@ -199,8 +199,7 @@ export function MetadataSection({ form }: MetadataSectionProps) {
               </FormDescription>
               <FormMessage />
             </FormItem>
-          )
-        }}
+        )}
       />
 
       <FormField
