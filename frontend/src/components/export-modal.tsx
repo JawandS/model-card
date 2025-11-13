@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Download, X, FileJson, FileType, FileText, Sun, Moon, Palette } from 'lucide-react'
+import { Download, X, FileJson, FileType, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModelCardSchema, type PartialModelCard } from '@modelcard/schema'
 import { exportToJSON, exportToPDF, exportToMarkdown, exportToHTML } from '@/lib/exporters'
@@ -12,7 +12,6 @@ import { useAlertModal } from '@/hooks/use-alert-modal'
 
 export function ExportModal() {
   const [isOpen, setIsOpen] = React.useState(false)
-  const [showHtmlThemeSelector, setShowHtmlThemeSelector] = React.useState(false)
   const [useExampleData, setUseExampleData] = React.useState(false)
   const { toast } = useToast()
   const { showAlert } = useAlertModal()
@@ -207,65 +206,18 @@ export function ExportModal() {
               </div>
             </Button>
 
-            {/* HTML Export with Theme Selector */}
-            <div className="border rounded-lg overflow-hidden">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowHtmlThemeSelector(!showHtmlThemeSelector)}
-                className="w-full justify-start group h-auto py-4 hover:bg-accent/10 border-0"
-              >
-                <Download className="mr-3 h-5 w-5 group-hover:scale-110 group-hover:text-foreground transition-all flex-shrink-0" />
-                <div className="text-left flex-1">
-                  <div className="font-semibold group-hover:text-foreground">HTML</div>
-                  <div className="text-xs text-muted-foreground group-hover:text-foreground/80">Web-ready format with theme options</div>
-                </div>
-                <Palette className={`h-4 w-4 transition-transform ${showHtmlThemeSelector ? 'rotate-180' : ''}`} />
-              </Button>
-
-              {showHtmlThemeSelector && (
-                <div className="border-t px-4 pb-3 pt-2 space-y-2 bg-muted/20">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => handleExport('html', 'light')}
-                    className="w-full justify-start h-auto py-2 hover:bg-muted/50"
-                  >
-                    <Sun className="mr-2 h-4 w-4 flex-shrink-0 text-foreground" />
-                    <div className="text-left text-sm text-foreground">
-                      <div className="font-medium">Light Mode</div>
-                      <div className="text-xs opacity-70">Optimized for light backgrounds</div>
-                    </div>
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => handleExport('html', 'dark')}
-                    className="w-full justify-start h-auto py-2 hover:bg-muted/50"
-                  >
-                    <Moon className="mr-2 h-4 w-4 flex-shrink-0 text-foreground" />
-                    <div className="text-left text-sm text-foreground">
-                      <div className="font-medium">Dark Mode</div>
-                      <div className="text-xs opacity-70">Optimized for dark backgrounds</div>
-                    </div>
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => handleExport('html', 'auto')}
-                    className="w-full justify-start h-auto py-2 hover:bg-muted/50"
-                  >
-                    <Palette className="mr-2 h-4 w-4 flex-shrink-0 text-foreground" />
-                    <div className="text-left text-sm text-foreground">
-                      <div className="font-medium">Auto (with toggle)</div>
-                      <div className="text-xs opacity-70">Includes theme switcher in HTML</div>
-                    </div>
-                  </Button>
-                </div>
-              )}
-            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleExport('html', 'auto')}
+              className="w-full justify-start group h-auto py-4 hover:bg-accent/10"
+            >
+              <Download className="mr-3 h-5 w-5 group-hover:scale-110 group-hover:text-foreground transition-all flex-shrink-0" />
+              <div className="text-left">
+                <div className="font-semibold group-hover:text-foreground">HTML</div>
+                <div className="text-xs text-muted-foreground group-hover:text-foreground/80">Web-ready format with auto theme detection</div>
+              </div>
+            </Button>
           </div>
 
           {/* Footer with toggle and close button */}

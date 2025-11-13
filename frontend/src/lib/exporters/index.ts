@@ -1,5 +1,7 @@
 import { ModelCard } from '@modelcard/schema'
 import { jsPDF } from 'jspdf'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 
 /**
  * Export model card as JSON
@@ -235,6 +237,17 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       .replace(/'/g, '&#039;')
   }
 
+  // Render markdown safely (parse + sanitize)
+  const renderMarkdown = (markdown: string) => {
+    const html = marked.parse(markdown, { async: false }) as string
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                     'ul', 'ol', 'li', 'a', 'code', 'pre', 'blockquote', 'hr', 'table',
+                     'thead', 'tbody', 'tr', 'th', 'td', 'img', 'del', 'ins', 'sub', 'sup'],
+      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class']
+    })
+  }
+
   const renderArray = (arr: string[]) => {
     return arr.map(item => `<li>${escapeHtml(item)}</li>`).join('')
   }
@@ -337,39 +350,6 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       margin-top: 0.5rem;
     }
 
-    ${theme === 'auto' ? `
-    .theme-toggle {
-      background: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      padding: 0.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--fg);
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .theme-toggle:hover {
-      background: var(--border);
-      transform: scale(1.05);
-    }
-
-    .theme-icon {
-      width: 1.25rem;
-      height: 1.25rem;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    ` : ''}
-
     .section {
       margin-top: 2rem;
       padding-top: 1.5rem;
@@ -433,6 +413,81 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
     .value {
       color: var(--fg);
       flex: 1;
+    }
+
+    .prose {
+      color: var(--fg);
+    }
+
+    .prose > *:first-child {
+      margin-top: 0;
+    }
+
+    .prose > *:last-child {
+      margin-bottom: 0;
+    }
+
+    .prose p {
+      margin: 0.75rem 0;
+    }
+
+    .prose ul, .prose ol {
+      margin: 0.75rem 0;
+      padding-left: 1.5rem;
+    }
+
+    .prose li {
+      margin: 0.25rem 0;
+    }
+
+    .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .prose h1 { font-size: 1.5rem; }
+    .prose h2 { font-size: 1.25rem; }
+    .prose h3 { font-size: 1.125rem; }
+    .prose h4 { font-size: 1rem; }
+
+    .prose blockquote {
+      margin: 1rem 0;
+      padding-left: 1rem;
+      border-left: 3px solid var(--accent);
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    .prose table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    .prose th, .prose td {
+      border: 1px solid var(--border);
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    .prose th {
+      background: var(--muted);
+      font-weight: 600;
+    }
+
+    .prose hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .prose img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
     }
 
     code {
@@ -544,10 +599,6 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
         box-shadow: none;
         padding: 0;
       }
-
-      .theme-toggle {
-        display: none;
-      }
     }
   </style>
 </head>
@@ -556,27 +607,8 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
     <div class="header">
       <div class="header-content">
         <h1>Model Card for ${escapeHtml(data.model_id)}</h1>
-        ${hasContent(data.model_summary) ? `<div class="summary">${escapeHtml(data.model_summary!)}</div>` : ''}
+        ${hasContent(data.model_summary) ? `<div class="summary">${renderMarkdown(data.model_summary!)}</div>` : ''}
       </div>
-      ${theme === 'auto' ? `
-      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-        <svg class="theme-icon" id="theme-icon-light" style="display: none;">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-        <svg class="theme-icon" id="theme-icon-dark" style="display: none;">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-        <span id="theme-text">Theme</span>
-      </button>
-      ` : ''}
     </div>
 `
 
@@ -587,7 +619,7 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Model Details</h2>
 `
     if (hasContent(data.model_description)) {
-      html += `      <p>${escapeHtml(data.model_description!)}</p>\n`
+      html += `      <div class="prose">${renderMarkdown(data.model_description!)}</div>\n`
     }
     if (hasContent(data.developers)) {
       html += `      <div class="key-value"><span class="key">Developers:</span> <span class="value">${escapeHtml(data.developers)}</span></div>\n`
@@ -636,13 +668,13 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Uses</h2>
 `
     if (hasContent(data.uses?.direct_use)) {
-      html += `      <h3>Direct Use</h3>\n      <p>${escapeHtml(data.uses!.direct_use!)}</p>\n`
+      html += `      <h3>Direct Use</h3>\n      <div class="prose">${renderMarkdown(data.uses!.direct_use!)}</div>\n`
     }
     if (hasContent(data.uses?.downstream_use)) {
-      html += `      <h3>Downstream Use</h3>\n      <p>${escapeHtml(data.uses!.downstream_use!)}</p>\n`
+      html += `      <h3>Downstream Use</h3>\n      <div class="prose">${renderMarkdown(data.uses!.downstream_use!)}</div>\n`
     }
     if (hasContent(data.uses?.out_of_scope_use)) {
-      html += `      <h3>Out-of-Scope Use</h3>\n      <p>${escapeHtml(data.uses!.out_of_scope_use!)}</p>\n`
+      html += `      <h3>Out-of-Scope Use</h3>\n      <div class="prose">${renderMarkdown(data.uses!.out_of_scope_use!)}</div>\n`
     }
     html += `    </div>\n`
   }
@@ -653,10 +685,10 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Bias, Risks, and Limitations</h2>
 `
     if (hasContent(data.bias_risks?.bias_risks_limitations)) {
-      html += `      <p>${escapeHtml(data.bias_risks!.bias_risks_limitations!)}</p>\n`
+      html += `      <div class="prose">${renderMarkdown(data.bias_risks!.bias_risks_limitations!)}</div>\n`
     }
     if (hasContent(data.bias_risks?.bias_recommendations)) {
-      html += `      <h3>Recommendations</h3>\n      <p>${escapeHtml(data.bias_risks!.bias_recommendations!)}</p>\n`
+      html += `      <h3>Recommendations</h3>\n      <div class="prose">${renderMarkdown(data.bias_risks!.bias_recommendations!)}</div>\n`
     }
     html += `    </div>\n`
   }
@@ -676,16 +708,16 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Training Details</h2>
 `
     if (hasContent(data.training_details?.training_data)) {
-      html += `      <h3>Training Data</h3>\n      <p>${escapeHtml(data.training_details!.training_data!)}</p>\n`
+      html += `      <h3>Training Data</h3>\n      <div class="prose">${renderMarkdown(data.training_details!.training_data!)}</div>\n`
     }
     if (hasContent(data.training_details?.preprocessing)) {
-      html += `      <h3>Preprocessing</h3>\n      <p>${escapeHtml(data.training_details!.preprocessing!)}</p>\n`
+      html += `      <h3>Preprocessing</h3>\n      <div class="prose">${renderMarkdown(data.training_details!.preprocessing!)}</div>\n`
     }
     if (hasContent(data.training_details?.training_regime)) {
-      html += `      <h3>Training Regime</h3>\n      <p>${escapeHtml(data.training_details!.training_regime!)}</p>\n`
+      html += `      <h3>Training Regime</h3>\n      <div class="prose">${renderMarkdown(data.training_details!.training_regime!)}</div>\n`
     }
     if (hasContent(data.training_details?.speeds_sizes_times)) {
-      html += `      <h3>Speeds, Sizes, Times</h3>\n      <p>${escapeHtml(data.training_details!.speeds_sizes_times!)}</p>\n`
+      html += `      <h3>Speeds, Sizes, Times</h3>\n      <div class="prose">${renderMarkdown(data.training_details!.speeds_sizes_times!)}</div>\n`
     }
     html += `    </div>\n`
   }
@@ -698,19 +730,19 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Evaluation</h2>
 `
     if (hasContent(data.evaluation?.testing_data)) {
-      html += `      <h3>Testing Data</h3>\n      <p>${escapeHtml(data.evaluation!.testing_data!)}</p>\n`
+      html += `      <h3>Testing Data</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.testing_data!)}</div>\n`
     }
     if (hasContent(data.evaluation?.testing_factors)) {
-      html += `      <h3>Testing Factors</h3>\n      <p>${escapeHtml(data.evaluation!.testing_factors!)}</p>\n`
+      html += `      <h3>Testing Factors</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.testing_factors!)}</div>\n`
     }
     if (hasContent(data.evaluation?.testing_metrics)) {
-      html += `      <h3>Testing Metrics</h3>\n      <p>${escapeHtml(data.evaluation!.testing_metrics!)}</p>\n`
+      html += `      <h3>Testing Metrics</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.testing_metrics!)}</div>\n`
     }
     if (hasContent(data.evaluation?.results)) {
-      html += `      <h3>Results</h3>\n      <p>${escapeHtml(data.evaluation!.results!)}</p>\n`
+      html += `      <h3>Results</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.results!)}</div>\n`
     }
     if (hasContent(data.evaluation?.results_summary)) {
-      html += `      <h3>Summary</h3>\n      <p>${escapeHtml(data.evaluation!.results_summary!)}</p>\n`
+      html += `      <h3>Summary</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.results_summary!)}</div>\n`
     }
     html += `    </div>\n`
   }
@@ -749,16 +781,16 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Technical Specifications</h2>
 `
     if (hasContent(data.technical_specs?.model_specs)) {
-      html += `      <h3>Model Architecture and Objective</h3>\n      <p>${escapeHtml(data.technical_specs!.model_specs!)}</p>\n`
+      html += `      <h3>Model Architecture and Objective</h3>\n      <div class="prose">${renderMarkdown(data.technical_specs!.model_specs!)}</div>\n`
     }
     if (hasContent(data.technical_specs?.compute_infrastructure)) {
-      html += `      <h3>Compute Infrastructure</h3>\n      <p>${escapeHtml(data.technical_specs!.compute_infrastructure!)}</p>\n`
+      html += `      <h3>Compute Infrastructure</h3>\n      <div class="prose">${renderMarkdown(data.technical_specs!.compute_infrastructure!)}</div>\n`
     }
     if (hasContent(data.technical_specs?.hardware_requirements)) {
-      html += `      <h3>Hardware Requirements</h3>\n      <p>${escapeHtml(data.technical_specs!.hardware_requirements!)}</p>\n`
+      html += `      <h3>Hardware Requirements</h3>\n      <div class="prose">${renderMarkdown(data.technical_specs!.hardware_requirements!)}</div>\n`
     }
     if (hasContent(data.technical_specs?.software)) {
-      html += `      <h3>Software</h3>\n      <p>${escapeHtml(data.technical_specs!.software!)}</p>\n`
+      html += `      <h3>Software</h3>\n      <div class="prose">${renderMarkdown(data.technical_specs!.software!)}</div>\n`
     }
     html += `    </div>\n`
   }
@@ -772,7 +804,7 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       html += `      <h3>BibTeX</h3>\n      <pre><code>${escapeHtml(data.citation!.citation_bibtex!)}</code></pre>\n`
     }
     if (hasContent(data.citation?.citation_apa)) {
-      html += `      <h3>APA</h3>\n      <p>${escapeHtml(data.citation!.citation_apa!)}</p>\n`
+      html += `      <h3>APA</h3>\n      <div class="prose">${renderMarkdown(data.citation!.citation_apa!)}</div>\n`
     }
     html += `    </div>\n`
   }
@@ -785,13 +817,13 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       <h2>Additional Information</h2>
 `
     if (hasContent(data.additional_info?.model_examination)) {
-      html += `      <h3>Model Examination</h3>\n      <p>${escapeHtml(data.additional_info!.model_examination!)}</p>\n`
+      html += `      <h3>Model Examination</h3>\n      <div class="prose">${renderMarkdown(data.additional_info!.model_examination!)}</div>\n`
     }
     if (hasContent(data.additional_info?.glossary)) {
-      html += `      <h3>Glossary</h3>\n      <p>${escapeHtml(data.additional_info!.glossary!)}</p>\n`
+      html += `      <h3>Glossary</h3>\n      <div class="prose">${renderMarkdown(data.additional_info!.glossary!)}</div>\n`
     }
     if (hasContent(data.additional_info?.more_information)) {
-      html += `      <h3>More Information</h3>\n      <p>${escapeHtml(data.additional_info!.more_information!)}</p>\n`
+      html += `      <h3>More Information</h3>\n      <div class="prose">${renderMarkdown(data.additional_info!.more_information!)}</div>\n`
     }
     if (hasContent(data.additional_info?.model_card_authors)) {
       html += `      <div class="key-value"><span class="key">Model Card Authors:</span> <span class="value">${escapeHtml(data.additional_info!.model_card_authors!)}</span></div>\n`
@@ -812,39 +844,66 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
 
   html += `  </div>\n`
 
-  // Add theme toggle JavaScript if theme is auto
+  // Add auto theme detection JavaScript if theme is auto
   if (theme === 'auto') {
     html += `
   <script>
-    function updateThemeIcon() {
-      const currentTheme = document.documentElement.getAttribute('data-theme')
-      const lightIcon = document.getElementById('theme-icon-light')
-      const darkIcon = document.getElementById('theme-icon-dark')
-      const themeText = document.getElementById('theme-text')
+    function detectParentTheme() {
+      // Check parent document for dark mode indicators
+      const htmlElement = document.documentElement
+      const bodyElement = document.body
 
-      if (currentTheme === 'dark') {
-        lightIcon.style.display = 'block'
-        darkIcon.style.display = 'none'
-        themeText.textContent = 'Light'
-      } else {
-        lightIcon.style.display = 'none'
-        darkIcon.style.display = 'block'
-        themeText.textContent = 'Dark'
+      // Check data-theme attribute
+      const dataTheme = htmlElement.getAttribute('data-theme')
+      if (dataTheme === 'dark') return 'dark'
+      if (dataTheme === 'light') return 'light'
+
+      // Check for dark class on html or body
+      if (htmlElement.classList.contains('dark') || bodyElement.classList.contains('dark')) {
+        return 'dark'
       }
+
+      // Check for light class
+      if (htmlElement.classList.contains('light') || bodyElement.classList.contains('light')) {
+        return 'light'
+      }
+
+      // Fallback to system preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark'
+      }
+
+      return 'light'
     }
 
-    function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme')
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light'
-      document.documentElement.setAttribute('data-theme', newTheme)
-      localStorage.setItem('modelcard-theme', newTheme)
-      updateThemeIcon()
+    function updateTheme() {
+      const detectedTheme = detectParentTheme()
+      document.documentElement.setAttribute('data-theme', detectedTheme)
     }
 
-    // Initialize theme from localStorage or default to light
-    const savedTheme = localStorage.getItem('modelcard-theme') || 'light'
-    document.documentElement.setAttribute('data-theme', savedTheme)
-    updateThemeIcon()
+    // Initialize theme on load
+    updateTheme()
+
+    // Watch for changes to parent document theme
+    const observer = new MutationObserver(() => {
+      updateTheme()
+    })
+
+    // Observe changes to html and body elements
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'class']
+    })
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    })
+
+    // Listen for system theme changes
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
+    }
   </script>
 `
   }
@@ -869,36 +928,149 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
 export function exportToPDF(data: ModelCard) {
   const doc = new jsPDF()
   let y = 20
+  const pageHeight = doc.internal.pageSize.height
+  const margin = 20
+  const maxWidth = 170
+
+  // Helper to convert markdown to plain text
+  const markdownToPlainText = (markdown: string): string => {
+    return markdown
+      // Remove bold/italic markers but keep the text
+      .replace(/\*\*\*(.+?)\*\*\*/g, '$1')  // Bold italic
+      .replace(/\*\*(.+?)\*\*/g, '$1')      // Bold
+      .replace(/\*(.+?)\*/g, '$1')          // Italic
+      .replace(/__(.+?)__/g, '$1')          // Bold
+      .replace(/_(.+?)_/g, '$1')            // Italic
+      // Convert links to just the text
+      .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+      // Convert headings to just text
+      .replace(/^#{1,6}\s+(.+)$/gm, '$1')
+      // Convert bullet points
+      .replace(/^\s*[-*+]\s+(.+)$/gm, '• $1')
+      // Convert numbered lists
+      .replace(/^\s*\d+\.\s+(.+)$/gm, '$1')
+      // Remove code blocks markers
+      .replace(/```[\s\S]*?```/g, (match) => match.replace(/```/g, ''))
+      .replace(/`(.+?)`/g, '$1')
+      // Remove horizontal rules
+      .replace(/^[-*_]{3,}$/gm, '')
+      // Clean up extra whitespace
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
+  }
+
+  // Check if we need a new page
+  const checkPageBreak = (requiredSpace: number) => {
+    if (y + requiredSpace > pageHeight - margin) {
+      doc.addPage()
+      y = margin
+    }
+  }
+
+  // Helper to add a section
+  const addSection = (title: string, content: string | undefined) => {
+    if (!content || !content.trim()) return
+
+    checkPageBreak(20)
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text(title, margin, y)
+    y += 8
+
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    const plainText = markdownToPlainText(content)
+    const lines = doc.splitTextToSize(plainText, maxWidth)
+
+    lines.forEach((line: string) => {
+      checkPageBreak(7)
+      doc.text(line, margin, y)
+      y += 5
+    })
+    y += 5
+  }
 
   // Title
   doc.setFontSize(20)
-  doc.text(`Model Card for ${data.model_id}`, 20, y)
+  doc.setFont('helvetica', 'bold')
+  doc.text(`Model Card for ${data.model_id}`, margin, y)
   y += 15
 
   // Summary
   if (data.model_summary) {
-    doc.setFontSize(10)
-    const summaryLines = doc.splitTextToSize(data.model_summary, 170)
-    doc.text(summaryLines, 20, y)
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'italic')
+    const summaryText = markdownToPlainText(data.model_summary)
+    const summaryLines = doc.splitTextToSize(summaryText, maxWidth)
+    doc.text(summaryLines, margin, y)
     y += summaryLines.length * 5 + 10
   }
 
-  // Developers
-  if (data.developers) {
-    doc.setFontSize(12)
-    doc.text(`Developed by: ${data.developers}`, 20, y)
-    y += 10
+  // Model Details
+  if (data.model_description) {
+    addSection('Model Details', data.model_description)
   }
 
-  // Description
-  if (data.model_description) {
-    doc.setFontSize(14)
-    doc.text('Model Details', 20, y)
-    y += 7
-    doc.setFontSize(10)
-    const descLines = doc.splitTextToSize(data.model_description, 170)
-    doc.text(descLines, 20, y)
-    y += descLines.length * 5 + 10
+  // Key metadata
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  if (data.developers) {
+    checkPageBreak(6)
+    doc.text(`Developers: ${data.developers}`, margin, y)
+    y += 6
+  }
+  if (data.license) {
+    checkPageBreak(6)
+    doc.text(`License: ${data.license}`, margin, y)
+    y += 6
+  }
+  if (data.model_type) {
+    checkPageBreak(6)
+    doc.text(`Model Type: ${data.model_type}`, margin, y)
+    y += 6
+  }
+  y += 5
+
+  // Uses
+  if (data.uses?.direct_use) {
+    addSection('Direct Use', data.uses.direct_use)
+  }
+  if (data.uses?.downstream_use) {
+    addSection('Downstream Use', data.uses.downstream_use)
+  }
+  if (data.uses?.out_of_scope_use) {
+    addSection('Out-of-Scope Use', data.uses.out_of_scope_use)
+  }
+
+  // Bias, Risks, and Limitations
+  if (data.bias_risks?.bias_risks_limitations) {
+    addSection('Bias, Risks, and Limitations', data.bias_risks.bias_risks_limitations)
+  }
+  if (data.bias_risks?.bias_recommendations) {
+    addSection('Recommendations', data.bias_risks.bias_recommendations)
+  }
+
+  // Training Details
+  if (data.training_details?.training_data) {
+    addSection('Training Data', data.training_details.training_data)
+  }
+  if (data.training_details?.preprocessing) {
+    addSection('Preprocessing', data.training_details.preprocessing)
+  }
+
+  // Evaluation
+  if (data.evaluation?.results) {
+    addSection('Evaluation Results', data.evaluation.results)
+  }
+
+  // Technical Specifications
+  if (data.technical_specs?.model_specs) {
+    addSection('Technical Specifications', data.technical_specs.model_specs)
+  }
+
+  // Additional Information
+  if (data.additional_info?.glossary) {
+    addSection('Glossary', data.additional_info.glossary)
   }
 
   doc.save(`${data.model_id.replace(/\s+/g, '-').toLowerCase()}-modelcard.pdf`)
