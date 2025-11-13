@@ -23,7 +23,7 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
         name="get_started_code"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>How to Get Started with the Model</FormLabel>
+            <FormLabel>How to Get Started with the Model (optional)</FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Provide a code snippet showing how to use the model...&#10;&#10;from transformers import AutoModel&#10;model = AutoModel.from_pretrained('model-name')"
@@ -124,7 +124,7 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
         name="additional_info.model_card_contact"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Model Card Contact</FormLabel>
+            <FormLabel>Model Card Contact (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., contact@example.com" type="email" {...field} />
             </FormControl>

@@ -22,7 +22,7 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
         name="technical_specs.model_specs"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Model Architecture and Objective</FormLabel>
+            <FormLabel>Model Architecture and Objective (optional)</FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Describe the model architecture, objective function, and training methodology..."
@@ -43,7 +43,7 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
         name="technical_specs.compute_infrastructure"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Compute Infrastructure</FormLabel>
+            <FormLabel>Compute Infrastructure (optional)</FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Describe the compute infrastructure used for training..."
@@ -64,7 +64,7 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
         name="technical_specs.hardware_requirements"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Hardware Requirements</FormLabel>
+            <FormLabel>Hardware Requirements (optional)</FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Describe minimum hardware requirements for inference (processing, storage, memory)..."
@@ -85,7 +85,7 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
         name="technical_specs.software"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Software</FormLabel>
+            <FormLabel>Software (optional)</FormLabel>
             <FormControl>
               <Textarea
                 placeholder="List software dependencies, frameworks, and libraries (e.g., PyTorch 2.0, transformers 4.30)..."

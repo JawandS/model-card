@@ -67,12 +67,31 @@ export function InstructionsModal() {
             </div>
 
             <div>
+              <h3 className="text-lg font-semibold mb-2">Priority Levels</h3>
+              <ul className="space-y-2 text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-destructive font-bold">*</span>
+                  <span><strong className="text-destructive">Red asterisk</strong> = Critical - Required to export</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-foreground font-bold">*</span>
+                  <span><strong>White asterisk</strong> = Required - Strongly recommended for complete model cards</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-muted-foreground">—</span>
+                  <span><strong>No asterisk</strong> = Optional - Nice to have</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
               <h3 className="text-lg font-semibold mb-2">How to Use</h3>
               <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
                 <li>Navigate through accordion sections to fill out the form</li>
                 <li>Track your progress with completion indicators for each section</li>
-                <li>Fill out required fields (Basic Information and Model Details)</li>
-                <li>Add optional information like Environmental Impact and Citations</li>
+                <li>Fill out critical sections (red asterisk) - required to export</li>
+                <li>Complete required sections (white asterisk) for a comprehensive model card</li>
+                <li>Add optional information as needed</li>
                 <li>Watch the live preview update (toggle on/off with the eye icon)</li>
                 <li>Your work auto-saves to local storage every second</li>
                 <li>Export your completed model card in JSON, PDF, Markdown, or HTML format</li>
@@ -80,10 +99,20 @@ export function InstructionsModal() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-2">Required Sections</h3>
+              <h3 className="text-lg font-semibold mb-2">Critical Sections <span className="text-destructive">*</span></h3>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li><strong>Basic Information:</strong> Model name</li>
-                <li><strong>Model Details:</strong> Model ID, description, developers, license, and more</li>
+                <li><strong>Basic Information:</strong> Model ID (required to export)</li>
+                <li><strong>Model Details:</strong> Developers (required to export)</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Required Sections <span className="text-foreground">*</span></h3>
+              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                <li><strong>Uses:</strong> Intended use cases, limitations, and out-of-scope uses</li>
+                <li><strong>Bias, Risks & Limitations:</strong> Ethics and safety considerations</li>
+                <li><strong>Training Details:</strong> Training data and procedures</li>
+                <li><strong>Evaluation:</strong> Performance metrics and testing results</li>
               </ul>
             </div>
 
@@ -91,14 +120,10 @@ export function InstructionsModal() {
               <h3 className="text-lg font-semibold mb-2">Optional Sections</h3>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                 <li><strong>Model Sources:</strong> Repository, paper, and demo links</li>
-                <li><strong>Uses:</strong> Intended use cases and limitations</li>
-                <li><strong>Bias & Risks:</strong> Potential issues and recommendations</li>
-                <li><strong>Training Details:</strong> Data and training process</li>
-                <li><strong>Evaluation:</strong> Performance metrics and results</li>
                 <li><strong>Environmental Impact:</strong> Carbon footprint and compute resources</li>
-                <li><strong>Technical Specs:</strong> Model architecture and infrastructure</li>
+                <li><strong>Technical Specifications:</strong> Model architecture and infrastructure</li>
                 <li><strong>Citation:</strong> How to cite your model</li>
-                <li><strong>Additional Info:</strong> Getting started code, authors, glossary</li>
+                <li><strong>Additional Information:</strong> Model examination, glossary, authors</li>
               </ul>
             </div>
 

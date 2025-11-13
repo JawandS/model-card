@@ -22,7 +22,7 @@ export function ModelSourcesSection({ form }: ModelSourcesSectionProps) {
         name="model_sources.repo"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Repository</FormLabel>
+            <FormLabel>Repository (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., https://github.com/user/repo" type="url" {...field} />
             </FormControl>
@@ -39,7 +39,7 @@ export function ModelSourcesSection({ form }: ModelSourcesSectionProps) {
         name="model_sources.paper"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Paper</FormLabel>
+            <FormLabel>Paper (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., https://arxiv.org/abs/..." type="url" {...field} />
             </FormControl>
@@ -56,7 +56,7 @@ export function ModelSourcesSection({ form }: ModelSourcesSectionProps) {
         name="model_sources.demo"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Demo</FormLabel>
+            <FormLabel>Demo (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., https://huggingface.co/spaces/..." type="url" {...field} />
             </FormControl>

@@ -5,6 +5,7 @@ export interface SectionConfig {
   title: string
   fields: string[]
   required?: boolean // Whether section itself is required
+  priority?: 'critical' | 'required' | 'optional' // Priority level for UI indicators
 }
 
 export const SECTION_CONFIGS: SectionConfig[] = [
@@ -12,6 +13,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
     id: 'basic-info',
     title: 'Basic Information',
     required: true,
+    priority: 'critical',
     fields: [
       'model_id',
       'model_summary',
@@ -21,6 +23,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
     id: 'model-details',
     title: 'Model Details',
     required: true,
+    priority: 'critical',
     fields: [
       'model_description',
       'developers',
@@ -35,6 +38,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'model-sources',
     title: 'Model Sources',
+    priority: 'optional',
     fields: [
       'model_sources.repo',
       'model_sources.paper',
@@ -44,6 +48,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'uses',
     title: 'Uses',
+    priority: 'required',
     fields: [
       'uses.direct_use',
       'uses.downstream_use',
@@ -53,6 +58,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'bias-risks',
     title: 'Bias, Risks, and Limitations',
+    priority: 'required',
     fields: [
       'bias_risks.bias_risks_limitations',
       'bias_risks.bias_recommendations',
@@ -61,6 +67,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'training',
     title: 'Training Details',
+    priority: 'required',
     fields: [
       'training_details.training_data',
       'training_details.preprocessing',
@@ -71,6 +78,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'evaluation',
     title: 'Evaluation',
+    priority: 'required',
     fields: [
       'evaluation.testing_data',
       'evaluation.testing_factors',
@@ -82,6 +90,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'environmental',
     title: 'Environmental Impact',
+    priority: 'optional',
     fields: [
       'environmental_impact.hardware_type',
       'environmental_impact.hours_used',
@@ -93,6 +102,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'technical',
     title: 'Technical Specifications',
+    priority: 'optional',
     fields: [
       'technical_specs.model_specs',
       'technical_specs.compute_infrastructure',
@@ -103,6 +113,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'citation',
     title: 'Citation',
+    priority: 'optional',
     fields: [
       'citation.citation_bibtex',
       'citation.citation_apa',
@@ -111,6 +122,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   {
     id: 'additional',
     title: 'Additional Information',
+    priority: 'optional',
     fields: [
       'get_started_code',
       'additional_info.model_examination',

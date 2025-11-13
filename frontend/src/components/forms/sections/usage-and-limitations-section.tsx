@@ -22,7 +22,7 @@ export function UsageAndLimitationsSection({ form }: UsageAndLimitationsSectionP
         name="uses.direct_use"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Direct Use</FormLabel>
+            <FormLabel>Direct Use <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Explain how the model can be used without fine-tuning, post-processing, or plugging into a pipeline..."
@@ -43,7 +43,7 @@ export function UsageAndLimitationsSection({ form }: UsageAndLimitationsSectionP
         name="uses.downstream_use"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Downstream Use (optional)</FormLabel>
+            <FormLabel>Downstream Use <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Explain how this model can be used when fine-tuned for a task or plugged into a larger ecosystem/app..."
@@ -64,7 +64,7 @@ export function UsageAndLimitationsSection({ form }: UsageAndLimitationsSectionP
         name="uses.out_of_scope_use"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Out-of-Scope Use</FormLabel>
+            <FormLabel>Out-of-Scope Use <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="List how the model may foreseeably be misused and address what users ought not do with the model..."

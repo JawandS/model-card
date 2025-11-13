@@ -23,7 +23,7 @@ export function TrainingDataSection({ form }: TrainingDataSectionProps) {
         name="training_details.training_data"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Training Data</FormLabel>
+            <FormLabel>Training Data <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Describe the training dataset, its composition, source, and key characteristics. Link to Dataset Card if available."
@@ -44,7 +44,7 @@ export function TrainingDataSection({ form }: TrainingDataSectionProps) {
         name="training_details.preprocessing"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Preprocessing</FormLabel>
+            <FormLabel>Preprocessing <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Detail tokenization, resizing/rewriting, data cleaning, augmentation, etc."
@@ -65,7 +65,7 @@ export function TrainingDataSection({ form }: TrainingDataSectionProps) {
         name="training_details.training_regime"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Training Regime</FormLabel>
+            <FormLabel>Training Regime <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Input placeholder="e.g., fp32, fp16 mixed precision, bf16 mixed precision" {...field} />
             </FormControl>
@@ -82,7 +82,7 @@ export function TrainingDataSection({ form }: TrainingDataSectionProps) {
         name="training_details.speeds_sizes_times"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Speeds, Sizes, Times</FormLabel>
+            <FormLabel>Speeds, Sizes, Times <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Detail throughput, start/end time, checkpoint sizes, etc."

@@ -46,7 +46,7 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
             name="model_description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Description <span className="text-foreground">*</span></FormLabel>
                 <FormControl>
                   <TextareaWithAssist
                     placeholder="Provide a longer summary of what this model is, including architecture, version, and key characteristics"
@@ -71,7 +71,7 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
             name="funded_by"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Funded by</FormLabel>
+                <FormLabel>Funded by <span className="text-foreground">*</span></FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., NSF Grant #12345, Internal R&D" {...field} />
                 </FormControl>
@@ -88,7 +88,7 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
             name="shared_by"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Shared by</FormLabel>
+                <FormLabel>Shared by <span className="text-foreground">*</span></FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., HuggingFace, GitHub User" {...field} />
                 </FormControl>
@@ -105,7 +105,7 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
             name="model_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Model Type</FormLabel>
+                <FormLabel>Model Type <span className="text-foreground">*</span></FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., Transformer, CNN, Supervised Learning" {...field} />
                 </FormControl>
@@ -122,7 +122,7 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
             name="language"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Language(s)</FormLabel>
+                <FormLabel>Language(s) <span className="text-foreground">*</span></FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., English, Multilingual (en, es, fr)" {...field} />
                 </FormControl>
@@ -139,7 +139,7 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
             name="license"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>License</FormLabel>
+                <FormLabel>License <span className="text-foreground">*</span></FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., apache-2.0, mit, cc-by-4.0" {...field} />
                 </FormControl>
@@ -156,7 +156,7 @@ export function ModelDetailsSection({ form, showOptionalFields = true }: ModelDe
             name="base_model"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Finetuned from Model</FormLabel>
+                <FormLabel>Finetuned from Model <span className="text-foreground">*</span></FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., bert-base-uncased, gpt-3" {...field} />
                 </FormControl>

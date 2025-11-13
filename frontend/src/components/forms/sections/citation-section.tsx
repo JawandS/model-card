@@ -22,7 +22,7 @@ export function CitationSection({ form }: CitationSectionProps) {
         name="citation.citation_bibtex"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>BibTeX</FormLabel>
+            <FormLabel>BibTeX (optional)</FormLabel>
             <FormControl>
               <Textarea
                 placeholder="@article{author2024model,&#10;  title={Model Name},&#10;  author={Author Name},&#10;  year={2024}&#10;}"
@@ -43,7 +43,7 @@ export function CitationSection({ form }: CitationSectionProps) {
         name="citation.citation_apa"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>APA</FormLabel>
+            <FormLabel>APA (optional)</FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Author, A. (2024). Model Name. Publisher."

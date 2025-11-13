@@ -22,7 +22,7 @@ export function EnvironmentalImpactSection({ form }: EnvironmentalImpactSectionP
         name="environmental_impact.hardware_type"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Hardware Type</FormLabel>
+            <FormLabel>Hardware Type (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., 8x NVIDIA A100 80GB" {...field} />
             </FormControl>
@@ -39,7 +39,7 @@ export function EnvironmentalImpactSection({ form }: EnvironmentalImpactSectionP
         name="environmental_impact.hours_used"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Hours Used</FormLabel>
+            <FormLabel>Hours Used (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., 100 hours" {...field} />
             </FormControl>
@@ -56,7 +56,7 @@ export function EnvironmentalImpactSection({ form }: EnvironmentalImpactSectionP
         name="environmental_impact.cloud_provider"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Cloud Provider</FormLabel>
+            <FormLabel>Cloud Provider (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., AWS, Google Cloud, Azure" {...field} />
             </FormControl>
@@ -73,7 +73,7 @@ export function EnvironmentalImpactSection({ form }: EnvironmentalImpactSectionP
         name="environmental_impact.cloud_region"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Compute Region</FormLabel>
+            <FormLabel>Compute Region (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., us-east-1, eu-west-1" {...field} />
             </FormControl>
@@ -90,7 +90,7 @@ export function EnvironmentalImpactSection({ form }: EnvironmentalImpactSectionP
         name="environmental_impact.co2_emitted"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Carbon Emitted</FormLabel>
+            <FormLabel>Carbon Emitted (optional)</FormLabel>
             <FormControl>
               <Input placeholder="e.g., 125 kg CO2eq" {...field} />
             </FormControl>

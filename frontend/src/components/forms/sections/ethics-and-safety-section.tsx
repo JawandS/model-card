@@ -23,7 +23,7 @@ export function EthicsAndSafetySection({ form }: EthicsAndSafetySectionProps) {
         name="bias_risks.bias_risks_limitations"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Bias, Risks, and Limitations</FormLabel>
+            <FormLabel>Bias, Risks, and Limitations <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <TextareaWithAssist
                 placeholder="Describe known or foreseeable issues including bias (stereotypes, skew), risks (socially-relevant issues), and limitations (failure modes)..."
@@ -48,7 +48,7 @@ export function EthicsAndSafetySection({ form }: EthicsAndSafetySectionProps) {
         name="bias_risks.bias_recommendations"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Recommendations</FormLabel>
+            <FormLabel>Recommendations <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <TextareaWithAssist
                 placeholder="Provide recommendations to address the foreseeable issues (e.g., filtering content, downsampling, monitoring for drift)..."

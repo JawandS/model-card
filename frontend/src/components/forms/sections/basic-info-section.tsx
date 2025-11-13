@@ -42,7 +42,7 @@ export function BasicInfoSection({ form, showOptionalFields = true }: BasicInfoS
           name="model_summary"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Model Summary</FormLabel>
+              <FormLabel>Model Summary <span className="text-foreground">*</span></FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Provide a quick 1-2 sentence summary of what the model is"

@@ -22,7 +22,7 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
         name="evaluation.testing_data"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Testing Data</FormLabel>
+            <FormLabel>Testing Data <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Describe testing data or link to its Dataset Card..."
@@ -43,7 +43,7 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
         name="evaluation.testing_factors"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Factors</FormLabel>
+            <FormLabel>Factors <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Describe characteristics that influence model behavior (e.g., subpopulations, domains)..."
@@ -64,7 +64,7 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
         name="evaluation.testing_metrics"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Metrics</FormLabel>
+            <FormLabel>Metrics <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="List evaluation metrics used (e.g., Accuracy, Precision, Recall, F1, BLEU, ROUGE)..."
@@ -85,7 +85,7 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
         name="evaluation.results"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Results</FormLabel>
+            <FormLabel>Results <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Provide evaluation results based on the factors and metrics defined above..."
@@ -106,7 +106,7 @@ export function EvaluationSection({ form }: EvaluationSectionProps) {
         name="evaluation.results_summary"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Results Summary</FormLabel>
+            <FormLabel>Results Summary <span className="text-foreground">*</span></FormLabel>
             <FormControl>
               <Textarea
                 placeholder="Provide a brief summary/TL;DR of the results for general audiences..."
