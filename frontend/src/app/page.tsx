@@ -5,17 +5,27 @@ import { ModelCardForm } from '@/components/forms/model-card-form'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { InstructionsModal } from '@/components/instructions-modal'
 import { ExportModal } from '@/components/export-modal'
+import { AutofillConfirmationModal } from '@/components/autofill-confirmation-modal'
 import { Button } from '@/components/ui/button'
-import { Eye, EyeOff, Sparkles } from 'lucide-react'
+import { Eye, EyeOff, Wand2 } from 'lucide-react'
 
 export default function Home() {
   const [showPreview, setShowPreview] = React.useState(true)
+  const [isAutofillModalOpen, setIsAutofillModalOpen] = React.useState(false)
   const fillExampleRef = React.useRef<(() => void) | null>(null)
 
   const handleFillExample = () => {
     if (fillExampleRef.current) {
       fillExampleRef.current()
     }
+  }
+
+  const handleOpenAutofillModal = () => {
+    setIsAutofillModalOpen(true)
+  }
+
+  const handleCloseAutofillModal = () => {
+    setIsAutofillModalOpen(false)
   }
 
   return (
@@ -39,11 +49,11 @@ export default function Home() {
             <Button
               variant="outline"
               size="icon"
-              onClick={handleFillExample}
+              onClick={handleOpenAutofillModal}
               className="rounded-xl shadow-lg hover:shadow-xl h-12 w-12"
               title="Fill empty fields with example data"
             >
-              <Sparkles className="h-6 w-6" />
+              <Wand2 className="h-6 w-6" />
               <span className="sr-only">Fill example data</span>
             </Button>
             <ExportModal />
@@ -70,6 +80,13 @@ export default function Home() {
           <ModelCardForm showPreview={showPreview} onFillExampleRef={fillExampleRef} />
         </div>
       </div>
+
+      {/* Autofill Confirmation Modal */}
+      <AutofillConfirmationModal
+        isOpen={isAutofillModalOpen}
+        onClose={handleCloseAutofillModal}
+        onConfirm={handleFillExample}
+      />
     </main>
   )
 }
