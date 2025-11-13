@@ -107,6 +107,17 @@ predictions = outputs.logits.softmax(dim=-1)`,
     model_card_authors: 'Jane Doe, John Smith',
     model_card_contact: 'ml-team@acme-corp.com',
   },
+
+  // HuggingFace metadata
+  metadata: {
+    license: 'apache-2.0',
+    language: 'en',
+    base_model: 'bert-base-uncased',
+    library_name: 'transformers',
+    pipeline_tag: 'text-classification',
+    tags: ['sentiment-analysis', 'bert', 'nlp', 'text-classification'],
+    inference: true,
+  },
 }
 
 /**

@@ -132,6 +132,20 @@ export const SECTION_CONFIGS: SectionConfig[] = [
       'additional_info.model_card_contact',
     ],
   },
+  {
+    id: 'metadata',
+    title: 'HuggingFace Metadata',
+    priority: 'optional',
+    fields: [
+      'metadata.license',
+      'metadata.language',
+      'metadata.base_model',
+      'metadata.library_name',
+      'metadata.pipeline_tag',
+      'metadata.tags',
+      'metadata.inference',
+    ],
+  },
 ]
 
 // Helper function to get a nested value from an object using dot notation

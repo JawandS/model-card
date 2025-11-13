@@ -79,6 +79,17 @@ export const AdditionalInfoSchema = z.object({
   model_card_contact: z.string().optional(),
 });
 
+// HuggingFace Metadata (for YAML frontmatter generation)
+export const MetadataSchema = z.object({
+  license: z.string().optional(),
+  language: z.string().optional(),
+  base_model: z.string().optional(),
+  library_name: z.string().optional(),
+  pipeline_tag: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  inference: z.boolean().default(true).optional(),
+});
+
 // Main Model Card Schema (HuggingFace Standard)
 export const ModelCardSchema = z.object({
   // YAML Frontmatter
@@ -127,6 +138,9 @@ export const ModelCardSchema = z.object({
 
   // Additional Information
   additional_info: AdditionalInfoSchema.optional(),
+
+  // HuggingFace Metadata (for YAML frontmatter)
+  metadata: MetadataSchema.optional(),
 });
 
 // Helper function to validate and parse model card data

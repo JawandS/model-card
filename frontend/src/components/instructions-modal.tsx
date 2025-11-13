@@ -124,6 +124,7 @@ export function InstructionsModal() {
                 <li><strong>Technical Specifications:</strong> Model architecture and infrastructure</li>
                 <li><strong>Citation:</strong> How to cite your model</li>
                 <li><strong>Additional Information:</strong> Model examination, glossary, authors</li>
+                <li><strong>HuggingFace Metadata:</strong> Library, pipeline tag, tags for Hub integration</li>
               </ul>
             </div>
 

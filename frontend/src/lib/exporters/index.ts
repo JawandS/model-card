@@ -25,18 +25,54 @@ export function exportToJSON(data: ModelCard) {
 export function exportToMarkdown(data: ModelCard) {
   let markdown = ''
 
-  // YAML Frontmatter
-  markdown += `---\n`
+  // Generate YAML Frontmatter with HuggingFace metadata
+  const yamlFields: Record<string, any> = {}
+
+  // Map all metadata fields from metadata section (HuggingFace YAML format)
+  if (data.metadata?.license) yamlFields.license = data.metadata.license
+  if (data.metadata?.language) yamlFields.language = data.metadata.language
+  if (data.metadata?.base_model) yamlFields.base_model = data.metadata.base_model
+  if (data.metadata?.library_name) yamlFields.library_name = data.metadata.library_name
+  if (data.metadata?.pipeline_tag) yamlFields.pipeline_tag = data.metadata.pipeline_tag
+  if (data.metadata?.tags && data.metadata.tags.length > 0) {
+    yamlFields.tags = data.metadata.tags
+  }
+  if (data.metadata?.inference !== undefined) {
+    yamlFields.inference = data.metadata.inference
+  }
+
+  // Legacy card_data support (if present)
   if (data.card_data) {
-    markdown += `# Model metadata (optional)\n`
     Object.entries(data.card_data).forEach(([key, value]) => {
-      markdown += `${key}: ${value}\n`
+      if (!yamlFields[key]) {
+        yamlFields[key] = value
+      }
     })
   }
-  if (data.license) markdown += `license: ${data.license}\n`
-  if (data.language) markdown += `language: ${data.language}\n`
-  if (data.model_type) markdown += `model_type: ${data.model_type}\n`
-  markdown += `---\n\n`
+
+  // Generate YAML frontmatter
+  if (Object.keys(yamlFields).length > 0) {
+    markdown += `---\n`
+
+    // Format YAML fields
+    Object.entries(yamlFields).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        // Format arrays with proper YAML syntax
+        markdown += `${key}:\n`
+        value.forEach(item => {
+          markdown += `  - ${item}\n`
+        })
+      } else if (typeof value === 'boolean') {
+        // Format booleans without quotes
+        markdown += `${key}: ${value}\n`
+      } else {
+        // Format strings and numbers
+        markdown += `${key}: ${value}\n`
+      }
+    })
+
+    markdown += `---\n\n`
+  }
 
   // Title
   markdown += `# Model Card for ${data.model_id}\n\n`

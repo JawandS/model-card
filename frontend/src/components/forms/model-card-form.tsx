@@ -19,6 +19,7 @@ import { EnvironmentalImpactSection } from './sections/environmental-impact-sect
 import { TechnicalSpecsSection } from './sections/technical-specs-section'
 import { CitationSection } from './sections/citation-section'
 import { AdditionalInfoSection } from './sections/additional-info-section'
+import { MetadataSection } from './sections/metadata-section'
 import { ModelCardPreview } from '../model-card-preview'
 import { ProgressTracker } from '../progress-tracker'
 import { SaveIndicator } from '../save-indicator'
@@ -103,6 +104,15 @@ export function ModelCardForm({ showPreview = true }: ModelCardFormProps) {
         more_information: '',
         model_card_authors: '',
         model_card_contact: '',
+      },
+      metadata: {
+        license: '',
+        language: '',
+        base_model: '',
+        library_name: '',
+        pipeline_tag: '',
+        tags: [],
+        inference: true,
       },
     },
     mode: 'onChange',
@@ -456,6 +466,21 @@ export function ModelCardForm({ showPreview = true }: ModelCardFormProps) {
                     </AccordionTrigger>
                     <AccordionContent>
                       <AdditionalInfoSection form={form} />
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="metadata">
+                    <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-2">
+                        <span>HuggingFace Metadata</span>
+                        <SectionProgressIndicator
+                          formData={formData}
+                          section={SECTION_CONFIGS[11]}
+                        />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <MetadataSection form={form} />
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
