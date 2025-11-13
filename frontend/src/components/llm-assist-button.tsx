@@ -78,9 +78,7 @@ export function LLMAssistButton({
         </>
       ) : (
         <>
-          <Sparkles className="mr-2 h-3 w-3" />
-          AI Assist
-        </>
+          <Sparkles className="mr-2 h-3 w-3" />Assist</>
       )}
     </Button>
   )

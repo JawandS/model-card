@@ -39,9 +39,19 @@ const TextareaWithAssist = React.forwardRef<
     }
   }
 
+  // Add right padding to textarea when AI button is present to prevent text overlap
+  const textareaClassName = React.useMemo(() => {
+    const baseClassName = props.className || ''
+    if (configLoaded && aiAssistEnabled) {
+      // Add padding-right if not already present
+      return baseClassName.includes('pr-') ? baseClassName : `${baseClassName} pr-24`
+    }
+    return baseClassName
+  }, [configLoaded, aiAssistEnabled, props.className])
+
   return (
     <div className="relative">
-      <Textarea ref={ref} {...props} />
+      <Textarea ref={ref} {...props} className={textareaClassName} />
       {configLoaded && aiAssistEnabled && (
         <div className="absolute top-2 right-2">
           <LLMAssistButton

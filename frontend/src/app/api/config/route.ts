@@ -4,6 +4,6 @@ export const runtime = 'edge'
 
 export async function GET() {
   return NextResponse.json({
-    aiAssistEnabled: !!process.env.OPENAI_API_KEY,
+    aiAssistEnabled: !!process.env.GEMINI_API_KEY,
   })
 }

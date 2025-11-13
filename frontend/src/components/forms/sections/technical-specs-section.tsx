@@ -8,12 +8,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Textarea } from '@/components/ui/textarea'
-
+import { TextareaWithAssist } from '@/components/ui/textarea-with-assist'
 interface TechnicalSpecsSectionProps {
   form: UseFormReturn<ModelCard>
 }
-
 export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
   return (
     <div className="space-y-6 pt-2">
@@ -24,10 +22,14 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
           <FormItem>
             <FormLabel>Model Architecture and Objective (optional)</FormLabel>
             <FormControl>
-              <Textarea
+              <TextareaWithAssist
                 placeholder="Describe the model architecture, objective function, and training methodology..."
                 className="min-h-[100px]"
+                onValueChange={field.onChange}
                 {...field}
+                fieldName="Model Architecture and Objective"
+                fieldDescription="Details about model architecture and training objective"
+                contextData={form.getValues()}
               />
             </FormControl>
             <FormDescription>
@@ -37,7 +39,6 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="technical_specs.compute_infrastructure"
@@ -45,10 +46,14 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
           <FormItem>
             <FormLabel>Compute Infrastructure (optional)</FormLabel>
             <FormControl>
-              <Textarea
+              <TextareaWithAssist
                 placeholder="Describe the compute infrastructure used for training..."
                 className="min-h-[80px]"
+                onValueChange={field.onChange}
                 {...field}
+                fieldName="Compute Infrastructure"
+                fieldDescription="Overview of compute infrastructure"
+                contextData={form.getValues()}
               />
             </FormControl>
             <FormDescription>
@@ -58,7 +63,6 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="technical_specs.hardware_requirements"
@@ -66,10 +70,14 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
           <FormItem>
             <FormLabel>Hardware Requirements (optional)</FormLabel>
             <FormControl>
-              <Textarea
+              <TextareaWithAssist
                 placeholder="Describe minimum hardware requirements for inference (processing, storage, memory)..."
                 className="min-h-[80px]"
+                onValueChange={field.onChange}
                 {...field}
+                fieldName="Hardware Requirements"
+                fieldDescription="Minimum hardware requirements for running the model"
+                contextData={form.getValues()}
               />
             </FormControl>
             <FormDescription>
@@ -79,7 +87,6 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="technical_specs.software"
@@ -87,10 +94,14 @@ export function TechnicalSpecsSection({ form }: TechnicalSpecsSectionProps) {
           <FormItem>
             <FormLabel>Software (optional)</FormLabel>
             <FormControl>
-              <Textarea
+              <TextareaWithAssist
                 placeholder="List software dependencies, frameworks, and libraries (e.g., PyTorch 2.0, transformers 4.30)..."
                 className="min-h-[80px]"
+                onValueChange={field.onChange}
                 {...field}
+                fieldName="Software"
+                fieldDescription="Software dependencies and requirements"
+                contextData={form.getValues()}
               />
             </FormControl>
             <FormDescription>

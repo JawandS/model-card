@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { TextareaWithAssist } from '@/components/ui/textarea-with-assist'
 
 interface BasicInfoSectionProps {
   form: UseFormReturn<ModelCard>
@@ -44,9 +44,13 @@ export function BasicInfoSection({ form, showOptionalFields = true }: BasicInfoS
             <FormItem>
               <FormLabel>Model Summary <span className="text-foreground">*</span></FormLabel>
               <FormControl>
-                <Textarea
+                <TextareaWithAssist
                   placeholder="Provide a quick 1-2 sentence summary of what the model is"
                   className="min-h-[80px]"
+                  fieldName="Model Summary"
+                  fieldDescription="A brief summary of what the model does (1-2 sentences)"
+                  contextData={form.getValues()}
+                  onValueChange={field.onChange}
                   {...field}
                 />
               </FormControl>

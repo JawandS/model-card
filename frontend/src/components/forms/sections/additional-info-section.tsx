@@ -9,12 +9,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-
+import { TextareaWithAssist } from '@/components/ui/textarea-with-assist'
 interface AdditionalInfoSectionProps {
   form: UseFormReturn<ModelCard>
 }
-
 export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
   return (
     <div className="space-y-6 pt-2">
@@ -25,10 +23,14 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           <FormItem>
             <FormLabel>How to Get Started with the Model (optional)</FormLabel>
             <FormControl>
-              <Textarea
+              <TextareaWithAssist
                 placeholder="Provide a code snippet showing how to use the model...&#10;&#10;from transformers import AutoModel&#10;model = AutoModel.from_pretrained('model-name')"
                 className="min-h-[120px] font-mono text-sm"
+                onValueChange={field.onChange}
                 {...field}
+                fieldName="How to Get Started with the Model"
+                fieldDescription="Code snippet to show how to use the model"
+                contextData={form.getValues()}
               />
             </FormControl>
             <FormDescription>
@@ -38,7 +40,6 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="additional_info.model_examination"
@@ -46,10 +47,14 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           <FormItem>
             <FormLabel>Model Examination (optional)</FormLabel>
             <FormControl>
-              <Textarea
+              <TextareaWithAssist
                 placeholder="Describe explainability/interpretability work for the model..."
                 className="min-h-[80px]"
+                onValueChange={field.onChange}
                 {...field}
+                fieldName="Model Examination"
+                fieldDescription="Experimental section for explainability/interpretability work"
+                contextData={form.getValues()}
               />
             </FormControl>
             <FormDescription>
@@ -59,7 +64,6 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="additional_info.glossary"
@@ -67,10 +71,14 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           <FormItem>
             <FormLabel>Glossary (optional)</FormLabel>
             <FormControl>
-              <Textarea
+              <TextareaWithAssist
                 placeholder="Define terms and calculations to help readers understand the model..."
                 className="min-h-[80px]"
+                onValueChange={field.onChange}
                 {...field}
+                fieldName="Glossary"
+                fieldDescription="Define common terms and metrics"
+                contextData={form.getValues()}
               />
             </FormControl>
             <FormDescription>
@@ -80,7 +88,6 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="additional_info.more_information"
@@ -88,10 +95,14 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           <FormItem>
             <FormLabel>More Information (optional)</FormLabel>
             <FormControl>
-              <Textarea
+              <TextareaWithAssist
                 placeholder="Links to dataset creation, technical specs, lessons learned, etc..."
                 className="min-h-[80px]"
+                onValueChange={field.onChange}
                 {...field}
+                fieldName="More Information"
+                fieldDescription="Additional resources and links"
+                contextData={form.getValues()}
               />
             </FormControl>
             <FormDescription>
@@ -101,7 +112,6 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="additional_info.model_card_authors"
@@ -118,7 +128,6 @@ export function AdditionalInfoSection({ form }: AdditionalInfoSectionProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="additional_info.model_card_contact"
