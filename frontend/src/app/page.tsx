@@ -56,12 +56,12 @@ export default function Home() {
               title={aiAssistEnabled ? "Disable AI Assist" : "Enable AI Assist"}
             >
               {aiAssistEnabled ? (
-                <Sparkles className="h-6 w-6" />
-              ) : (
                 <div className="relative h-6 w-6">
                   <Sparkles className="h-6 w-6" />
                   <Slash className="h-6 w-6 absolute inset-0" />
                 </div>
+              ) : (
+                <Sparkles className="h-6 w-6" />
               )}
               <span className="sr-only">{aiAssistEnabled ? "Disable AI Assist" : "Enable AI Assist"}</span>
             </Button>

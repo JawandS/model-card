@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
-import { Sparkles, Loader2 } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
 interface LLMAssistButtonProps {
@@ -72,13 +72,18 @@ export function LLMAssistButton({
       className={className}
     >
       {isLoading ? (
-        <>
-          <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-          Generating...
-        </>
+        <div className="flex items-center gap-1">
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-1.5 h-1.5 bg-current rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+        </div>
       ) : (
         <>
-          <Sparkles className="mr-2 h-3 w-3" />Assist</>
+          <Sparkles className="mr-2 h-3 w-3" />
+          Assist
+        </>
       )}
     </Button>
   )
