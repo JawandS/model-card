@@ -62,9 +62,9 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=schema-builder /app/packages/schema ./packages/schema
 
 # Copy built application
-COPY --from=builder /app/frontend/public ./frontend/public
+# Note: Public assets are already included in the standalone build
 COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/static ./frontend/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/frontend/.next/static ./.next/static
 
 USER nextjs
 
@@ -74,4 +74,4 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Start the application
-CMD ["node", "frontend/server.js"]
+CMD ["node", "server.js"]
