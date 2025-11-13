@@ -219,7 +219,7 @@ export function exportToMarkdown(data: ModelCard) {
 /**
  * Export model card as HTML with theme support
  */
-export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' = 'auto') {
+export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' = 'auto', initialTheme: 'light' | 'dark' = 'light') {
   const hasContent = (obj: any) => {
     if (!obj) return false
     if (typeof obj === 'string') return obj.trim().length > 0
@@ -262,10 +262,10 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
   }
 
   // Initialize HTML with theme class based on selection
-  const initialTheme = theme === 'auto' ? 'data-theme="light"' : theme === 'dark' ? 'data-theme="dark"' : 'data-theme="light"'
+  const initialThemeAttr = theme === 'auto' ? `data-theme="${initialTheme}"` : theme === 'dark' ? 'data-theme="dark"' : 'data-theme="light"'
 
   let html = `<!DOCTYPE html>
-<html lang="en" ${initialTheme}>
+<html lang="en" ${initialThemeAttr}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -16,6 +16,31 @@ export function ExportModal() {
   const { toast } = useToast()
   const { showAlert } = useAlertModal()
 
+  // Detect current page theme
+  const detectCurrentTheme = (): 'light' | 'dark' => {
+    // Check data-theme attribute
+    const dataTheme = document.documentElement.getAttribute('data-theme')
+    if (dataTheme === 'dark') return 'dark'
+    if (dataTheme === 'light') return 'light'
+
+    // Check for dark class on html or body
+    if (document.documentElement.classList.contains('dark') || document.body.classList.contains('dark')) {
+      return 'dark'
+    }
+
+    // Check for light class
+    if (document.documentElement.classList.contains('light') || document.body.classList.contains('light')) {
+      return 'light'
+    }
+
+    // Fallback to system preference
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark'
+    }
+
+    return 'light'
+  }
+
   const handleExport = (format: 'json' | 'pdf' | 'markdown' | 'html', htmlTheme?: 'light' | 'dark' | 'auto') => {
     // Load data from localStorage
     const saved = localStorage.getItem('modelcard-draft')
@@ -98,7 +123,9 @@ export function ExportModal() {
           })
           break
         case 'html':
-          exportToHTML(validData, htmlTheme || 'auto')
+          // Detect current page theme to initialize the HTML export
+          const currentTheme = detectCurrentTheme()
+          exportToHTML(validData, htmlTheme || 'auto', currentTheme)
           toast({
             title: 'HTML exported successfully!',
             description: 'Your model card has been downloaded.',
