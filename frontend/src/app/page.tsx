@@ -6,10 +6,17 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { InstructionsModal } from '@/components/instructions-modal'
 import { ExportModal } from '@/components/export-modal'
 import { Button } from '@/components/ui/button'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Sparkles } from 'lucide-react'
 
 export default function Home() {
   const [showPreview, setShowPreview] = React.useState(true)
+  const fillExampleRef = React.useRef<(() => void) | null>(null)
+
+  const handleFillExample = () => {
+    if (fillExampleRef.current) {
+      fillExampleRef.current()
+    }
+  }
 
   return (
     <main className="h-screen gradient-bg relative overflow-hidden flex flex-col">
@@ -28,6 +35,18 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
+            <InstructionsModal />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleFillExample}
+              className="rounded-xl shadow-lg hover:shadow-xl h-12 w-12"
+              title="Fill empty fields with example data"
+            >
+              <Sparkles className="h-6 w-6" />
+              <span className="sr-only">Fill example data</span>
+            </Button>
+            <ExportModal />
             <Button
               variant="outline"
               size="icon"
@@ -42,15 +61,13 @@ export default function Home() {
               )}
               <span className="sr-only">{showPreview ? "Hide preview" : "Show preview"}</span>
             </Button>
-            <InstructionsModal />
-            <ExportModal />
             <ThemeToggle />
           </div>
         </header>
 
         {/* Main Content */}
         <div className="flex-1 overflow-hidden pb-6">
-          <ModelCardForm showPreview={showPreview} />
+          <ModelCardForm showPreview={showPreview} onFillExampleRef={fillExampleRef} />
         </div>
       </div>
     </main>

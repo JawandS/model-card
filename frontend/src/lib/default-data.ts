@@ -140,9 +140,10 @@ export function mergeWithDefaults(userData: any, defaultData: any = DEFAULT_MODE
       const userValue = userData[key]
       const defaultValue = defaultData[key]
 
-      // Check if value is "empty" (null, undefined, empty string, empty object/array)
+      // Check if value is "empty" (null, undefined, empty/whitespace-only string, empty object/array)
       const isEmpty = (val: any): boolean => {
-        if (val === null || val === undefined || val === '') return true
+        if (val === null || val === undefined) return true
+        if (typeof val === 'string') return val.trim() === ''
         if (typeof val === 'object' && !Array.isArray(val)) {
           return Object.keys(val).length === 0
         }

@@ -26,13 +26,15 @@ import { SaveIndicator } from '../save-indicator'
 import { SectionProgressIndicator } from '../section-progress-indicator'
 import { ResetConfirmationModal } from '../reset-confirmation-modal'
 import { SECTION_CONFIGS } from '@/lib/section-config'
+import { DEFAULT_MODEL_CARD_DATA, mergeWithDefaults } from '@/lib/default-data'
 import { Eye, RotateCcw } from 'lucide-react'
 
 interface ModelCardFormProps {
   showPreview?: boolean
+  onFillExampleRef?: React.MutableRefObject<(() => void) | null>
 }
 
-export function ModelCardForm({ showPreview = true }: ModelCardFormProps) {
+export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCardFormProps) {
   const [formData, setFormData] = React.useState<PartialModelCard>({})
   const [isSaving, setIsSaving] = React.useState(false)
   const [lastSaved, setLastSaved] = React.useState<Date | undefined>()
@@ -176,6 +178,21 @@ export function ModelCardForm({ showPreview = true }: ModelCardFormProps) {
       setPreviewKey(prev => prev + 1)
     }
   }, [showPreview])
+
+  // Fill example data handler
+  const handleFillExample = React.useCallback(() => {
+    const currentData = form.getValues()
+    const mergedData = mergeWithDefaults(currentData)
+    form.reset(mergedData)
+    // The auto-save mechanism will automatically save to localStorage
+  }, [form])
+
+  // Expose fill example handler via ref
+  React.useEffect(() => {
+    if (onFillExampleRef) {
+      onFillExampleRef.current = handleFillExample
+    }
+  }, [onFillExampleRef, handleFillExample])
 
   const handleReset = () => {
     // Reset the form to default values with all nested objects explicitly cleared

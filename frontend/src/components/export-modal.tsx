@@ -6,13 +6,11 @@ import { Button } from '@/components/ui/button'
 import { ModelCardSchema, type PartialModelCard } from '@modelcard/schema'
 import { exportToJSON, exportToPDF, exportToMarkdown, exportToHTML } from '@/lib/exporters'
 import { cleanEmptyStrings } from '@/lib/utils'
-import { mergeWithDefaults } from '@/lib/default-data'
 import { useToast } from '@/hooks/use-toast'
 import { useAlertModal } from '@/hooks/use-alert-modal'
 
 export function ExportModal() {
   const [isOpen, setIsOpen] = React.useState(false)
-  const [useExampleData, setUseExampleData] = React.useState(false)
   const { toast } = useToast()
   const { showAlert } = useAlertModal()
 
@@ -67,13 +65,7 @@ export function ExportModal() {
 
     // Clean empty strings from the data (converts '' to undefined)
     // This prevents validation failures for optional fields with format constraints (e.g., URLs)
-    let cleanedData = cleanEmptyStrings(formData)
-
-    // If "Use example data" is enabled, merge with defaults
-    if (useExampleData) {
-      cleanedData = mergeWithDefaults(cleanedData)
-    }
-
+    const cleanedData = cleanEmptyStrings(formData)
     const result = ModelCardSchema.safeParse(cleanedData)
 
     if (!result.success) {
@@ -247,35 +239,12 @@ export function ExportModal() {
             </Button>
           </div>
 
-          {/* Footer with toggle and close button */}
-          <div className="mt-6 flex items-center justify-between gap-4">
-            {/* Left: Use example data toggle */}
-            <div className="flex items-center gap-2">
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={useExampleData}
-                  onChange={(e) => setUseExampleData(e.target.checked)}
-                  className="w-4 h-4 rounded border-border text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer"
-                />
-                <span className="text-sm text-foreground group-hover:text-primary transition-colors">
-                  Use example data for incomplete fields
-                </span>
-              </label>
-            </div>
-
-            {/* Right: Cancel button */}
-            <Button variant="outline" onClick={() => setIsOpen(false)} className="border-2 flex-shrink-0">
+          {/* Footer with close button */}
+          <div className="mt-6 flex justify-end">
+            <Button variant="outline" onClick={() => setIsOpen(false)} className="border-2">
               Cancel
             </Button>
           </div>
-
-          {/* Helper text when toggle is enabled */}
-          {useExampleData && (
-            <div className="mt-2 text-xs text-muted-foreground italic">
-              Empty fields will be populated with professional example data during export
-            </div>
-          )}
         </div>
       </div>
         </>
