@@ -4,6 +4,7 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ToastProvider } from '@/hooks/use-toast'
 import { AlertModalProvider } from '@/hooks/use-alert-modal'
+import { AIAssistProvider } from '@/contexts/ai-assist-context'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,7 +38,9 @@ export default function RootLayout({
         >
           <AlertModalProvider>
             <ToastProvider>
-              {children}
+              <AIAssistProvider>
+                {children}
+              </AIAssistProvider>
             </ToastProvider>
           </AlertModalProvider>
         </ThemeProvider>

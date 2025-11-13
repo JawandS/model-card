@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { LLMAssistButton } from '@/components/llm-assist-button'
+import { useAIAssist } from '@/contexts/ai-assist-context'
 
 interface TextareaWithAssistProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -16,15 +17,16 @@ const TextareaWithAssist = React.forwardRef<
   HTMLTextAreaElement,
   TextareaWithAssistProps
 >(({ fieldName, fieldDescription, contextData, onValueChange, ...props }, ref) => {
-  const [aiAssistEnabled, setAiAssistEnabled] = React.useState(false)
+  const { isEnabled: userEnabled } = useAIAssist()
+  const [apiEnabled, setApiEnabled] = React.useState(false)
   const [configLoaded, setConfigLoaded] = React.useState(false)
 
   React.useEffect(() => {
-    // Check if AI assist is enabled by fetching config
+    // Check if AI assist API is configured
     fetch('/api/config')
       .then((res) => res.json())
       .then((data) => {
-        setAiAssistEnabled(data.aiAssistEnabled)
+        setApiEnabled(data.aiAssistEnabled)
         setConfigLoaded(true)
       })
       .catch((error) => {
@@ -39,20 +41,23 @@ const TextareaWithAssist = React.forwardRef<
     }
   }
 
+  // AI assist is enabled if both user preference and API are enabled
+  const aiAssistEnabled = configLoaded && apiEnabled && userEnabled
+
   // Add right padding to textarea when AI button is present to prevent text overlap
   const textareaClassName = React.useMemo(() => {
     const baseClassName = props.className || ''
-    if (configLoaded && aiAssistEnabled) {
+    if (aiAssistEnabled) {
       // Add padding-right if not already present
       return baseClassName.includes('pr-') ? baseClassName : `${baseClassName} pr-24`
     }
     return baseClassName
-  }, [configLoaded, aiAssistEnabled, props.className])
+  }, [aiAssistEnabled, props.className])
 
   return (
     <div className="relative">
       <Textarea ref={ref} {...props} className={textareaClassName} />
-      {configLoaded && aiAssistEnabled && (
+      {aiAssistEnabled && (
         <div className="absolute top-2 right-2">
           <LLMAssistButton
             fieldName={fieldName}

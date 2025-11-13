@@ -7,12 +7,14 @@ import { InstructionsModal } from '@/components/instructions-modal'
 import { ExportModal } from '@/components/export-modal'
 import { AutofillConfirmationModal } from '@/components/autofill-confirmation-modal'
 import { Button } from '@/components/ui/button'
-import { Eye, EyeOff, Wand2 } from 'lucide-react'
+import { Eye, EyeOff, Wand2, Sparkles, Slash } from 'lucide-react'
+import { useAIAssist } from '@/contexts/ai-assist-context'
 
 export default function Home() {
   const [showPreview, setShowPreview] = React.useState(true)
   const [isAutofillModalOpen, setIsAutofillModalOpen] = React.useState(false)
   const fillExampleRef = React.useRef<(() => void) | null>(null)
+  const { isEnabled: aiAssistEnabled, toggleEnabled: toggleAIAssist } = useAIAssist()
 
   const handleFillExample = () => {
     if (fillExampleRef.current) {
@@ -46,6 +48,23 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3">
             <InstructionsModal />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggleAIAssist}
+              className="rounded-xl shadow-lg hover:shadow-xl h-12 w-12"
+              title={aiAssistEnabled ? "Disable AI Assist" : "Enable AI Assist"}
+            >
+              {aiAssistEnabled ? (
+                <Sparkles className="h-6 w-6" />
+              ) : (
+                <div className="relative h-6 w-6">
+                  <Sparkles className="h-6 w-6" />
+                  <Slash className="h-6 w-6 absolute inset-0" />
+                </div>
+              )}
+              <span className="sr-only">{aiAssistEnabled ? "Disable AI Assist" : "Enable AI Assist"}</span>
+            </Button>
             <Button
               variant="outline"
               size="icon"
