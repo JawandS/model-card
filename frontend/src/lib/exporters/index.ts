@@ -253,9 +253,9 @@ export function exportToMarkdown(data: ModelCard) {
 }
 
 /**
- * Export model card as HTML with theme support
+ * Export model card as HTML with accordion UI (self-contained, no external dependencies)
  */
-export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' = 'auto', initialTheme: 'light' | 'dark' = 'light') {
+export function exportToHTML(data: ModelCard) {
   const hasContent = (obj: any) => {
     if (!obj) return false
     if (typeof obj === 'string') return obj.trim().length > 0
@@ -284,10 +284,6 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
     })
   }
 
-  const renderArray = (arr: string[]) => {
-    return arr.map(item => `<li>${escapeHtml(item)}</li>`).join('')
-  }
-
   const renderKeyValue = (obj: Record<string, any>) => {
     return Object.entries(obj)
       .filter(([_, value]) => hasContent(value))
@@ -297,11 +293,240 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       }).join('')
   }
 
-  // Initialize HTML with theme class based on selection
-  const initialThemeAttr = theme === 'auto' ? `data-theme="${initialTheme}"` : theme === 'dark' ? 'data-theme="dark"' : 'data-theme="light"'
+  // Build accordion sections (group related content)
+  const accordionSections: Array<{ title: string; content: string }> = []
 
+  // Section 1: Overview & Setup
+  let section1Content = ''
+
+  // Model Details
+  if (hasContent(data.model_description) || hasContent(data.developers) || hasContent(data.model_type) ||
+      hasContent(data.license) || hasContent(data.language) || hasContent(data.base_model)) {
+    section1Content += `<h3>Model Details</h3>\n`
+    if (hasContent(data.model_description)) {
+      section1Content += `<div class="prose">${renderMarkdown(data.model_description!)}</div>\n`
+    }
+    if (hasContent(data.developers)) {
+      section1Content += `<div class="key-value"><span class="key">Developers:</span> <span class="value">${escapeHtml(data.developers)}</span></div>\n`
+    }
+    if (hasContent(data.funded_by)) {
+      section1Content += `<div class="key-value"><span class="key">Funded by:</span> <span class="value">${escapeHtml(data.funded_by!)}</span></div>\n`
+    }
+    if (hasContent(data.shared_by)) {
+      section1Content += `<div class="key-value"><span class="key">Shared by:</span> <span class="value">${escapeHtml(data.shared_by!)}</span></div>\n`
+    }
+    if (hasContent(data.model_type)) {
+      section1Content += `<div class="key-value"><span class="key">Model type:</span> <span class="value">${escapeHtml(data.model_type!)}</span></div>\n`
+    }
+    if (hasContent(data.language)) {
+      section1Content += `<div class="key-value"><span class="key">Language:</span> <span class="value">${escapeHtml(data.language!)}</span></div>\n`
+    }
+    if (hasContent(data.license)) {
+      section1Content += `<div class="key-value"><span class="key">License:</span> <span class="value">${escapeHtml(data.license!)}</span></div>\n`
+    }
+    if (hasContent(data.base_model)) {
+      section1Content += `<div class="key-value"><span class="key">Base model:</span> <span class="value">${escapeHtml(data.base_model!)}</span></div>\n`
+    }
+  }
+
+  // Model Sources
+  if (hasContent(data.model_sources?.repo) || hasContent(data.model_sources?.paper) || hasContent(data.model_sources?.demo)) {
+    section1Content += `<h3>Model Sources</h3>\n`
+    if (hasContent(data.model_sources?.repo)) {
+      section1Content += `<div class="key-value"><span class="key">Repository:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.repo!)}" target="_blank">${escapeHtml(data.model_sources!.repo!)}</a></span></div>\n`
+    }
+    if (hasContent(data.model_sources?.paper)) {
+      section1Content += `<div class="key-value"><span class="key">Paper:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.paper!)}" target="_blank">${escapeHtml(data.model_sources!.paper!)}</a></span></div>\n`
+    }
+    if (hasContent(data.model_sources?.demo)) {
+      section1Content += `<div class="key-value"><span class="key">Demo:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.demo!)}" target="_blank">${escapeHtml(data.model_sources!.demo!)}</a></span></div>\n`
+    }
+  }
+
+  // Get Started
+  if (hasContent(data.get_started_code)) {
+    section1Content += `<h3>How to Get Started</h3>\n<pre><code>${escapeHtml(data.get_started_code!)}</code></pre>\n`
+  }
+
+  if (section1Content) {
+    accordionSections.push({ title: 'Overview & Setup', content: section1Content })
+  }
+
+  // Section 2: Intended Use & Safety
+  let section2Content = ''
+
+  // Uses
+  if (hasContent(data.uses?.direct_use) || hasContent(data.uses?.downstream_use) || hasContent(data.uses?.out_of_scope_use)) {
+    section2Content += `<h3>Uses</h3>\n`
+    if (hasContent(data.uses?.direct_use)) {
+      section2Content += `<h4>Direct Use</h4>\n<div class="prose">${renderMarkdown(data.uses!.direct_use!)}</div>\n`
+    }
+    if (hasContent(data.uses?.downstream_use)) {
+      section2Content += `<h4>Downstream Use</h4>\n<div class="prose">${renderMarkdown(data.uses!.downstream_use!)}</div>\n`
+    }
+    if (hasContent(data.uses?.out_of_scope_use)) {
+      section2Content += `<h4>Out-of-Scope Use</h4>\n<div class="prose">${renderMarkdown(data.uses!.out_of_scope_use!)}</div>\n`
+    }
+  }
+
+  // Bias, Risks, and Limitations
+  if (hasContent(data.bias_risks?.bias_risks_limitations) || hasContent(data.bias_risks?.bias_recommendations)) {
+    section2Content += `<h3>Bias, Risks, and Limitations</h3>\n`
+    if (hasContent(data.bias_risks?.bias_risks_limitations)) {
+      section2Content += `<div class="prose">${renderMarkdown(data.bias_risks!.bias_risks_limitations!)}</div>\n`
+    }
+    if (hasContent(data.bias_risks?.bias_recommendations)) {
+      section2Content += `<h4>Recommendations</h4>\n<div class="prose">${renderMarkdown(data.bias_risks!.bias_recommendations!)}</div>\n`
+    }
+  }
+
+  if (section2Content) {
+    accordionSections.push({ title: 'Intended Use & Safety', content: section2Content })
+  }
+
+  // Section 3: Training & Evaluation
+  let section3Content = ''
+
+  // Training Details
+  if (hasContent(data.training_details?.training_data) || hasContent(data.training_details?.preprocessing) ||
+      hasContent(data.training_details?.training_regime) || hasContent(data.training_details?.speeds_sizes_times)) {
+    section3Content += `<h3>Training Details</h3>\n`
+    if (hasContent(data.training_details?.training_data)) {
+      section3Content += `<h4>Training Data</h4>\n<div class="prose">${renderMarkdown(data.training_details!.training_data!)}</div>\n`
+    }
+    if (hasContent(data.training_details?.preprocessing)) {
+      section3Content += `<h4>Preprocessing</h4>\n<div class="prose">${renderMarkdown(data.training_details!.preprocessing!)}</div>\n`
+    }
+    if (hasContent(data.training_details?.training_regime)) {
+      section3Content += `<h4>Training Regime</h4>\n<div class="prose">${renderMarkdown(data.training_details!.training_regime!)}</div>\n`
+    }
+    if (hasContent(data.training_details?.speeds_sizes_times)) {
+      section3Content += `<h4>Speeds, Sizes, Times</h4>\n<div class="prose">${renderMarkdown(data.training_details!.speeds_sizes_times!)}</div>\n`
+    }
+  }
+
+  // Evaluation
+  if (hasContent(data.evaluation?.testing_data) || hasContent(data.evaluation?.testing_factors) ||
+      hasContent(data.evaluation?.testing_metrics) || hasContent(data.evaluation?.results) ||
+      hasContent(data.evaluation?.results_summary)) {
+    section3Content += `<h3>Evaluation</h3>\n`
+    if (hasContent(data.evaluation?.testing_data)) {
+      section3Content += `<h4>Testing Data</h4>\n<div class="prose">${renderMarkdown(data.evaluation!.testing_data!)}</div>\n`
+    }
+    if (hasContent(data.evaluation?.testing_factors)) {
+      section3Content += `<h4>Testing Factors</h4>\n<div class="prose">${renderMarkdown(data.evaluation!.testing_factors!)}</div>\n`
+    }
+    if (hasContent(data.evaluation?.testing_metrics)) {
+      section3Content += `<h4>Testing Metrics</h4>\n<div class="prose">${renderMarkdown(data.evaluation!.testing_metrics!)}</div>\n`
+    }
+    if (hasContent(data.evaluation?.results)) {
+      section3Content += `<h4>Results</h4>\n<div class="prose">${renderMarkdown(data.evaluation!.results!)}</div>\n`
+    }
+    if (hasContent(data.evaluation?.results_summary)) {
+      section3Content += `<h4>Summary</h4>\n<div class="prose">${renderMarkdown(data.evaluation!.results_summary!)}</div>\n`
+    }
+  }
+
+  if (section3Content) {
+    accordionSections.push({ title: 'Training & Evaluation', content: section3Content })
+  }
+
+  // Section 4: Impact & Specifications
+  let section4Content = ''
+
+  // Environmental Impact
+  if (hasContent(data.environmental_impact?.hardware_type) || hasContent(data.environmental_impact?.hours_used) ||
+      hasContent(data.environmental_impact?.cloud_provider) || hasContent(data.environmental_impact?.cloud_region) ||
+      hasContent(data.environmental_impact?.co2_emitted)) {
+    section4Content += `<h3>Environmental Impact</h3>\n<div class="grid">\n`
+    if (hasContent(data.environmental_impact?.hardware_type)) {
+      section4Content += `<div class="grid-item"><div class="grid-item-title">Hardware Type</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.hardware_type!)}</div></div>\n`
+    }
+    if (hasContent(data.environmental_impact?.hours_used)) {
+      section4Content += `<div class="grid-item"><div class="grid-item-title">Hours Used</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.hours_used!)}</div></div>\n`
+    }
+    if (hasContent(data.environmental_impact?.cloud_provider)) {
+      section4Content += `<div class="grid-item"><div class="grid-item-title">Cloud Provider</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.cloud_provider!)}</div></div>\n`
+    }
+    if (hasContent(data.environmental_impact?.cloud_region)) {
+      section4Content += `<div class="grid-item"><div class="grid-item-title">Cloud Region</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.cloud_region!)}</div></div>\n`
+    }
+    if (hasContent(data.environmental_impact?.co2_emitted)) {
+      section4Content += `<div class="grid-item"><div class="grid-item-title">CO₂ Emitted</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.co2_emitted!)}</div></div>\n`
+    }
+    section4Content += `</div>\n`
+  }
+
+  // Technical Specifications
+  if (hasContent(data.technical_specs?.model_specs) || hasContent(data.technical_specs?.compute_infrastructure) ||
+      hasContent(data.technical_specs?.hardware_requirements) || hasContent(data.technical_specs?.software)) {
+    section4Content += `<h3>Technical Specifications</h3>\n`
+    if (hasContent(data.technical_specs?.model_specs)) {
+      section4Content += `<h4>Model Architecture and Objective</h4>\n<div class="prose">${renderMarkdown(data.technical_specs!.model_specs!)}</div>\n`
+    }
+    if (hasContent(data.technical_specs?.compute_infrastructure)) {
+      section4Content += `<h4>Compute Infrastructure</h4>\n<div class="prose">${renderMarkdown(data.technical_specs!.compute_infrastructure!)}</div>\n`
+    }
+    if (hasContent(data.technical_specs?.hardware_requirements)) {
+      section4Content += `<h4>Hardware Requirements</h4>\n<div class="prose">${renderMarkdown(data.technical_specs!.hardware_requirements!)}</div>\n`
+    }
+    if (hasContent(data.technical_specs?.software)) {
+      section4Content += `<h4>Software</h4>\n<div class="prose">${renderMarkdown(data.technical_specs!.software!)}</div>\n`
+    }
+  }
+
+  if (section4Content) {
+    accordionSections.push({ title: 'Impact & Specifications', content: section4Content })
+  }
+
+  // Section 5: Citation & Additional Information
+  let section5Content = ''
+
+  // Citation
+  if (hasContent(data.citation?.citation_bibtex) || hasContent(data.citation?.citation_apa)) {
+    section5Content += `<h3>Citation</h3>\n`
+    if (hasContent(data.citation?.citation_bibtex)) {
+      section5Content += `<h4>BibTeX</h4>\n<pre><code>${escapeHtml(data.citation!.citation_bibtex!)}</code></pre>\n`
+    }
+    if (hasContent(data.citation?.citation_apa)) {
+      section5Content += `<h4>APA</h4>\n<div class="prose">${renderMarkdown(data.citation!.citation_apa!)}</div>\n`
+    }
+  }
+
+  // Additional Information
+  if (hasContent(data.additional_info?.model_examination) || hasContent(data.additional_info?.glossary) ||
+      hasContent(data.additional_info?.more_information) || hasContent(data.additional_info?.model_card_authors) ||
+      hasContent(data.additional_info?.model_card_contact)) {
+    section5Content += `<h3>Additional Information</h3>\n`
+    if (hasContent(data.additional_info?.model_examination)) {
+      section5Content += `<h4>Model Examination</h4>\n<div class="prose">${renderMarkdown(data.additional_info!.model_examination!)}</div>\n`
+    }
+    if (hasContent(data.additional_info?.glossary)) {
+      section5Content += `<h4>Glossary</h4>\n<div class="prose">${renderMarkdown(data.additional_info!.glossary!)}</div>\n`
+    }
+    if (hasContent(data.additional_info?.more_information)) {
+      section5Content += `<h4>More Information</h4>\n<div class="prose">${renderMarkdown(data.additional_info!.more_information!)}</div>\n`
+    }
+    if (hasContent(data.additional_info?.model_card_authors)) {
+      section5Content += `<div class="key-value"><span class="key">Model Card Authors:</span> <span class="value">${escapeHtml(data.additional_info!.model_card_authors!)}</span></div>\n`
+    }
+    if (hasContent(data.additional_info?.model_card_contact)) {
+      section5Content += `<div class="key-value"><span class="key">Model Card Contact:</span> <span class="value">${escapeHtml(data.additional_info!.model_card_contact!)}</span></div>\n`
+    }
+  }
+
+  // Card Data Metadata
+  if (hasContent(data.card_data)) {
+    section5Content += `<h3>Model Card Metadata</h3>\n${renderKeyValue(data.card_data!)}\n`
+  }
+
+  if (section5Content) {
+    accordionSections.push({ title: 'Citation & Additional Information', content: section5Content })
+  }
+
+  // Build HTML with accordion UI
   let html = `<!DOCTYPE html>
-<html lang="en" ${initialThemeAttr}>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -311,27 +536,15 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Light mode colors - Professional Navy Blue + Teal */
-      --bg: hsl(215 18% 93%);
-      --fg: hsl(215 25% 15%);
-      --primary: hsl(215 45% 35%);
-      --accent: hsl(185 60% 40%);
-      --card: hsl(215 12% 96%);
-      --muted: hsl(215 18% 90%);
-      --border: hsl(215 15% 85%);
-      --code-bg: hsl(215 15% 92%);
-    }
-
-    html[data-theme="dark"] {
-      /* Dark mode colors */
-      --bg: hsl(215 28% 12%);
-      --fg: hsl(210 20% 95%);
-      --primary: hsl(215 50% 55%);
-      --accent: hsl(185 65% 50%);
-      --card: hsl(215 25% 15%);
-      --muted: hsl(215 20% 25%);
-      --border: hsl(215 20% 30%);
-      --code-bg: hsl(215 20% 18%);
+      --bg: #f5f7fa;
+      --fg: #1a202c;
+      --primary: #2c5282;
+      --accent: #2c7a7b;
+      --card: #ffffff;
+      --muted: #e2e8f0;
+      --border: #cbd5e0;
+      --code-bg: #edf2f7;
+      --hover: #f7fafc;
     }
 
     * {
@@ -345,31 +558,22 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       background: var(--bg);
       color: var(--fg);
       line-height: 1.6;
-      padding: 1rem;
-      transition: background 0.3s ease, color 0.3s ease;
+      padding: 1.5rem;
     }
 
     .container {
       max-width: 900px;
       margin: 0 auto;
       background: var(--card);
-      border-radius: 1rem;
+      border-radius: 0.75rem;
       padding: 2rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      transition: background 0.3s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
       margin-bottom: 2rem;
       padding-bottom: 1.5rem;
       border-bottom: 2px solid var(--border);
-    }
-
-    .header-content {
-      flex: 1;
     }
 
     h1 {
@@ -386,31 +590,115 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       margin-top: 0.5rem;
     }
 
-    .section {
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
 
-    .section:first-of-type {
-      margin-top: 0;
-      padding-top: 0;
-      border-top: none;
+    .btn {
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
     }
 
-    h2 {
-      font-size: 1.5rem;
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .accordion {
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .accordion-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .accordion-item:last-child {
+      border-bottom: none;
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: var(--card);
+      border: none;
+      text-align: left;
+      font-size: 1.125rem;
       font-weight: 600;
       color: var(--primary);
-      margin-bottom: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s ease;
+      font-family: inherit;
+    }
+
+    .accordion-trigger:hover {
+      background: var(--hover);
+    }
+
+    .accordion-trigger[aria-expanded="true"] {
+      background: var(--muted);
+    }
+
+    .chevron {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .accordion-trigger[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      max-height: 0;
+      padding: 0 1.25rem;
+    }
+
+    .accordion-content[data-state="open"] {
+      max-height: 10000px;
+      padding: 1.25rem;
     }
 
     h3 {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    h3:first-child {
+      margin-top: 0;
+    }
+
+    h4 {
+      font-size: 1rem;
       font-weight: 600;
       color: var(--fg);
-      margin-top: 1.25rem;
-      margin-bottom: 0.75rem;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
     }
 
     p {
@@ -561,17 +849,6 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       border-bottom-color: var(--accent);
     }
 
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      background: var(--accent);
-      color: white;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin: 0.25rem 0.25rem 0.25rem 0;
-    }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -604,7 +881,7 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
       }
 
       .container {
-        padding: 1rem;
+        padding: 1.25rem;
       }
 
       h1 {
@@ -615,25 +892,42 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
         font-size: 1rem;
       }
 
-      .header {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
       .grid {
         grid-template-columns: 1fr;
+      }
+
+      .accordion-trigger {
+        font-size: 1rem;
+        padding: 0.875rem 1rem;
       }
     }
 
     @media print {
       body {
         background: white;
-        color: black;
+        padding: 0;
       }
 
       .container {
         box-shadow: none;
         padding: 0;
+      }
+
+      .controls {
+        display: none;
+      }
+
+      .accordion-content {
+        max-height: none !important;
+        padding: 1rem 0 !important;
+      }
+
+      .accordion-trigger {
+        pointer-events: none;
+      }
+
+      .chevron {
+        display: none;
       }
     }
   </style>
@@ -641,310 +935,97 @@ export function exportToHTML(data: ModelCard, theme: 'light' | 'dark' | 'auto' =
 <body>
   <div class="container">
     <div class="header">
-      <div class="header-content">
-        <h1>Model Card for ${escapeHtml(data.model_id)}</h1>
-        ${hasContent(data.model_summary) ? `<div class="summary">${renderMarkdown(data.model_summary!)}</div>` : ''}
-      </div>
+      <h1>Model Card for ${escapeHtml(data.model_id)}</h1>
+      ${hasContent(data.model_summary) ? `<div class="summary">${renderMarkdown(data.model_summary!)}</div>` : ''}
     </div>
+
+    <div class="controls">
+      <button class="btn" id="expandAll">Expand All</button>
+      <button class="btn" id="collapseAll">Collapse All</button>
+    </div>
+
+    <div class="accordion">
 `
 
-  // Model Details Section
-  if (hasContent(data.model_description) || hasContent(data.developers) || hasContent(data.model_type) ||
-      hasContent(data.license) || hasContent(data.language) || hasContent(data.base_model)) {
-    html += `    <div class="section">
-      <h2>Model Details</h2>
+  // Render accordion items
+  accordionSections.forEach((section, index) => {
+    const isOpen = index === 0 // First section open by default
+    html += `      <div class="accordion-item">
+        <button
+          class="accordion-trigger"
+          aria-expanded="${isOpen}"
+          data-index="${index}"
+        >
+          <span>${escapeHtml(section.title)}</span>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-content" data-state="${isOpen ? 'open' : 'closed'}">
+          ${section.content}
+        </div>
+      </div>
 `
-    if (hasContent(data.model_description)) {
-      html += `      <div class="prose">${renderMarkdown(data.model_description!)}</div>\n`
-    }
-    if (hasContent(data.developers)) {
-      html += `      <div class="key-value"><span class="key">Developers:</span> <span class="value">${escapeHtml(data.developers)}</span></div>\n`
-    }
-    if (hasContent(data.funded_by)) {
-      html += `      <div class="key-value"><span class="key">Funded by:</span> <span class="value">${escapeHtml(data.funded_by!)}</span></div>\n`
-    }
-    if (hasContent(data.shared_by)) {
-      html += `      <div class="key-value"><span class="key">Shared by:</span> <span class="value">${escapeHtml(data.shared_by!)}</span></div>\n`
-    }
-    if (hasContent(data.model_type)) {
-      html += `      <div class="key-value"><span class="key">Model type:</span> <span class="value">${escapeHtml(data.model_type!)}</span></div>\n`
-    }
-    if (hasContent(data.language)) {
-      html += `      <div class="key-value"><span class="key">Language:</span> <span class="value">${escapeHtml(data.language!)}</span></div>\n`
-    }
-    if (hasContent(data.license)) {
-      html += `      <div class="key-value"><span class="key">License:</span> <span class="value">${escapeHtml(data.license!)}</span></div>\n`
-    }
-    if (hasContent(data.base_model)) {
-      html += `      <div class="key-value"><span class="key">Base model:</span> <span class="value">${escapeHtml(data.base_model!)}</span></div>\n`
-    }
-    html += `    </div>\n`
-  }
+  })
 
-  // Model Sources Section
-  if (hasContent(data.model_sources?.repo) || hasContent(data.model_sources?.paper) || hasContent(data.model_sources?.demo)) {
-    html += `    <div class="section">
-      <h2>Model Sources</h2>
-`
-    if (hasContent(data.model_sources?.repo)) {
-      html += `      <div class="key-value"><span class="key">Repository:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.repo!)}" target="_blank">${escapeHtml(data.model_sources!.repo!)}</a></span></div>\n`
-    }
-    if (hasContent(data.model_sources?.paper)) {
-      html += `      <div class="key-value"><span class="key">Paper:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.paper!)}" target="_blank">${escapeHtml(data.model_sources!.paper!)}</a></span></div>\n`
-    }
-    if (hasContent(data.model_sources?.demo)) {
-      html += `      <div class="key-value"><span class="key">Demo:</span> <span class="value"><a href="${escapeHtml(data.model_sources!.demo!)}" target="_blank">${escapeHtml(data.model_sources!.demo!)}</a></span></div>\n`
-    }
-    html += `    </div>\n`
-  }
+  html += `    </div>
+  </div>
 
-  // Uses Section
-  if (hasContent(data.uses?.direct_use) || hasContent(data.uses?.downstream_use) || hasContent(data.uses?.out_of_scope_use)) {
-    html += `    <div class="section">
-      <h2>Uses</h2>
-`
-    if (hasContent(data.uses?.direct_use)) {
-      html += `      <h3>Direct Use</h3>\n      <div class="prose">${renderMarkdown(data.uses!.direct_use!)}</div>\n`
-    }
-    if (hasContent(data.uses?.downstream_use)) {
-      html += `      <h3>Downstream Use</h3>\n      <div class="prose">${renderMarkdown(data.uses!.downstream_use!)}</div>\n`
-    }
-    if (hasContent(data.uses?.out_of_scope_use)) {
-      html += `      <h3>Out-of-Scope Use</h3>\n      <div class="prose">${renderMarkdown(data.uses!.out_of_scope_use!)}</div>\n`
-    }
-    html += `    </div>\n`
-  }
-
-  // Bias, Risks, and Limitations Section
-  if (hasContent(data.bias_risks?.bias_risks_limitations) || hasContent(data.bias_risks?.bias_recommendations)) {
-    html += `    <div class="section">
-      <h2>Bias, Risks, and Limitations</h2>
-`
-    if (hasContent(data.bias_risks?.bias_risks_limitations)) {
-      html += `      <div class="prose">${renderMarkdown(data.bias_risks!.bias_risks_limitations!)}</div>\n`
-    }
-    if (hasContent(data.bias_risks?.bias_recommendations)) {
-      html += `      <h3>Recommendations</h3>\n      <div class="prose">${renderMarkdown(data.bias_risks!.bias_recommendations!)}</div>\n`
-    }
-    html += `    </div>\n`
-  }
-
-  // Get Started Section
-  if (hasContent(data.get_started_code)) {
-    html += `    <div class="section">
-      <h2>How to Get Started with the Model</h2>
-      <pre><code>${escapeHtml(data.get_started_code!)}</code></pre>
-    </div>\n`
-  }
-
-  // Training Details Section
-  if (hasContent(data.training_details?.training_data) || hasContent(data.training_details?.preprocessing) ||
-      hasContent(data.training_details?.training_regime) || hasContent(data.training_details?.speeds_sizes_times)) {
-    html += `    <div class="section">
-      <h2>Training Details</h2>
-`
-    if (hasContent(data.training_details?.training_data)) {
-      html += `      <h3>Training Data</h3>\n      <div class="prose">${renderMarkdown(data.training_details!.training_data!)}</div>\n`
-    }
-    if (hasContent(data.training_details?.preprocessing)) {
-      html += `      <h3>Preprocessing</h3>\n      <div class="prose">${renderMarkdown(data.training_details!.preprocessing!)}</div>\n`
-    }
-    if (hasContent(data.training_details?.training_regime)) {
-      html += `      <h3>Training Regime</h3>\n      <div class="prose">${renderMarkdown(data.training_details!.training_regime!)}</div>\n`
-    }
-    if (hasContent(data.training_details?.speeds_sizes_times)) {
-      html += `      <h3>Speeds, Sizes, Times</h3>\n      <div class="prose">${renderMarkdown(data.training_details!.speeds_sizes_times!)}</div>\n`
-    }
-    html += `    </div>\n`
-  }
-
-  // Evaluation Section
-  if (hasContent(data.evaluation?.testing_data) || hasContent(data.evaluation?.testing_factors) ||
-      hasContent(data.evaluation?.testing_metrics) || hasContent(data.evaluation?.results) ||
-      hasContent(data.evaluation?.results_summary)) {
-    html += `    <div class="section">
-      <h2>Evaluation</h2>
-`
-    if (hasContent(data.evaluation?.testing_data)) {
-      html += `      <h3>Testing Data</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.testing_data!)}</div>\n`
-    }
-    if (hasContent(data.evaluation?.testing_factors)) {
-      html += `      <h3>Testing Factors</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.testing_factors!)}</div>\n`
-    }
-    if (hasContent(data.evaluation?.testing_metrics)) {
-      html += `      <h3>Testing Metrics</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.testing_metrics!)}</div>\n`
-    }
-    if (hasContent(data.evaluation?.results)) {
-      html += `      <h3>Results</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.results!)}</div>\n`
-    }
-    if (hasContent(data.evaluation?.results_summary)) {
-      html += `      <h3>Summary</h3>\n      <div class="prose">${renderMarkdown(data.evaluation!.results_summary!)}</div>\n`
-    }
-    html += `    </div>\n`
-  }
-
-  // Environmental Impact Section
-  if (hasContent(data.environmental_impact?.hardware_type) || hasContent(data.environmental_impact?.hours_used) ||
-      hasContent(data.environmental_impact?.cloud_provider) || hasContent(data.environmental_impact?.cloud_region) ||
-      hasContent(data.environmental_impact?.co2_emitted)) {
-    html += `    <div class="section">
-      <h2>Environmental Impact</h2>
-      <div class="grid">
-`
-    if (hasContent(data.environmental_impact?.hardware_type)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">Hardware Type</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.hardware_type!)}</div></div>\n`
-    }
-    if (hasContent(data.environmental_impact?.hours_used)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">Hours Used</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.hours_used!)}</div></div>\n`
-    }
-    if (hasContent(data.environmental_impact?.cloud_provider)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">Cloud Provider</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.cloud_provider!)}</div></div>\n`
-    }
-    if (hasContent(data.environmental_impact?.cloud_region)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">Cloud Region</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.cloud_region!)}</div></div>\n`
-    }
-    if (hasContent(data.environmental_impact?.co2_emitted)) {
-      html += `        <div class="grid-item"><div class="grid-item-title">CO₂ Emitted</div><div class="grid-item-value">${escapeHtml(data.environmental_impact!.co2_emitted!)}</div></div>\n`
-    }
-    html += `      </div>
-    </div>\n`
-  }
-
-  // Technical Specifications Section
-  if (hasContent(data.technical_specs?.model_specs) || hasContent(data.technical_specs?.compute_infrastructure) ||
-      hasContent(data.technical_specs?.hardware_requirements) || hasContent(data.technical_specs?.software)) {
-    html += `    <div class="section">
-      <h2>Technical Specifications</h2>
-`
-    if (hasContent(data.technical_specs?.model_specs)) {
-      html += `      <h3>Model Architecture and Objective</h3>\n      <div class="prose">${renderMarkdown(data.technical_specs!.model_specs!)}</div>\n`
-    }
-    if (hasContent(data.technical_specs?.compute_infrastructure)) {
-      html += `      <h3>Compute Infrastructure</h3>\n      <div class="prose">${renderMarkdown(data.technical_specs!.compute_infrastructure!)}</div>\n`
-    }
-    if (hasContent(data.technical_specs?.hardware_requirements)) {
-      html += `      <h3>Hardware Requirements</h3>\n      <div class="prose">${renderMarkdown(data.technical_specs!.hardware_requirements!)}</div>\n`
-    }
-    if (hasContent(data.technical_specs?.software)) {
-      html += `      <h3>Software</h3>\n      <div class="prose">${renderMarkdown(data.technical_specs!.software!)}</div>\n`
-    }
-    html += `    </div>\n`
-  }
-
-  // Citation Section
-  if (hasContent(data.citation?.citation_bibtex) || hasContent(data.citation?.citation_apa)) {
-    html += `    <div class="section">
-      <h2>Citation</h2>
-`
-    if (hasContent(data.citation?.citation_bibtex)) {
-      html += `      <h3>BibTeX</h3>\n      <pre><code>${escapeHtml(data.citation!.citation_bibtex!)}</code></pre>\n`
-    }
-    if (hasContent(data.citation?.citation_apa)) {
-      html += `      <h3>APA</h3>\n      <div class="prose">${renderMarkdown(data.citation!.citation_apa!)}</div>\n`
-    }
-    html += `    </div>\n`
-  }
-
-  // Additional Information Section
-  if (hasContent(data.additional_info?.model_examination) || hasContent(data.additional_info?.glossary) ||
-      hasContent(data.additional_info?.more_information) || hasContent(data.additional_info?.model_card_authors) ||
-      hasContent(data.additional_info?.model_card_contact)) {
-    html += `    <div class="section">
-      <h2>Additional Information</h2>
-`
-    if (hasContent(data.additional_info?.model_examination)) {
-      html += `      <h3>Model Examination</h3>\n      <div class="prose">${renderMarkdown(data.additional_info!.model_examination!)}</div>\n`
-    }
-    if (hasContent(data.additional_info?.glossary)) {
-      html += `      <h3>Glossary</h3>\n      <div class="prose">${renderMarkdown(data.additional_info!.glossary!)}</div>\n`
-    }
-    if (hasContent(data.additional_info?.more_information)) {
-      html += `      <h3>More Information</h3>\n      <div class="prose">${renderMarkdown(data.additional_info!.more_information!)}</div>\n`
-    }
-    if (hasContent(data.additional_info?.model_card_authors)) {
-      html += `      <div class="key-value"><span class="key">Model Card Authors:</span> <span class="value">${escapeHtml(data.additional_info!.model_card_authors!)}</span></div>\n`
-    }
-    if (hasContent(data.additional_info?.model_card_contact)) {
-      html += `      <div class="key-value"><span class="key">Model Card Contact:</span> <span class="value">${escapeHtml(data.additional_info!.model_card_contact!)}</span></div>\n`
-    }
-    html += `    </div>\n`
-  }
-
-  // Card Data Section (YAML frontmatter metadata)
-  if (hasContent(data.card_data)) {
-    html += `    <div class="section">
-      <h2>Model Card Metadata</h2>
-      ${renderKeyValue(data.card_data!)}
-    </div>\n`
-  }
-
-  html += `  </div>\n`
-
-  // Add auto theme detection JavaScript if theme is auto
-  if (theme === 'auto') {
-    html += `
   <script>
-    function detectParentTheme() {
-      // Check parent document for dark mode indicators
-      const htmlElement = document.documentElement
-      const bodyElement = document.body
+    // Accordion functionality
+    const triggers = document.querySelectorAll('.accordion-trigger')
+    const expandAllBtn = document.getElementById('expandAll')
+    const collapseAllBtn = document.getElementById('collapseAll')
 
-      // Check data-theme attribute
-      const dataTheme = htmlElement.getAttribute('data-theme')
-      if (dataTheme === 'dark') return 'dark'
-      if (dataTheme === 'light') return 'light'
+    function toggleAccordion(trigger) {
+      const isExpanded = trigger.getAttribute('aria-expanded') === 'true'
+      const content = trigger.nextElementSibling
 
-      // Check for dark class on html or body
-      if (htmlElement.classList.contains('dark') || bodyElement.classList.contains('dark')) {
-        return 'dark'
-      }
-
-      // Check for light class
-      if (htmlElement.classList.contains('light') || bodyElement.classList.contains('light')) {
-        return 'light'
-      }
-
-      // Fallback to system preference
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark'
-      }
-
-      return 'light'
+      trigger.setAttribute('aria-expanded', !isExpanded)
+      content.setAttribute('data-state', isExpanded ? 'closed' : 'open')
     }
 
-    function updateTheme() {
-      const detectedTheme = detectParentTheme()
-      document.documentElement.setAttribute('data-theme', detectedTheme)
+    function expandAll() {
+      triggers.forEach(trigger => {
+        trigger.setAttribute('aria-expanded', 'true')
+        trigger.nextElementSibling.setAttribute('data-state', 'open')
+      })
     }
 
-    // Initialize theme on load
-    updateTheme()
-
-    // Watch for changes to parent document theme
-    const observer = new MutationObserver(() => {
-      updateTheme()
-    })
-
-    // Observe changes to html and body elements
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme', 'class']
-    })
-
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class']
-    })
-
-    // Listen for system theme changes
-    if (window.matchMedia) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
+    function collapseAll() {
+      triggers.forEach(trigger => {
+        trigger.setAttribute('aria-expanded', 'false')
+        trigger.nextElementSibling.setAttribute('data-state', 'closed')
+      })
     }
+
+    // Event listeners
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', () => toggleAccordion(trigger))
+    })
+
+    expandAllBtn.addEventListener('click', expandAll)
+    collapseAllBtn.addEventListener('click', collapseAll)
+
+    // Keyboard accessibility
+    triggers.forEach((trigger, index) => {
+      trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          toggleAccordion(trigger)
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault()
+          const nextTrigger = triggers[index + 1]
+          if (nextTrigger) nextTrigger.focus()
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault()
+          const prevTrigger = triggers[index - 1]
+          if (prevTrigger) prevTrigger.focus()
+        }
+      })
+    })
   </script>
-`
-  }
-
-  html += `</body>
+</body>
 </html>`
 
   const blob = new Blob([html], { type: 'text/html' })
