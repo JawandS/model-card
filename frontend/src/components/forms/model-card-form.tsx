@@ -383,15 +383,19 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <ProgressTracker formData={formData} showOptionalFields={true} />
-              <SaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
+              <div data-tour="progress">
+                <ProgressTracker formData={formData} showOptionalFields={true} />
+              </div>
+              <div data-tour="save-indicator">
+                <SaveIndicator isSaving={isSaving} lastSaved={lastSaved} />
+              </div>
             </div>
           </CardHeader>
           <CardContent className="p-6 overflow-y-auto flex-1 min-h-0">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <Accordion type="multiple" value={openSections} onValueChange={setOpenSections} className="w-full">
-                  <AccordionItem value="basic-info" data-section-id="basic-info">
+                  <AccordionItem value="basic-info" data-section-id="basic-info" data-tour="basic-info">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>
@@ -408,7 +412,7 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="model-details" data-section-id="model-details">
+                  <AccordionItem value="model-details" data-section-id="model-details" data-tour="model-details">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>
@@ -592,7 +596,7 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
       {/* Preview Section */}
       {showPreview && (
         <div className="flex flex-col min-h-0" key="preview-panel">
-          <Card className="overflow-hidden flex flex-col h-full shadow-sm">
+          <Card className="overflow-hidden flex flex-col h-full shadow-sm" data-tour="preview-panel">
             <CardHeader className="bg-accent/5 border-b border-border flex-shrink-0">
               <CardTitle className="text-xl flex items-center gap-2 text-accent">
                 <Eye className="h-5 w-5" />

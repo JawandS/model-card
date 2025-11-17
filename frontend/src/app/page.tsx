@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import Joyride from 'react-joyride'
 import { ModelCardForm, type ModelCardFormHandle } from '@/components/forms/model-card-form'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { InstructionsModal } from '@/components/instructions-modal'
@@ -9,10 +10,12 @@ import { AutofillConfirmationModal } from '@/components/autofill-confirmation-mo
 import { Button } from '@/components/ui/button'
 import { Eye, EyeOff, Wand2, Sparkles, Slash } from 'lucide-react'
 import { useAIAssist } from '@/contexts/ai-assist-context'
+import { walkthroughSteps } from '@/lib/walkthrough-steps'
 
 export default function Home() {
   const [showPreview, setShowPreview] = React.useState(true)
   const [isAutofillModalOpen, setIsAutofillModalOpen] = React.useState(false)
+  const [runTour, setRunTour] = React.useState(false)
   const fillExampleRef = React.useRef<(() => void) | null>(null)
   const formRef = React.useRef<ModelCardFormHandle>(null)
   const { isEnabled: aiAssistEnabled, toggleEnabled: toggleAIAssist } = useAIAssist()
@@ -48,8 +51,9 @@ export default function Home() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <InstructionsModal />
+            <InstructionsModal onStartWalkthrough={() => setRunTour(true)} />
             <Button
+              data-tour="ai-assist"
               variant="outline"
               size="icon"
               onClick={toggleAIAssist}
@@ -67,6 +71,7 @@ export default function Home() {
               <span className="sr-only">{aiAssistEnabled ? "Disable AI Assist" : "Enable AI Assist"}</span>
             </Button>
             <Button
+              data-tour="autofill"
               variant="outline"
               size="icon"
               onClick={handleOpenAutofillModal}
@@ -76,8 +81,11 @@ export default function Home() {
               <Wand2 className="h-6 w-6" />
               <span className="sr-only">Fill example data</span>
             </Button>
-            <ExportModal formRef={formRef} />
+            <div data-tour="export">
+              <ExportModal formRef={formRef} />
+            </div>
             <Button
+              data-tour="preview-toggle"
               variant="outline"
               size="icon"
               onClick={() => setShowPreview(!showPreview)}
@@ -106,6 +114,27 @@ export default function Home() {
         isOpen={isAutofillModalOpen}
         onClose={handleCloseAutofillModal}
         onConfirm={handleFillExample}
+      />
+
+      {/* Walkthrough Tour */}
+      <Joyride
+        steps={walkthroughSteps}
+        run={runTour}
+        continuous
+        showSkipButton
+        showProgress
+        styles={{
+          options: {
+            primaryColor: 'hsl(var(--primary))',
+            zIndex: 10000,
+          },
+        }}
+        callback={(data) => {
+          const { status } = data
+          if (status === 'finished' || status === 'skipped') {
+            setRunTour(false)
+          }
+        }}
       />
     </main>
   )

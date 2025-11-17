@@ -1,11 +1,20 @@
 'use client'
 
 import * as React from 'react'
-import { HelpCircle, X, Stethoscope } from 'lucide-react'
+import { HelpCircle, X, Stethoscope, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export function InstructionsModal() {
+interface InstructionsModalProps {
+  onStartWalkthrough?: () => void
+}
+
+export function InstructionsModal({ onStartWalkthrough }: InstructionsModalProps) {
   const [isOpen, setIsOpen] = React.useState(false)
+
+  const handleStartWalkthrough = () => {
+    setIsOpen(false) // Close modal
+    onStartWalkthrough?.() // Start tour
+  }
 
   if (!isOpen) {
     return (
@@ -43,18 +52,28 @@ export function InstructionsModal() {
           </button>
 
           {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
-            <div className="p-3 rounded-xl bg-primary shadow-md">
-              <Stethoscope className="h-8 w-8 text-primary-foreground" />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-primary shadow-md">
+                <Stethoscope className="h-8 w-8 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold text-primary">
+                  Model Card Generator
+                </h2>
+                <p className="text-muted-foreground text-base mt-1">
+                  Create comprehensive, compliant documentation for your ML models
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-3xl font-bold text-primary">
-                Model Card Generator
-              </h2>
-              <p className="text-muted-foreground text-base mt-1">
-                Create comprehensive, compliant documentation for your ML models
-              </p>
-            </div>
+            <Button
+              onClick={handleStartWalkthrough}
+              variant="default"
+              className="flex items-center gap-2 shadow-lg"
+            >
+              <Play className="h-4 w-4" />
+              Start Walkthrough
+            </Button>
           </div>
 
           {/* Instructions */}
