@@ -13,8 +13,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Model Card Generator | Society of Actuaries',
-  description: 'Create comprehensive model cards for ML models following the Google Model Card standard',
+  title: 'Model Card Generator',
+  description: 'Create comprehensive model cards for ML models following the Hugging Face Model Card standard',
   icons: {
     icon: '/favicon.svg',
   },
