@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { ModelCardForm } from '@/components/forms/model-card-form'
+import { ModelCardForm, type ModelCardFormHandle } from '@/components/forms/model-card-form'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { InstructionsModal } from '@/components/instructions-modal'
 import { ExportModal } from '@/components/export-modal'
@@ -14,6 +14,7 @@ export default function Home() {
   const [showPreview, setShowPreview] = React.useState(true)
   const [isAutofillModalOpen, setIsAutofillModalOpen] = React.useState(false)
   const fillExampleRef = React.useRef<(() => void) | null>(null)
+  const formRef = React.useRef<ModelCardFormHandle>(null)
   const { isEnabled: aiAssistEnabled, toggleEnabled: toggleAIAssist } = useAIAssist()
 
   const handleFillExample = () => {
@@ -75,7 +76,7 @@ export default function Home() {
               <Wand2 className="h-6 w-6" />
               <span className="sr-only">Fill example data</span>
             </Button>
-            <ExportModal />
+            <ExportModal formRef={formRef} />
             <Button
               variant="outline"
               size="icon"
@@ -96,7 +97,7 @@ export default function Home() {
 
         {/* Main Content */}
         <div className="flex-1 overflow-hidden pb-6">
-          <ModelCardForm showPreview={showPreview} onFillExampleRef={fillExampleRef} />
+          <ModelCardForm ref={formRef} showPreview={showPreview} onFillExampleRef={fillExampleRef} />
         </div>
       </div>
 

@@ -208,3 +208,11 @@ export function calculateOverallCompletion(
     percentage,
   }
 }
+
+// Get section ID for a given field path
+export function getSectionForField(fieldPath: string): string | undefined {
+  const section = SECTION_CONFIGS.find(section =>
+    section.fields.includes(fieldPath)
+  )
+  return section?.id
+}

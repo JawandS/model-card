@@ -8,8 +8,13 @@ import { exportToJSON, exportToPDF, exportToMarkdown, exportToHTML } from '@/lib
 import { cleanEmptyStrings } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
 import { useAlertModal } from '@/hooks/use-alert-modal'
+import type { ModelCardFormHandle } from '@/components/forms/model-card-form'
 
-export function ExportModal() {
+interface ExportModalProps {
+  formRef: React.RefObject<ModelCardFormHandle>
+}
+
+export function ExportModal({ formRef }: ExportModalProps) {
   const [isOpen, setIsOpen] = React.useState(false)
   const { toast } = useToast()
   const { showAlert } = useAlertModal()
@@ -44,21 +49,51 @@ export function ExportModal() {
     const result = ModelCardSchema.safeParse(cleanedData)
 
     if (!result.success) {
-      // Build detailed error message as array
+      // Categorize errors for better readability
       const errors = result.error.errors
-      const errorMessages = errors.map(err => {
-        const field = err.path.join('.')
-        return `${field}: ${err.message}`
+      const missingFields: string[] = []
+      const invalidFields: string[] = []
+
+      errors.forEach(err => {
+        const fieldPath = err.path.join('.')
+        const fieldName = fieldPath || 'unknown field'
+
+        // Categorize based on error message
+        if (err.message.toLowerCase().includes('required')) {
+          missingFields.push(fieldName)
+        } else {
+          invalidFields.push(`${fieldName}: ${err.message}`)
+        }
       })
+
+      // Build categorized error message
+      const errorMessages: string[] = []
+
+      if (missingFields.length > 0) {
+        const fieldList = missingFields.join(', ')
+        errorMessages.push(`Missing Required Fields: ${fieldList}`)
+      }
+
+      if (invalidFields.length > 0) {
+        errorMessages.push('Invalid Values:')
+        invalidFields.forEach(field => errorMessages.push(`  ${field}`))
+      }
 
       showAlert({
         variant: 'error',
         title: 'Validation Failed',
-        description: [
-          'Please fix the following errors:',
-          ...errorMessages,
-          '',
-          'Required fields: model_id, developers',
+        description: errorMessages.length === 1 ? errorMessages[0] : errorMessages,
+        actions: [
+          {
+            label: 'OK',
+            variant: 'default',
+            onClick: () => {
+              // Close export modal
+              setIsOpen(false)
+              // Trigger form error handling
+              formRef.current?.handleValidationErrors(errors)
+            },
+          },
         ],
       })
       return

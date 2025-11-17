@@ -25,21 +25,28 @@ import { ProgressTracker } from '../progress-tracker'
 import { SaveIndicator } from '../save-indicator'
 import { SectionProgressIndicator } from '../section-progress-indicator'
 import { ResetConfirmationModal } from '../reset-confirmation-modal'
-import { SECTION_CONFIGS } from '@/lib/section-config'
-import { DEFAULT_MODEL_CARD_DATA, mergeWithDefaults } from '@/lib/default-data'
+import { SECTION_CONFIGS, getSectionForField } from '@/lib/section-config'
+import { mergeWithDefaults } from '@/lib/default-data'
 import { Eye, RotateCcw } from 'lucide-react'
+import type { ZodError } from 'zod'
 
 interface ModelCardFormProps {
   showPreview?: boolean
   onFillExampleRef?: React.MutableRefObject<(() => void) | null>
 }
 
-export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCardFormProps) {
+export interface ModelCardFormHandle {
+  handleValidationErrors: (errors: ZodError['errors']) => void
+}
+
+export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardFormProps>(
+  ({ showPreview = true, onFillExampleRef }, ref) => {
   const [formData, setFormData] = React.useState<PartialModelCard>({})
   const [isSaving, setIsSaving] = React.useState(false)
   const [lastSaved, setLastSaved] = React.useState<Date | undefined>()
   const [isResetModalOpen, setIsResetModalOpen] = React.useState(false)
   const [previewKey, setPreviewKey] = React.useState(0)
+  const [openSections, setOpenSections] = React.useState<string[]>(['basic-info', 'model-details'])
 
   const form = useForm<ModelCard>({
     resolver: zodResolver(ModelCardSchema),
@@ -194,6 +201,43 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
     }
   }, [onFillExampleRef, handleFillExample])
 
+  // Expose validation error handler via useImperativeHandle
+  React.useImperativeHandle(ref, () => ({
+    handleValidationErrors: (errors: ZodError['errors']) => {
+      // Collect sections with errors
+      const sectionsWithErrors = new Set<string>()
+
+      // Set errors on form fields and collect affected sections
+      errors.forEach(err => {
+        const fieldPath = err.path.join('.')
+
+        // Set manual error on the field
+        form.setError(fieldPath as any, {
+          type: 'manual',
+          message: err.message,
+        })
+
+        // Find the section containing this field
+        const sectionId = getSectionForField(fieldPath)
+        if (sectionId) {
+          sectionsWithErrors.add(sectionId)
+        }
+      })
+
+      // Open only sections with errors, close all others
+      setOpenSections(Array.from(sectionsWithErrors))
+
+      // Scroll to first error section
+      if (sectionsWithErrors.size > 0) {
+        const firstSection = Array.from(sectionsWithErrors)[0]
+        setTimeout(() => {
+          const element = document.querySelector(`[data-section-id="${firstSection}"]`)
+          element?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        }, 100)
+      }
+    },
+  }), [form])
+
   const handleReset = () => {
     // Reset the form to default values with all nested objects explicitly cleared
     form.reset({
@@ -308,8 +352,8 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
           <CardContent className="p-6 overflow-y-auto flex-1 min-h-0">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-                <Accordion type="multiple" className="w-full">
-                  <AccordionItem value="basic-info">
+                <Accordion type="multiple" value={openSections} onValueChange={setOpenSections} className="w-full">
+                  <AccordionItem value="basic-info" data-section-id="basic-info">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>
@@ -326,7 +370,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="model-details">
+                  <AccordionItem value="model-details" data-section-id="model-details">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>
@@ -343,7 +387,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="model-sources">
+                  <AccordionItem value="model-sources" data-section-id="model-sources">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>Model Sources</span>
@@ -358,7 +402,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="uses">
+                  <AccordionItem value="uses" data-section-id="uses">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>
@@ -375,7 +419,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="bias-risks">
+                  <AccordionItem value="bias-risks" data-section-id="bias-risks">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>
@@ -392,7 +436,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="training">
+                  <AccordionItem value="training" data-section-id="training">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>
@@ -409,7 +453,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="evaluation">
+                  <AccordionItem value="evaluation" data-section-id="evaluation">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>
@@ -426,7 +470,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="environmental">
+                  <AccordionItem value="environmental" data-section-id="environmental">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>Environmental Impact</span>
@@ -441,7 +485,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="technical">
+                  <AccordionItem value="technical" data-section-id="technical">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>Technical Specifications</span>
@@ -456,7 +500,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="citation">
+                  <AccordionItem value="citation" data-section-id="citation">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>Citation</span>
@@ -471,7 +515,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="additional">
+                  <AccordionItem value="additional" data-section-id="additional">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>Additional Information</span>
@@ -486,7 +530,7 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="metadata">
+                  <AccordionItem value="metadata" data-section-id="metadata">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center justify-between w-full pr-2">
                         <span>HuggingFace Metadata</span>
@@ -535,4 +579,6 @@ export function ModelCardForm({ showPreview = true, onFillExampleRef }: ModelCar
       />
     </div>
   )
-}
+})
+
+ModelCardForm.displayName = 'ModelCardForm'
