@@ -46,7 +46,26 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
   const [lastSaved, setLastSaved] = React.useState<Date | undefined>()
   const [isResetModalOpen, setIsResetModalOpen] = React.useState(false)
   const [previewKey, setPreviewKey] = React.useState(0)
-  const [openSections, setOpenSections] = React.useState<string[]>(['basic-info', 'model-details'])
+  const [openSections, setOpenSections] = React.useState<string[]>(() => {
+    // Load accordion state from localStorage with SSR safety and validation
+    if (typeof window === 'undefined') return ['basic-info', 'model-details']
+
+    try {
+      const saved = localStorage.getItem('modelcard-accordion-state')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        // Validate it's an array of strings
+        if (Array.isArray(parsed) && parsed.every(item => typeof item === 'string')) {
+          return parsed
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load accordion state:', error)
+    }
+
+    // Fallback to default
+    return ['basic-info', 'model-details']
+  })
 
   const form = useForm<ModelCard>({
     resolver: zodResolver(ModelCardSchema),
@@ -165,6 +184,11 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
       }
     }
   }, [form])
+
+  // Save accordion state to localStorage
+  React.useEffect(() => {
+    localStorage.setItem('modelcard-accordion-state', JSON.stringify(openSections))
+  }, [openSections])
 
   // Load from localStorage on mount
   React.useEffect(() => {
@@ -308,9 +332,13 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
 
     // Clear localStorage
     localStorage.removeItem('modelcard-draft')
+    localStorage.removeItem('modelcard-accordion-state')
 
     // Reset save state
     setLastSaved(undefined)
+
+    // Reset accordion to default state
+    setOpenSections(['basic-info', 'model-details'])
   }
 
   const onSubmit = (data: ModelCard) => {
