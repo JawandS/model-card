@@ -49,35 +49,20 @@ export function ExportModal({ formRef }: ExportModalProps) {
     const result = ModelCardSchema.safeParse(cleanedData)
 
     if (!result.success) {
-      // Categorize errors for better readability
+      // Build simple, scannable error list
       const errors = result.error.errors
-      const missingFields: string[] = []
-      const invalidFields: string[] = []
+      const errorMessages: string[] = []
 
       errors.forEach(err => {
         const fieldPath = err.path.join('.')
         const fieldName = fieldPath || 'unknown field'
 
-        // Categorize based on error message
         if (err.message.toLowerCase().includes('required')) {
-          missingFields.push(fieldName)
+          errorMessages.push(`Missing required field: ${fieldName}`)
         } else {
-          invalidFields.push(`${fieldName}: ${err.message}`)
+          errorMessages.push(`${fieldName}: ${err.message}`)
         }
       })
-
-      // Build categorized error message
-      const errorMessages: string[] = []
-
-      if (missingFields.length > 0) {
-        const fieldList = missingFields.join(', ')
-        errorMessages.push(`Missing Required Fields: ${fieldList}`)
-      }
-
-      if (invalidFields.length > 0) {
-        errorMessages.push('Invalid Values:')
-        invalidFields.forEach(field => errorMessages.push(`  ${field}`))
-      }
 
       showAlert({
         variant: 'error',
@@ -85,7 +70,7 @@ export function ExportModal({ formRef }: ExportModalProps) {
         description: errorMessages.length === 1 ? errorMessages[0] : errorMessages,
         actions: [
           {
-            label: 'OK',
+            label: 'Fix',
             variant: 'default',
             onClick: () => {
               // Close export modal
