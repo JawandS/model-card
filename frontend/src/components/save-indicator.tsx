@@ -32,7 +32,7 @@ export function SaveIndicator({ isSaving, lastSaved }: SaveIndicatorProps) {
       ) : lastSaved ? (
         <>
           <FileText className="h-3.5 w-3.5" />
-          <span>Saved {getTimeAgo(lastSaved)}</span>
+          <span>Saved locally {getTimeAgo(lastSaved)}</span>
         </>
       ) : (
         <>
