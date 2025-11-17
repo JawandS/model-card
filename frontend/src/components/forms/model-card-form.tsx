@@ -41,6 +41,7 @@ export interface ModelCardFormHandle {
 
 export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardFormProps>(
   ({ showPreview = true, onFillExampleRef }, ref) => {
+  const [isLoading, setIsLoading] = React.useState(true)
   const [formData, setFormData] = React.useState<PartialModelCard>({})
   const [isSaving, setIsSaving] = React.useState(false)
   const [lastSaved, setLastSaved] = React.useState<Date | undefined>()
@@ -201,6 +202,8 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
         console.error('Failed to load saved data:', error)
       }
     }
+    // Mark as loaded (whether data exists or not)
+    setIsLoading(false)
   }, [form])
 
   // Force preview to update when it becomes visible
@@ -346,8 +349,15 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
     // Validation passed, ready to export or save
   }
 
-  return (
-    <div className={`grid gap-6 h-full animate-in fade-in slide-in-from-bottom duration-700 ${
+  return isLoading ? (
+    <div className="flex items-center justify-center h-full">
+      <div className="flex flex-col items-center gap-3">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <p className="text-sm text-muted-foreground">Loading your model card...</p>
+      </div>
+    </div>
+  ) : (
+    <div className={`grid gap-6 h-full ${
       showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'
     }`}>
       {/* Form Section */}
