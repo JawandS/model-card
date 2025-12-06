@@ -5,10 +5,27 @@ interface ModelCardPreviewProps {
 }
 
 export function ModelCardPreview({ data }: ModelCardPreviewProps) {
-  const hasContent = (obj: any): boolean => {
-    if (!obj) return false
-    return Object.values(obj).some(v => v && (typeof v !== 'object' || hasContent(v)))
+  const hasContent = (value: any): boolean => {
+    if (value === undefined || value === null) return false
+    if (typeof value === 'boolean' || typeof value === 'number') return true
+    if (typeof value === 'string') return value.trim().length > 0
+    if (Array.isArray(value)) return value.length > 0
+    if (typeof value === 'object') return Object.values(value).some(v => hasContent(v))
+    return false
   }
+
+  const formatList = (value?: string | string[]) => {
+    if (!value) return ''
+    if (Array.isArray(value)) return value.join(', ')
+    return value
+  }
+
+  const showMetadataSection = hasContent(data.metadata?.pipeline_tag) ||
+    hasContent(data.metadata?.library_name) ||
+    hasContent(data.metadata?.tags) ||
+    hasContent(data.metadata?.datasets) ||
+    hasContent(data.metadata?.metrics) ||
+    data.metadata?.inference === false
 
   return (
     <div className="space-y-6 text-sm">
@@ -34,6 +51,9 @@ export function ModelCardPreview({ data }: ModelCardPreviewProps) {
           )}
           {data.funded_by && (
             <p className="text-xs mb-1"><span className="font-medium">Funded by:</span> {data.funded_by}</p>
+          )}
+          {data.shared_by && (
+            <p className="text-xs mb-1"><span className="font-medium">Shared by:</span> {data.shared_by}</p>
           )}
           {data.model_type && (
             <p className="text-xs mb-1"><span className="font-medium">Model type:</span> {data.model_type}</p>
@@ -131,6 +151,9 @@ export function ModelCardPreview({ data }: ModelCardPreviewProps) {
           {data.training_details?.training_regime && (
             <p className="text-xs mb-1"><span className="font-medium">Training Regime:</span> {data.training_details.training_regime}</p>
           )}
+          {data.training_details?.speeds_sizes_times && (
+            <p className="text-xs mb-1"><span className="font-medium">Speeds/Sizes/Times:</span> {data.training_details.speeds_sizes_times}</p>
+          )}
         </div>
       )}
 
@@ -140,6 +163,9 @@ export function ModelCardPreview({ data }: ModelCardPreviewProps) {
           <h4 className="font-semibold mb-2">Evaluation</h4>
           {data.evaluation?.testing_data && (
             <p className="text-xs mb-1"><span className="font-medium">Testing Data:</span> {data.evaluation.testing_data}</p>
+          )}
+          {data.evaluation?.testing_factors && (
+            <p className="text-xs mb-1"><span className="font-medium">Testing Factors:</span> {data.evaluation.testing_factors}</p>
           )}
           {data.evaluation?.testing_metrics && (
             <p className="text-xs mb-1"><span className="font-medium">Metrics:</span> {data.evaluation.testing_metrics}</p>
@@ -169,6 +195,12 @@ export function ModelCardPreview({ data }: ModelCardPreviewProps) {
           {data.environmental_impact?.hours_used && (
             <p className="text-xs mb-1"><span className="font-medium">Hours Used:</span> {data.environmental_impact.hours_used}</p>
           )}
+          {data.environmental_impact?.cloud_provider && (
+            <p className="text-xs mb-1"><span className="font-medium">Cloud Provider:</span> {data.environmental_impact.cloud_provider}</p>
+          )}
+          {data.environmental_impact?.cloud_region && (
+            <p className="text-xs mb-1"><span className="font-medium">Compute Region:</span> {data.environmental_impact.cloud_region}</p>
+          )}
           {data.environmental_impact?.co2_emitted && (
             <p className="text-xs mb-1"><span className="font-medium">Carbon Emitted:</span> {data.environmental_impact.co2_emitted}</p>
           )}
@@ -181,6 +213,12 @@ export function ModelCardPreview({ data }: ModelCardPreviewProps) {
           <h4 className="font-semibold mb-2">Technical Specifications</h4>
           {data.technical_specs?.model_specs && (
             <p className="text-xs text-muted-foreground mb-2">{data.technical_specs.model_specs}</p>
+          )}
+          {data.technical_specs?.compute_infrastructure && (
+            <p className="text-xs mb-1"><span className="font-medium">Compute Infrastructure:</span> {data.technical_specs.compute_infrastructure}</p>
+          )}
+          {data.technical_specs?.hardware_requirements && (
+            <p className="text-xs mb-1"><span className="font-medium">Hardware Requirements:</span> {data.technical_specs.hardware_requirements}</p>
           )}
           {data.technical_specs?.software && (
             <p className="text-xs mb-1"><span className="font-medium">Software:</span> {data.technical_specs.software}</p>
@@ -211,11 +249,44 @@ export function ModelCardPreview({ data }: ModelCardPreviewProps) {
       {hasContent(data.additional_info) && (
         <div className="border-t pt-4">
           <h4 className="font-semibold mb-2">Additional Information</h4>
+          {data.additional_info?.model_examination && (
+            <p className="text-xs mb-2"><span className="font-medium">Model Examination:</span> {data.additional_info.model_examination}</p>
+          )}
+          {data.additional_info?.glossary && (
+            <p className="text-xs mb-2"><span className="font-medium">Glossary:</span> {data.additional_info.glossary}</p>
+          )}
+          {data.additional_info?.more_information && (
+            <p className="text-xs mb-2"><span className="font-medium">More Information:</span> {data.additional_info.more_information}</p>
+          )}
           {data.additional_info?.model_card_authors && (
             <p className="text-xs mb-1"><span className="font-medium">Model Card Authors:</span> {data.additional_info.model_card_authors}</p>
           )}
           {data.additional_info?.model_card_contact && (
             <p className="text-xs mb-1"><span className="font-medium">Contact:</span> {data.additional_info.model_card_contact}</p>
+          )}
+        </div>
+      )}
+
+      {showMetadataSection && (
+        <div className="border-t pt-4">
+          <h4 className="font-semibold mb-2">HuggingFace Metadata</h4>
+          {data.metadata?.pipeline_tag && (
+            <p className="text-xs mb-1"><span className="font-medium">Pipeline Tag:</span> {data.metadata.pipeline_tag}</p>
+          )}
+          {data.metadata?.library_name && (
+            <p className="text-xs mb-1"><span className="font-medium">Library:</span> {data.metadata.library_name}</p>
+          )}
+          {hasContent(data.metadata?.datasets) && (
+            <p className="text-xs mb-1"><span className="font-medium">Datasets:</span> {formatList(data.metadata?.datasets)}</p>
+          )}
+          {hasContent(data.metadata?.metrics) && (
+            <p className="text-xs mb-1"><span className="font-medium">Metrics:</span> {formatList(data.metadata?.metrics)}</p>
+          )}
+          {hasContent(data.metadata?.tags) && (
+            <p className="text-xs mb-1"><span className="font-medium">Tags:</span> {formatList(data.metadata?.tags)}</p>
+          )}
+          {data.metadata?.inference !== undefined && (
+            <p className="text-xs mb-1"><span className="font-medium">Inference Widget:</span> {data.metadata.inference ? 'Enabled' : 'Disabled'}</p>
           )}
         </div>
       )}

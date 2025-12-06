@@ -76,72 +76,157 @@ export class PdfExporter extends BaseExporter {
       y += summaryLines.length * 5 + 10
     }
 
-    // Model Details
-    if (data.model_description) {
-      addSection('Model Details', data.model_description)
+    const formatList = (value?: string | string[]) => {
+      if (!value) return ''
+      return Array.isArray(value) ? value.join(', ') : value
     }
 
-    // Key metadata
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    if (data.developers) {
-      checkPageBreak(6)
-      doc.text(`Developers: ${data.developers}`, this.margin, y)
-      y += 6
+    const formatPairs = (pairs: Array<[string, string | undefined]>) =>
+      pairs
+        .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== '')
+        .map(([label, value]) => `${label}: ${markdownToPlainText(String(value))}`)
+        .join('\n')
+
+    // Model Details
+    const detailLines: string[] = []
+    if (data.model_description) {
+      detailLines.push(markdownToPlainText(data.model_description))
     }
-    if (data.license) {
-      checkPageBreak(6)
-      doc.text(`License: ${data.license}`, this.margin, y)
-      y += 6
+    const detailPairs = formatPairs([
+      ['Developed by', data.developers],
+      ['Funded by', data.funded_by],
+      ['Shared by', data.shared_by],
+      ['Model type', data.model_type],
+      ['Language(s)', data.language],
+      ['License', data.license],
+      ['Finetuned from', data.base_model],
+    ])
+    if (detailPairs) {
+      detailLines.push(detailPairs)
     }
-    if (data.model_type) {
-      checkPageBreak(6)
-      doc.text(`Model Type: ${data.model_type}`, this.margin, y)
-      y += 6
-    }
-    y += 5
+    addSection('Model Details', detailLines.join('\n\n'))
+
+    // Model Sources
+    const sourcesText = formatPairs([
+      ['Repository', data.model_sources?.repo],
+      ['Paper', data.model_sources?.paper],
+      ['Demo', data.model_sources?.demo],
+    ])
+    addSection('Model Sources', sourcesText)
+
+    // Quickstart
+    addSection('How to Get Started', data.get_started_code)
 
     // Uses
-    if (data.uses?.direct_use) {
-      addSection('Direct Use', data.uses.direct_use)
-    }
-    if (data.uses?.downstream_use) {
-      addSection('Downstream Use', data.uses.downstream_use)
-    }
-    if (data.uses?.out_of_scope_use) {
-      addSection('Out-of-Scope Use', data.uses.out_of_scope_use)
-    }
+    addSection('Direct Use', data.uses?.direct_use)
+    addSection('Downstream Use', data.uses?.downstream_use)
+    addSection('Out-of-Scope Use', data.uses?.out_of_scope_use)
 
     // Bias, Risks, and Limitations
-    if (data.bias_risks?.bias_risks_limitations) {
-      addSection('Bias, Risks, and Limitations', data.bias_risks.bias_risks_limitations)
-    }
-    if (data.bias_risks?.bias_recommendations) {
-      addSection('Recommendations', data.bias_risks.bias_recommendations)
-    }
+    addSection('Bias, Risks, and Limitations', data.bias_risks?.bias_risks_limitations)
+    addSection('Recommendations', data.bias_risks?.bias_recommendations)
 
     // Training Details
+    const trainingLines: string[] = []
     if (data.training_details?.training_data) {
-      addSection('Training Data', data.training_details.training_data)
+      trainingLines.push(`Training Data:\n${markdownToPlainText(data.training_details.training_data)}`)
     }
     if (data.training_details?.preprocessing) {
-      addSection('Preprocessing', data.training_details.preprocessing)
+      trainingLines.push(`Preprocessing:\n${markdownToPlainText(data.training_details.preprocessing)}`)
     }
+    if (data.training_details?.training_regime) {
+      trainingLines.push(`Training Regime: ${data.training_details.training_regime}`)
+    }
+    if (data.training_details?.speeds_sizes_times) {
+      trainingLines.push(`Speeds/Sizes/Times:\n${markdownToPlainText(data.training_details.speeds_sizes_times)}`)
+    }
+    addSection('Training Details', trainingLines.join('\n\n'))
 
     // Evaluation
-    if (data.evaluation?.results) {
-      addSection('Evaluation Results', data.evaluation.results)
+    const evaluationLines: string[] = []
+    if (data.evaluation?.testing_data) {
+      evaluationLines.push(`Testing Data:\n${markdownToPlainText(data.evaluation.testing_data)}`)
     }
+    if (data.evaluation?.testing_factors) {
+      evaluationLines.push(`Testing Factors:\n${markdownToPlainText(data.evaluation.testing_factors)}`)
+    }
+    if (data.evaluation?.testing_metrics) {
+      evaluationLines.push(`Metrics:\n${markdownToPlainText(data.evaluation.testing_metrics)}`)
+    }
+    if (data.evaluation?.results) {
+      evaluationLines.push(`Results:\n${markdownToPlainText(data.evaluation.results)}`)
+    }
+    if (data.evaluation?.results_summary) {
+      evaluationLines.push(`Summary:\n${markdownToPlainText(data.evaluation.results_summary)}`)
+    }
+    addSection('Evaluation', evaluationLines.join('\n\n'))
+
+    // Environmental Impact
+    const envText = formatPairs([
+      ['Hardware Type', data.environmental_impact?.hardware_type],
+      ['Hours used', data.environmental_impact?.hours_used],
+      ['Cloud Provider', data.environmental_impact?.cloud_provider],
+      ['Compute Region', data.environmental_impact?.cloud_region],
+      ['Carbon Emitted', data.environmental_impact?.co2_emitted],
+    ])
+    addSection('Environmental Impact', envText)
 
     // Technical Specifications
+    const techLines: string[] = []
     if (data.technical_specs?.model_specs) {
-      addSection('Technical Specifications', data.technical_specs.model_specs)
+      techLines.push(markdownToPlainText(data.technical_specs.model_specs))
+    }
+    const techPairs = formatPairs([
+      ['Compute Infrastructure', data.technical_specs?.compute_infrastructure],
+      ['Hardware Requirements', data.technical_specs?.hardware_requirements],
+      ['Software', data.technical_specs?.software],
+    ])
+    if (techPairs) techLines.push(techPairs)
+    addSection('Technical Specifications', techLines.join('\n\n'))
+
+    // Citation
+    if (data.citation?.citation_bibtex || data.citation?.citation_apa) {
+      const citationText = [
+        data.citation?.citation_bibtex ? `BibTeX:\n${markdownToPlainText(data.citation.citation_bibtex)}` : '',
+        data.citation?.citation_apa ? `APA:\n${markdownToPlainText(data.citation.citation_apa)}` : '',
+      ].filter(Boolean).join('\n\n')
+      addSection('Citation', citationText)
     }
 
     // Additional Information
-    if (data.additional_info?.glossary) {
-      addSection('Glossary', data.additional_info.glossary)
+    const additionalLines: string[] = []
+    if (data.additional_info?.model_examination) {
+      additionalLines.push(`Model Examination:\n${markdownToPlainText(data.additional_info.model_examination)}`)
     }
+    if (data.additional_info?.glossary) {
+      additionalLines.push(`Glossary:\n${markdownToPlainText(data.additional_info.glossary)}`)
+    }
+    if (data.additional_info?.more_information) {
+      additionalLines.push(`More Information:\n${markdownToPlainText(data.additional_info.more_information)}`)
+    }
+    if (data.additional_info?.model_card_authors) {
+      additionalLines.push(`Model Card Authors: ${data.additional_info.model_card_authors}`)
+    }
+    if (data.additional_info?.model_card_contact) {
+      additionalLines.push(`Contact: ${data.additional_info.model_card_contact}`)
+    }
+    addSection('Additional Information', additionalLines.join('\n\n'))
+
+    // HuggingFace Metadata
+    const metadataEntries: Array<[string, string | undefined]> = [
+      ['Library Name', data.metadata?.library_name],
+      ['Pipeline Tag', data.metadata?.pipeline_tag],
+      ['Datasets', formatList(data.metadata?.datasets)],
+      ['Metrics', formatList(data.metadata?.metrics)],
+      ['Tags', formatList(data.metadata?.tags)],
+    ]
+    const showInference = data.metadata?.inference === false ||
+      metadataEntries.some(([, value]) => value && value.trim() !== '')
+    if (data.metadata?.inference !== undefined && showInference) {
+      metadataEntries.push(['Inference Widget', String(data.metadata.inference)])
+    }
+    const metadataLines = formatPairs(metadataEntries)
+    addSection('HuggingFace Metadata', metadataLines)
 
     // Generate blob
     return doc.output('blob')

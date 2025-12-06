@@ -200,15 +200,31 @@ export class MarkdownExporter extends BaseExporter {
   private buildYamlFrontmatter(data: ModelCard): string {
     const yamlFields: Record<string, any> = {}
 
+    // Helper to normalize array-like metadata fields
+    const addListField = (key: string, value?: string | string[]) => {
+      if (!value) return
+      if (Array.isArray(value)) {
+        if (value.length > 0) yamlFields[key] = value
+        return
+      }
+      const parts = value.split(',').map(part => part.trim()).filter(Boolean)
+      if (parts.length > 1) {
+        yamlFields[key] = parts
+      } else if (parts.length === 1) {
+        yamlFields[key] = parts[0]
+      }
+    }
+
     // Map all metadata fields from metadata section (HuggingFace YAML format)
-    if (data.metadata?.license) yamlFields.license = data.metadata.license
-    if (data.metadata?.language) yamlFields.language = data.metadata.language
-    if (data.metadata?.base_model) yamlFields.base_model = data.metadata.base_model
+    // Use explicit metadata values with fallback to the core fields to stay spec-compliant
+    if (data.metadata?.license || data.license) yamlFields.license = data.metadata?.license ?? data.license
+    addListField('language', data.metadata?.language ?? data.language)
+    if (data.metadata?.base_model || data.base_model) yamlFields.base_model = data.metadata?.base_model ?? data.base_model
     if (data.metadata?.library_name) yamlFields.library_name = data.metadata.library_name
     if (data.metadata?.pipeline_tag) yamlFields.pipeline_tag = data.metadata.pipeline_tag
-    if (data.metadata?.tags && data.metadata.tags.length > 0) {
-      yamlFields.tags = data.metadata.tags
-    }
+    addListField('tags', data.metadata?.tags)
+    addListField('datasets', data.metadata?.datasets)
+    addListField('metrics', data.metadata?.metrics)
     if (data.metadata?.inference !== undefined) {
       yamlFields.inference = data.metadata.inference
     }

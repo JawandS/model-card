@@ -87,6 +87,8 @@ export const MetadataSchema = z.object({
   library_name: z.string().optional(),
   pipeline_tag: z.string().optional(),
   tags: z.array(z.string()).optional(),
+  datasets: z.array(z.string()).optional(),
+  metrics: z.array(z.string()).optional(),
   inference: z.boolean().default(true).optional(),
 });
 

@@ -46,7 +46,8 @@ export function renderKeyValue(obj: Record<string, any>): string {
     .filter(([_, value]) => hasContent(value))
     .map(([key, value]) => {
       const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-      return `<div class="key-value"><span class="key">${escapeHtml(displayKey)}:</span> <span class="value">${escapeHtml(String(value))}</span></div>`
+      const displayValue = Array.isArray(value) ? value.join(', ') : String(value)
+      return `<div class="key-value"><span class="key">${escapeHtml(displayKey)}:</span> <span class="value">${escapeHtml(displayValue)}</span></div>`
     }).join('')
 }
 

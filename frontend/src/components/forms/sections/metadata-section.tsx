@@ -29,13 +29,42 @@ interface MetadataSectionProps {
 export function MetadataSection({ form }: MetadataSectionProps) {
   // Local state for tags input to allow natural comma typing
   const [tagsInput, setTagsInput] = React.useState('')
+  const [datasetsInput, setDatasetsInput] = React.useState('')
+  const [metricsInput, setMetricsInput] = React.useState('')
 
   // Initialize tagsInput from form field value
   React.useEffect(() => {
-    const tags = form.watch('metadata.tags')
-    if (tags && Array.isArray(tags) && tags.length > 0) {
-      setTagsInput(tags.join(', '))
+    const metadata = form.getValues('metadata')
+    if (Array.isArray(metadata?.tags)) {
+      setTagsInput(metadata.tags.join(', '))
     }
+    if (Array.isArray(metadata?.datasets)) {
+      setDatasetsInput(metadata.datasets.join(', '))
+    }
+    if (Array.isArray(metadata?.metrics)) {
+      setMetricsInput(metadata.metrics.join(', '))
+    }
+
+    const subscription = form.watch((value) => {
+      const meta = (value as ModelCard).metadata
+      if (Array.isArray(meta?.tags)) {
+        setTagsInput(meta.tags.join(', '))
+      } else {
+        setTagsInput('')
+      }
+      if (Array.isArray(meta?.datasets)) {
+        setDatasetsInput(meta.datasets.join(', '))
+      } else {
+        setDatasetsInput('')
+      }
+      if (Array.isArray(meta?.metrics)) {
+        setMetricsInput(meta.metrics.join(', '))
+      } else {
+        setMetricsInput('')
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [form])
 
   return (
@@ -196,6 +225,70 @@ export function MetadataSection({ form }: MetadataSectionProps) {
               </FormControl>
               <FormDescription>
                 Custom tags for categorization and discoverability on HuggingFace Hub
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="metadata.datasets"
+        render={({ field }) => (
+            <FormItem>
+              <FormLabel>Datasets (optional)</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Enter comma-separated dataset IDs (e.g., imdb, glue, squad, c4)..."
+                  className="min-h-[80px]"
+                  value={datasetsInput}
+                  onChange={(e) => setDatasetsInput(e.target.value)}
+                  onBlur={(e) => {
+                    const datasets = e.target.value
+                      .split(',')
+                      .map((item) => item.trim())
+                      .filter(Boolean);
+                    field.onChange(datasets.length > 0 ? datasets : undefined);
+                    field.onBlur();
+                  }}
+                  name={field.name}
+                  ref={field.ref}
+                />
+              </FormControl>
+              <FormDescription>
+                Dataset identifiers used for training/evaluation (improves Hub search and compliance)
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="metadata.metrics"
+        render={({ field }) => (
+            <FormItem>
+              <FormLabel>Metrics (optional)</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Enter comma-separated metric names (e.g., accuracy, f1, bleu, perplexity)..."
+                  className="min-h-[80px]"
+                  value={metricsInput}
+                  onChange={(e) => setMetricsInput(e.target.value)}
+                  onBlur={(e) => {
+                    const metrics = e.target.value
+                      .split(',')
+                      .map((item) => item.trim())
+                      .filter(Boolean);
+                    field.onChange(metrics.length > 0 ? metrics : undefined);
+                    field.onBlur();
+                  }}
+                  name={field.name}
+                  ref={field.ref}
+                />
+              </FormControl>
+              <FormDescription>
+                Evaluation metrics to expose in the HuggingFace model card metadata
               </FormDescription>
               <FormMessage />
             </FormItem>

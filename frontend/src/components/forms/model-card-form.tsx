@@ -141,6 +141,8 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
         library_name: '',
         pipeline_tag: '',
         tags: [],
+        datasets: [],
+        metrics: [],
         inference: true,
       },
     },
@@ -330,6 +332,17 @@ export const ModelCardForm = React.forwardRef<ModelCardFormHandle, ModelCardForm
         more_information: '',
         model_card_authors: '',
         model_card_contact: '',
+      },
+      metadata: {
+        license: '',
+        language: '',
+        base_model: '',
+        library_name: '',
+        pipeline_tag: '',
+        tags: [],
+        datasets: [],
+        metrics: [],
+        inference: true,
       },
     })
 

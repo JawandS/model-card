@@ -116,6 +116,8 @@ predictions = outputs.logits.softmax(dim=-1)`,
     library_name: 'transformers',
     pipeline_tag: 'text-classification',
     tags: ['sentiment-analysis', 'bert', 'nlp', 'text-classification'],
+    datasets: ['sst2', 'imdb', 'acme/sentiment-combined'],
+    metrics: ['accuracy', 'f1', 'roc-auc'],
     inference: true,
   },
 }

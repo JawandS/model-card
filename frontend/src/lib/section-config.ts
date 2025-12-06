@@ -143,7 +143,8 @@ export const SECTION_CONFIGS: SectionConfig[] = [
       'metadata.library_name',
       'metadata.pipeline_tag',
       'metadata.tags',
-      'metadata.inference',
+      'metadata.datasets',
+      'metadata.metrics',
     ],
   },
 ]

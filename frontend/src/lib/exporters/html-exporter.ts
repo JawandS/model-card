@@ -56,6 +56,12 @@ export class HtmlExporter extends BaseExporter {
 
   private buildOverviewSection(data: ModelCard): string {
     let content = ''
+    const listToDisplay = (value?: string | string[]): string => {
+      if (!value) return ''
+      if (Array.isArray(value)) return value.join(', ')
+      const parts = value.split(',').map(v => v.trim()).filter(Boolean)
+      return parts.join(', ')
+    }
 
     // Model Details
     if (hasContent(data.model_description) || hasContent(data.developers) || hasContent(data.model_type) ||
@@ -104,6 +110,28 @@ export class HtmlExporter extends BaseExporter {
     // Get Started
     if (hasContent(data.get_started_code)) {
       content += `<h3>How to Get Started</h3>\n<pre><code>${escapeHtml(data.get_started_code!)}</code></pre>\n`
+    }
+
+    // HuggingFace Hub metadata (frontmatter fields)
+    if (data.metadata) {
+      const metadataEntries: Record<string, any> = {}
+      const datasets = listToDisplay(data.metadata.datasets)
+      const metrics = listToDisplay(data.metadata.metrics)
+      const tags = listToDisplay(data.metadata.tags)
+
+      if (hasContent(data.metadata.pipeline_tag)) metadataEntries['Pipeline Tag'] = data.metadata.pipeline_tag
+      if (hasContent(data.metadata.library_name)) metadataEntries['Library Name'] = data.metadata.library_name
+      if (datasets) metadataEntries['Datasets'] = datasets
+      if (metrics) metadataEntries['Metrics'] = metrics
+      if (tags) metadataEntries['Tags'] = tags
+      const includeInference = data.metadata.inference === false || Object.keys(metadataEntries).length > 0
+      if (data.metadata.inference !== undefined && includeInference) {
+        metadataEntries['Enable Inference Widget'] = data.metadata.inference ? 'true' : 'false'
+      }
+
+      if (Object.keys(metadataEntries).length > 0) {
+        content += `<h3>HuggingFace Metadata</h3>\n${renderKeyValue(metadataEntries)}\n`
+      }
     }
 
     return content
