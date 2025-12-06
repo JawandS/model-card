@@ -37,14 +37,4 @@ export const walkthroughSteps: Step[] = [
     content: 'Start here! Fill out the required Basic Information section including Model ID and summary.',
     placement: 'right',
   },
-  {
-    target: '[data-tour="model-details"]',
-    content: 'Add detailed information about your model, including developers, type, and licensing.',
-    placement: 'right',
-  },
-  {
-    target: '[data-tour="preview-panel"]',
-    content: 'See a live preview of your model card documentation. It updates automatically as you fill out the form.',
-    placement: 'left',
-  },
 ]
