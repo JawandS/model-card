@@ -86,24 +86,6 @@ export function InstructionsModal({ onStartWalkthrough }: InstructionsModalProps
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-2">Priority Levels</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-destructive font-bold">*</span>
-                  <span><strong className="text-destructive">Red asterisk</strong> = Critical - Required to export</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-foreground font-bold">*</span>
-                  <span><strong>White asterisk</strong> = Required - Strongly recommended for complete model cards</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-muted-foreground">—</span>
-                  <span><strong>No asterisk</strong> = Optional - Nice to have</span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
               <h3 className="text-lg font-semibold mb-2">How to Use</h3>
               <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
                 <li>Navigate through accordion sections to fill out the form</li>
